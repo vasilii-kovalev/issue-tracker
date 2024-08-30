@@ -10,7 +10,6 @@ const config = defineConfig({
 		}),
 		react(),
 	],
-	base: "/issue-tracker/applications/application-01",
 	build: {
 		outDir: "../applications/application-01",
 		emptyOutDir: true,
