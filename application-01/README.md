@@ -2,7 +2,11 @@
 
 Status: in progress.
 
-## Technologies
+[Link to application](https://vasilii-kovalev.github.io/issue-tracker/applications/application-01)
+
+[Link to source code](https://github.com/vasilii-kovalev/issue-tracker/tree/main/application-01)
+
+Technologies:
 
 * [TypeScript](https://www.typescriptlang.org)
 * [React](https://react.dev)
