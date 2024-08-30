@@ -7,7 +7,22 @@ import reactLogo from "assets/react.svg";
 import styles from "./application.module.css";
 
 const Application: FC = () => {
-	const { uuiNotifications } = useUuiContext();
+	const handleClick = async (): Promise<void> => {
+		try {
+			await uuiNotifications.show((notificationProps) => {
+				return (
+					<NotificationCard
+						{...notificationProps}
+						color="info"
+					>
+						<Text color="primary">Hello!</Text>
+					</NotificationCard>
+				);
+			});
+		} catch (error) {
+			logError(error);
+		}
+	};
 
 	return (
 		<>
@@ -30,16 +45,7 @@ const Application: FC = () => {
 			<Button
 				caption="Click me"
 				onClick={() => {
-					void uuiNotifications.show((notificationProps) => {
-						return (
-							<NotificationCard
-								{...notificationProps}
-								color="info"
-							>
-								<Text color="primary">Hello!</Text>
-							</NotificationCard>
-						);
-					});
+					void handleClick();
 				}}
 			/>
 		</>
