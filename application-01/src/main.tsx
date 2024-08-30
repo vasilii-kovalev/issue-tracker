@@ -7,7 +7,7 @@ import { createRoot } from "react-dom/client";
 import { Router } from "react-router-dom";
 
 import { Application } from "application/application.tsx";
-import { initializeDatabase } from "models/server/utilities/initialize-database";
+import { initializeDatabase } from "models/server";
 
 import "./reset.css";
 import "@epam/uui-components/styles.css";

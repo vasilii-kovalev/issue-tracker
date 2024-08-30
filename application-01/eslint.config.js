@@ -29,6 +29,13 @@ const config = typescript.config({
 				allowConstantExport: true,
 			},
 		],
+		"@typescript-eslint/array-type": [
+			"error",
+			{
+				default: "generic",
+				readonly: "generic",
+			},
+		],
 	},
 });
 
