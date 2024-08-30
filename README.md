@@ -25,6 +25,7 @@ I use it to learn and experiment with different technologies, which I think shin
 * Supported browsers:
   * Latest Google Chrome version
   * Latest Firefox version
+* Tests included
 * Responsiveness included
 * Accessibility (a11y) included
 * Light/dark theme included
@@ -34,7 +35,7 @@ I use it to learn and experiment with different technologies, which I think shin
 
 ## Applications
 
-01. Application 01
+01. Application 01 (in progress)
     * [Link to application](https://vasilii-kovalev.github.io/issue-tracker/applications/application-01)
     * [Link to source code](https://github.com/vasilii-kovalev/issue-tracker/tree/main/application-01)
     * Technologies:

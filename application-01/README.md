@@ -1,5 +1,7 @@
 # Application 01
 
+Status: in progress.
+
 ## Technologies
 
 * [TypeScript](https://www.typescriptlang.org)
