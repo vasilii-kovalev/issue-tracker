@@ -3,10 +3,13 @@ import { useUuiContext } from "@epam/uui-core";
 import type { FC } from "react";
 
 import reactLogo from "assets/react.svg";
+import { logError } from "utilities/log-error";
 
 import styles from "./application.module.css";
 
 const Application: FC = () => {
+	const { uuiNotifications } = useUuiContext();
+
 	const handleClick = async (): Promise<void> => {
 		try {
 			await uuiNotifications.show((notificationProps) => {
