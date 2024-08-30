@@ -2,11 +2,12 @@ import { ErrorHandler, Snackbar } from "@epam/loveship";
 import { Modals } from "@epam/uui-components";
 import { DragGhost, HistoryAdaptedRouter, useUuiServices, UuiContext } from "@epam/uui-core";
 import { createBrowserHistory } from "history";
-import { type FC, StrictMode } from "react";
+import { type FC, StrictMode, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import { Router } from "react-router-dom";
 
 import { Application } from "application/application.tsx";
+import { uuiContexts } from "constants/uui-contexts";
 import { initializeDatabase } from "models/server";
 
 import "./reset.css";
@@ -29,6 +30,10 @@ if (rootElement !== null) {
 		const { services } = useUuiServices({
 			router,
 		});
+
+		useEffect(() => {
+			Object.assign(uuiContexts, services);
+		}, [services]);
 
 		return (
 			<StrictMode>
