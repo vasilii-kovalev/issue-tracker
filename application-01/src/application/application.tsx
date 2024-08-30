@@ -11,7 +11,7 @@ const Application: FC = () => {
 
 	return (
 		<>
-			<FlexRow>
+			<FlexRow spacing={null}>
 				<Text
 					color="primary"
 					fontSize="24"
