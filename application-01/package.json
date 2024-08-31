@@ -5,7 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "bunx --bun vite",
-		"build": "bunx --bun vite build --base=/issue-tracker/applications/application-01",
+		"build": "bunx --bun vite build",
 		"format:check": "bunx --bun biome format ./",
 		"format:write": "bun format:check --write",
 		"lint:biome": "bunx --bun biome lint --error-on-warnings ./",
@@ -19,7 +19,6 @@
 		"@epam/uui": "5.9.1",
 		"@epam/uui-components": "5.9.1",
 		"@epam/uui-core": "5.9.1",
-		"dexie": "4.0.8",
 		"react": "18.3.1",
 		"react-dom": "18.3.1",
 		"react-router-dom": "5.3.4"

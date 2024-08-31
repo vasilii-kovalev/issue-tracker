@@ -17,9 +17,11 @@ I use it to learn and experiment with different technologies, which I think shin
 
 ## Features
 
+* Each implementation is called "application"
 * Focus on front-end technologies mostly
-* No dedicated server. [IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API) as a database. Though endpoints do exist (as well as their API documentation), their implementation depends on the context - the endpoints are called in tests and their responses are mocked with [MWS](https://mswjs.io/), while the database is updated in development and production builds. The name of application is so simple, because in order to distinguish them, it would be necessary to list all the technologies used, which would make the name very long. To compensate it, each application has a list of used technologies (see the [applications](#applications) section below)
-* Each implementation is called "application". The applications are deployed under one GitHub page with different sub-paths in URLs (for example, `/issue-tracker/applications/application-01`). For it to work, all the applications put their artifacts in a folder with the application's name (for example, `application-01`) inside `applications` folder, located at the top level of the repository
+* Minimalistic server with MongoDB database
+* No deployed preview. Since there will be no focus on the server, its optimization and security, the server will not be deployed anywhere, which means the applications can only be observed locally - run the [server](#server) and the application you need
+  * I tried to use IndexedDB (using [Dexie](https://dexie.org)) to avoid relying on a dedicated server and serve the preview of the applications via GitHub Pages, but realized that too much code will be shipped alongside the "front-end" part, slowing it down and making the code harder to maintain
 * Markdown support in text fields (issue description, comments, etc.)
 * No query language support (like [JQL](https://www.atlassian.com/blog/jira/jql-the-most-flexible-way-to-search-jira-14)). A visual filter is provided instead
 * Supported browsers:
@@ -35,11 +37,22 @@ I use it to learn and experiment with different technologies, which I think shin
 
 ## Applications
 
-### Application 01
+### Server
 
 Status: in progress.
 
-[Link to application](https://vasilii-kovalev.github.io/issue-tracker/applications/application-01)
+[Link to source code](https://github.com/vasilii-kovalev/issue-tracker/tree/main/server)
+
+Technologies:
+
+* [Fastify](https://fastify.dev)
+* [MongoDB](https://www.mongodb.com)
+* [Mongoose](https://mongoosejs.com)
+* [Docker](https://www.docker.com)
+
+### Application 01
+
+Status: in progress.
 
 [Link to source code](https://github.com/vasilii-kovalev/issue-tracker/tree/main/application-01)
 

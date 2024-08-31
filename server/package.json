@@ -1,0 +1,16 @@
+{
+	"name": "server",
+	"type": "module",
+	"scripts": {
+		"container:stop": "docker stop issue-tracker-container",
+		"container:remove": "docker rm -f issue-tracker-container",
+		"remove-anonymous-volumes": "docker volume prune -f",
+		"start:database": "docker run -d -p 27017:27017 -v issue-tracker-volume:/data/db --name issue-tracker-container mongo:latest",
+		"stop:database": "bun run container:stop && bun run container:remove && bun run remove-anonymous-volumes",
+		"start": "bun run start:database && bun --watch ./index.ts"
+	},
+	"dependencies": {
+		"fastify": "4.28.1",
+		"mongoose": "8.6.0"
+	}
+}

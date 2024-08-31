@@ -1,14 +1,31 @@
 import { Button, FlexRow, NotificationCard, Text } from "@epam/loveship";
 import { useUuiContext } from "@epam/uui-core";
-import type { FC } from "react";
+import { useEffect, type FC } from "react";
 
 import reactLogo from "assets/react.svg";
+import type { User } from "models/user/types";
 import { logError } from "utilities/log-error";
 
 import styles from "./application.module.css";
 
 const Application: FC = () => {
 	const { uuiNotifications } = useUuiContext();
+
+	useEffect(() => {
+		const getUsers = async (): Promise<void> => {
+			try {
+				const response = await fetch("/api/users");
+
+				const users = (await response.json()) as Array<User>;
+
+				console.log(users);
+			} catch (error) {
+				logError(error);
+			}
+		};
+
+		void getUsers();
+	}, []);
 
 	const handleClick = async (): Promise<void> => {
 		try {

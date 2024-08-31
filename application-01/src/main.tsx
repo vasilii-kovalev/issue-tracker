@@ -8,7 +8,6 @@ import { Router } from "react-router-dom";
 
 import { Application } from "application/application.tsx";
 import { uuiContexts } from "constants/uui-contexts";
-import { initializeDatabase } from "models/server";
 
 import "./reset.css";
 import "@epam/uui-components/styles.css";
@@ -19,8 +18,6 @@ import "./main.css";
 const rootElement = document.getElementById("root");
 
 if (rootElement !== null) {
-	initializeDatabase();
-
 	const root = createRoot(rootElement);
 
 	const history = createBrowserHistory();
