@@ -4,10 +4,12 @@ Status: in progress.
 
 Technologies:
 
+* [TypeScript](https://www.typescriptlang.org)
 * [Fastify](https://fastify.dev)
 * [MongoDB](https://www.mongodb.com)
 * [Mongoose](https://mongoosejs.com)
 * [Docker](https://www.docker.com)
+* [Bun](https://bun.sh)
 
 ## Start/stop scripts
 

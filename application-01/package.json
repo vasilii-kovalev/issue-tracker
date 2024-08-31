@@ -11,7 +11,7 @@
 		"lint:biome": "bunx --bun biome lint --error-on-warnings ./",
 		"lint:eslint": "bunx --bun eslint .",
 		"lint": "bun run lint:biome && bun run format:check && bun lint:eslint",
-		"preview": "vite preview",
+		"preview": "bunx --bun vite preview",
 		"analyze-bundle": "bunx --bun vite-bundle-visualizer"
 	},
 	"dependencies": {

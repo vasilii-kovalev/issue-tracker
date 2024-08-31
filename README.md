@@ -45,10 +45,12 @@ Status: in progress.
 
 Technologies:
 
+* [TypeScript](https://www.typescriptlang.org)
 * [Fastify](https://fastify.dev)
 * [MongoDB](https://www.mongodb.com)
 * [Mongoose](https://mongoosejs.com)
 * [Docker](https://www.docker.com)
+* [Bun](https://bun.sh)
 
 ### Application 01
 
@@ -64,3 +66,4 @@ Technologies:
 * [UUI](https://uui.epam.com)
 * [Dexie](https://dexie.org)
 * [CSS Modules](https://github.com/css-modules/css-modules)
+* [Bun](https://bun.sh)
