@@ -11,6 +11,10 @@
 		"types:check": "tsc --noEmit --project tsconfig.app.json",
 		"lint:check": "bunx --bun eslint . --quiet"
 	},
+	"browserslist": [
+		"last 1 chrome version",
+		"last 1 firefox version"
+	],
 	"dependencies": {
 		"@epam/loveship": "5.9.1",
 		"@epam/uui": "5.9.1",
