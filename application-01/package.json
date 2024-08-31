@@ -6,9 +6,10 @@
 	"scripts": {
 		"dev": "bunx --bun vite",
 		"build": "bunx --bun vite build",
-		"lint": "bunx --bun eslint . --quiet",
 		"preview": "bunx --bun vite preview",
-		"analyze-bundle": "bunx --bun vite-bundle-visualizer"
+		"analyze-bundle": "bunx --bun vite-bundle-visualizer",
+		"types:check": "tsc --noEmit --project tsconfig.app.json",
+		"lint:check": "bunx --bun eslint . --quiet"
 	},
 	"dependencies": {
 		"@epam/loveship": "5.9.1",
