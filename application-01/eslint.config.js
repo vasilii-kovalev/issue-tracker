@@ -1,4 +1,5 @@
 import js from "@eslint/js";
+import react from "@eslint-react/eslint-plugin";
 import stylistic from "@stylistic/eslint-plugin";
 import parser from "@typescript-eslint/parser";
 import reactHooks from "eslint-plugin-react-hooks";
@@ -21,6 +22,8 @@ const config = typescript.config(
 			...typescript.configs.stylisticTypeChecked,
 			// @ts-expect-error Though the type is incorrect, the config still works.
 			stylistic.configs["all-flat"],
+			// @ts-expect-error Though the type is incorrect, the config still works.
+			react.configs["recommended-type-checked"],
 		],
 		files: [
 			"**/*.{ts,tsx}",
