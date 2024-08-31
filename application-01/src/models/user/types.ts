@@ -5,4 +5,6 @@ interface User {
 	isActive: boolean;
 }
 
-export type { User };
+export type {
+	User,
+};

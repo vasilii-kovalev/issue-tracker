@@ -1,31 +1,45 @@
-import { Button, FlexRow, NotificationCard, Text } from "@epam/loveship";
-import { useUuiContext } from "@epam/uui-core";
-import { useEffect, type FC } from "react";
-
+import {
+	Button, FlexRow, NotificationCard, Text,
+} from "@epam/loveship";
+import {
+	useUuiContext,
+} from "@epam/uui-core";
 import reactLogo from "assets/react.svg";
-import type { User } from "models/user/types";
-import { logError } from "utilities/log-error";
+import {
+	type User,
+} from "models/user/types";
+import {
+	type FC, useEffect,
+} from "react";
+import {
+	logError,
+} from "utilities/log-error";
 
 import styles from "./application.module.css";
 
 const Application: FC = () => {
-	const { uuiNotifications } = useUuiContext();
+	const {
+		uuiNotifications,
+	} = useUuiContext();
 
-	useEffect(() => {
-		const getUsers = async (): Promise<void> => {
-			try {
-				const response = await fetch("/api/users");
+	useEffect(
+		() => {
+			const getUsers = async (): Promise<void> => {
+				try {
+					const response = await fetch("/api/users");
 
-				const users = (await response.json()) as Array<User>;
+					const users = (await response.json()) as Array<User>;
 
-				console.log(users);
-			} catch (error) {
-				logError(error);
-			}
-		};
+					console.log(users);
+				} catch (error) {
+					logError(error);
+				}
+			};
 
-		void getUsers();
-	}, []);
+			void getUsers();
+		},
+		[],
+	);
 
 	const handleClick = async (): Promise<void> => {
 		try {
@@ -35,7 +49,11 @@ const Application: FC = () => {
 						{...notificationProps}
 						color="info"
 					>
-						<Text color="primary">Hello!</Text>
+						<Text
+							color="primary"
+						>
+							Hello!
+						</Text>
 					</NotificationCard>
 				);
 			});
@@ -46,7 +64,9 @@ const Application: FC = () => {
 
 	return (
 		<>
-			<FlexRow spacing={null}>
+			<FlexRow
+				spacing={null}
+			>
 				<Text
 					color="primary"
 					fontSize="24"
@@ -57,9 +77,9 @@ const Application: FC = () => {
 			</FlexRow>
 
 			<img
-				src={reactLogo}
-				className={`${styles.logo} ${styles.react}`}
 				alt="React logo"
+				className={`${styles.logo} ${styles.react}`}
+				src={reactLogo}
 			/>
 
 			<Button
@@ -72,4 +92,6 @@ const Application: FC = () => {
 	);
 };
 
-export { Application };
+export {
+	Application,
+};

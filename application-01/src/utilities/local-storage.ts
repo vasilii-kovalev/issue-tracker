@@ -1,11 +1,15 @@
-import { logError } from "./log-error";
+import {
+	logError,
+} from "./log-error";
 
 interface GetDataFromLocalStorageParams<Data> {
 	key: string;
 	defaultValue: Data;
 }
 
-const getDataFromLocalStorage = <Data>({ key, defaultValue }: GetDataFromLocalStorageParams<Data>): Data => {
+const getDataFromLocalStorage = <Data>({
+	key, defaultValue,
+}: GetDataFromLocalStorageParams<Data>): Data => {
 	try {
 		const rawData = window.localStorage.getItem(key);
 
@@ -26,11 +30,17 @@ interface SetDataToLocalStorageParams {
 	data: unknown;
 }
 
-const setDataToLocalStorage = ({ key, data }: SetDataToLocalStorageParams): void => {
+const setDataToLocalStorage = ({
+	key,
+	data,
+}: SetDataToLocalStorageParams): void => {
 	try {
 		const rawData = JSON.stringify(data);
 
-		window.localStorage.setItem(key, rawData);
+		window.localStorage.setItem(
+			key,
+			rawData,
+		);
 	} catch (error) {
 		logError(error);
 	}
@@ -44,4 +54,8 @@ const deleteDataFromLocalStorage = (key: string): void => {
 	}
 };
 
-export { getDataFromLocalStorage, setDataToLocalStorage, deleteDataFromLocalStorage };
+export {
+	deleteDataFromLocalStorage,
+	getDataFromLocalStorage,
+	setDataToLocalStorage,
+};

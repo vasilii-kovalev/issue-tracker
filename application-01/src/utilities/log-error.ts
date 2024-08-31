@@ -1,4 +1,6 @@
-import { isError } from "./is-error";
+import {
+	isError,
+} from "./is-error";
 
 const logError = <ErrorType>(error: ErrorType): ErrorType => {
 	if (isError(error)) {
@@ -8,4 +10,6 @@ const logError = <ErrorType>(error: ErrorType): ErrorType => {
 	return error;
 };
 
-export { logError };
+export {
+	logError,
+};

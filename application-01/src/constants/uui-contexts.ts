@@ -1,5 +1,9 @@
-import type { UuiContexts } from "@epam/uui-core";
+import {
+	type UuiContexts,
+} from "@epam/uui-core";
 
 const uuiContexts = {} as UuiContexts;
 
-export { uuiContexts };
+export {
+	uuiContexts,
+};
