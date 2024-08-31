@@ -1,5 +1,8 @@
 import {
-	Button, FlexRow, NotificationCard, Text,
+	Button,
+	FlexRow,
+	NotificationCard,
+	Text,
 } from "@epam/loveship";
 import {
 	useUuiContext,
@@ -9,7 +12,8 @@ import {
 	type User,
 } from "models/user/types";
 import {
-	type FC, useEffect,
+	type FC,
+	useEffect,
 } from "react";
 import {
 	logError,

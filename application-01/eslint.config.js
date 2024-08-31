@@ -2,6 +2,7 @@ import js from "@eslint/js";
 import react from "@eslint-react/eslint-plugin";
 import stylistic from "@stylistic/eslint-plugin";
 import parser from "@typescript-eslint/parser";
+import importExportNewline from "eslint-plugin-import-export-newline";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
@@ -22,8 +23,6 @@ const config = typescript.config(
 			...typescript.configs.stylisticTypeChecked,
 			// @ts-expect-error Though the type is incorrect, the config still works.
 			stylistic.configs["all-flat"],
-			// @ts-expect-error Though the type is incorrect, the config still works.
-			react.configs["recommended-type-checked"],
 		],
 		files: [
 			"**/*.{ts,tsx}",
@@ -43,10 +42,8 @@ const config = typescript.config(
 			},
 		},
 		plugins: {
-			// @ts-expect-error Legacy plugin.
-			"react-hooks": reactHooks,
-			"react-refresh": reactRefresh,
 			"simple-import-sort": simpleImportSort,
+			"import-export-newline": importExportNewline,
 		},
 		rules: {
 			// https://eslint.org/docs/latest/rules/arrow-body-style
@@ -103,21 +100,15 @@ const config = typescript.config(
 				},
 			],
 
-			// https://github.com/facebook/react/tree/main/packages/eslint-plugin-react-hooks
-			"react-hooks/exhaustive-deps": "warn",
-			// https://github.com/facebook/react/tree/main/packages/eslint-plugin-react-hooks
-			"react-hooks/rules-of-hooks": "error",
-
-			// https://github.com/ArnaudBarre/eslint-plugin-react-refresh?tab=readme-ov-file#usage
-			"react-refresh/only-export-components": [
-				"error",
-				{
-					allowConstantExport: true,
-				},
-			],
-
+			// https://github.com/lydell/eslint-plugin-simple-import-sort/?tab=readme-ov-file#usage
 			"simple-import-sort/imports": "error",
+			// https://github.com/lydell/eslint-plugin-simple-import-sort/?tab=readme-ov-file#usage
 			"simple-import-sort/exports": "error",
+
+			// https://github.com/yay/eslint-plugin-import-export-newline?tab=readme-ov-file#usage
+			"import-export-newline/import-declaration-newline": "error",
+			// https://github.com/yay/eslint-plugin-import-export-newline?tab=readme-ov-file#usage
+			"import-export-newline/export-declaration-newline": "error",
 
 			// https://eslint.style/rules/default/array-bracket-newline
 			"@stylistic/array-bracket-newline": [
@@ -853,6 +844,32 @@ const config = typescript.config(
 				{
 					before: false,
 					after: true,
+				},
+			],
+		},
+	},
+	{
+		files: [
+			"**/*.tsx",
+		],
+		extends: [
+			react.configs["recommended-type-checked"],
+		],
+		plugins: {
+			"react-hooks": reactHooks,
+			"react-refresh": reactRefresh,
+		},
+		rules: {
+			// https://github.com/facebook/react/tree/main/packages/eslint-plugin-react-hooks
+			"react-hooks/exhaustive-deps": "warn",
+			// https://github.com/facebook/react/tree/main/packages/eslint-plugin-react-hooks
+			"react-hooks/rules-of-hooks": "error",
+
+			// https://github.com/ArnaudBarre/eslint-plugin-react-refresh?tab=readme-ov-file#usage
+			"react-refresh/only-export-components": [
+				"error",
+				{
+					allowConstantExport: true,
 				},
 			],
 		},

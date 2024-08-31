@@ -5,13 +5,16 @@ import "@epam/loveship/styles.css";
 import "./main.css";
 
 import {
-	ErrorHandler, Snackbar,
+	ErrorHandler,
+	Snackbar,
 } from "@epam/loveship";
 import {
 	Modals,
 } from "@epam/uui-components";
 import {
-	DragGhost, HistoryAdaptedRouter, useUuiServices,
+	DragGhost,
+	HistoryAdaptedRouter,
+	useUuiServices,
 	UuiContext,
 } from "@epam/uui-core";
 import {
@@ -24,7 +27,9 @@ import {
 	createBrowserHistory,
 } from "history";
 import {
-	type FC, StrictMode, useEffect,
+	type FC,
+	StrictMode,
+	useEffect,
 } from "react";
 import {
 	createRoot,

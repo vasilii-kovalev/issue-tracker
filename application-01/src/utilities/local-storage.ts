@@ -8,7 +8,8 @@ interface GetDataFromLocalStorageParams<Data> {
 }
 
 const getDataFromLocalStorage = <Data>({
-	key, defaultValue,
+	key,
+	defaultValue,
 }: GetDataFromLocalStorageParams<Data>): Data => {
 	try {
 		const rawData = window.localStorage.getItem(key);
