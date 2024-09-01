@@ -63,6 +63,7 @@ const eslintConfig = config(
 		files: [
 			"**/*.{ts,tsx}",
 			"eslint.config.js",
+			"stylelint.config.js",
 		],
 		extends: [
 			js.configs.recommended,
@@ -2261,9 +2262,11 @@ const eslintConfig = config(
 	{
 		files: [
 			"eslint.config.js",
+			"stylelint.config.js",
 		],
 		rules: {
 			"no-autofix/capitalized-comments": DISABLED,
+			"no-magic-numbers": DISABLED,
 			"sort-keys": DISABLED,
 		},
 	},
