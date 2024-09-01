@@ -34,7 +34,7 @@ const Application: FC = () => {
 
 					const users = (await response.json()) as Array<User>;
 
-					console.log(users);
+					console.info(users);
 				} catch (error) {
 					logError(error);
 				}

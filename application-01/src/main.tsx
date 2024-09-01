@@ -19,10 +19,11 @@ import {
 } from "@epam/uui-core";
 import {
 	Application,
-} from "application/application.tsx";
+} from "application/application";
 import {
 	uuiContexts,
 } from "constants/uui-contexts";
+// eslint-disable-next-line import-x/no-extraneous-dependencies
 import {
 	createBrowserHistory,
 } from "history";
@@ -46,6 +47,7 @@ if (rootElement !== null) {
 	const history = createBrowserHistory();
 	const router = new HistoryAdaptedRouter(history);
 
+	// eslint-disable-next-line no-useless-assignment
 	const ApplicationWithProviders: FC = () => {
 		const {
 			services,

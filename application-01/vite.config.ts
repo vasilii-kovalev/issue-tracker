@@ -16,6 +16,7 @@ const config = defineConfig({
 	],
 	server: {
 		proxy: {
+			// eslint-disable-next-line @typescript-eslint/naming-convention
 			"/api": "http://localhost:5000",
 		},
 	},
