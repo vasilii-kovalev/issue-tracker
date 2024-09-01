@@ -9,7 +9,6 @@ import simpleImportSort from "eslint-plugin-simple-import-sort";
 import globals from "globals";
 import typescript from "typescript-eslint";
 
-/** @type {import("@typescript-eslint/utils").TSESLint.FlatConfig.ConfigArray} */
 const config = typescript.config(
 	{
 		ignores: [
@@ -17,11 +16,8 @@ const config = typescript.config(
 		],
 		extends: [
 			js.configs.recommended,
-			// @ts-expect-error Unknown type error because of `stylisticConfig` type.
 			...typescript.configs.strictTypeChecked,
-			// @ts-expect-error Unknown type error because of `stylisticConfig` type.
 			...typescript.configs.stylisticTypeChecked,
-			// @ts-expect-error Though the type is incorrect, the config still works.
 			stylistic.configs["all-flat"],
 		],
 		files: [
