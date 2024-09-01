@@ -3,6 +3,7 @@ import react from "@eslint-react/eslint-plugin";
 import stylistic from "@stylistic/eslint-plugin";
 import parser from "@typescript-eslint/parser";
 import importExportNewline from "eslint-plugin-import-export-newline";
+import noAutofix from "eslint-plugin-no-autofix";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
@@ -40,6 +41,8 @@ const config = typescript.config(
 		plugins: {
 			"simple-import-sort": simpleImportSort,
 			"import-export-newline": importExportNewline,
+			// @ts-expect-error No types provided.
+			"no-autofix": noAutofix,
 		},
 		rules: {
 			// https://eslint.org/docs/latest/rules/arrow-body-style
