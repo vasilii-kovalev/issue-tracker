@@ -1,12 +1,16 @@
 import mongoose from "mongoose";
 
+import { transformJsonPlugin } from "../utilities/schema";
+
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
-	name: {
-		type: String,
+	fullName: {
+		type: Schema.Types.String,
 	},
 });
+
+userSchema.plugin(transformJsonPlugin);
 
 const UserModel = mongoose.model(
 	"user",
