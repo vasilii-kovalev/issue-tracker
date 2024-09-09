@@ -4,7 +4,7 @@ import {
 
 import {
 	UserModel,
-} from "../models/users";
+} from "models/users";
 
 const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 	server.get(

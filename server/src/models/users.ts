@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 import {
 	transformJsonPlugin,
-} from "../utilities/schema";
+} from "utilities/schema";
 
 const { Schema } = mongoose;
 
