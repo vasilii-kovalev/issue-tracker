@@ -2,9 +2,11 @@ import mongoose from "mongoose";
 
 import {
 	transformJsonPlugin,
-} from "utilities/schema";
+} from "@/utilities/schema";
 
-const { Schema } = mongoose;
+const {
+	Schema,
+} = mongoose;
 
 const userSchema = new Schema({
 	fullName: {
@@ -22,4 +24,4 @@ const UserModel = mongoose.model(
 
 export {
 	UserModel,
-}
+};

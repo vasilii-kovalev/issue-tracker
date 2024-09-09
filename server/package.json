@@ -6,14 +6,27 @@
 		"container:remove": "docker rm -f issue-tracker-container",
 		"remove-anonymous-volumes": "docker volume prune -f",
 		"start:database": "docker run -d -p 27017:27017 -v issue-tracker-volume:/data/db --name issue-tracker-container mongo:latest",
+		"start": "bun run start:database && bun --watch ./index.ts",
 		"stop:database": "bun run container:stop && bun run container:remove && bun run remove-anonymous-volumes",
-		"start": "bun run start:database && bun --watch ./index.ts"
+		"types:check": "tsc --noEmit",
+		"eslint:check": "bunx --bun eslint . --quiet"
 	},
 	"dependencies": {
 		"fastify": "4.28.1",
 		"mongoose": "8.6.0"
 	},
 	"devDependencies": {
-		"@types/node": "22.5.4"
+		"@eslint/js": "9.9.1",
+		"@stylistic/eslint-plugin": "2.7.2",
+		"@types/node": "22.5.4",
+		"@typescript-eslint/parser": "8.3.0",
+		"eslint": "9.9.1",
+		"eslint-import-resolver-typescript": "3.6.3",
+		"eslint-plugin-import-export-newline": "1.0.0",
+		"eslint-plugin-import-x": "4.1.1",
+		"eslint-plugin-no-autofix": "2.0.0",
+		"eslint-plugin-simple-import-sort": "12.1.1",
+		"globals": "15.9.0",
+		"typescript-eslint": "8.3.0"
 	}
 }

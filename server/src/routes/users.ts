@@ -4,7 +4,7 @@ import {
 
 import {
 	UserModel,
-} from "models/users";
+} from "@/models/users";
 
 const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 	server.get(
@@ -12,7 +12,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 		async (request, response) => {
 			const users = await UserModel.find();
 
-			response.send(users);
+			void response.send(users);
 		},
 	);
 
@@ -21,4 +21,4 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 
 export {
 	usersRoutes,
-}
+};

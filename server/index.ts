@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 
 import {
 	usersRoutes,
-} from "routes/users";
+} from "@/routes/users";
 
 // Connection to database.
 mongoose.connect("mongodb://localhost:27017/issue-tracker")
@@ -15,12 +15,13 @@ mongoose.connect("mongodb://localhost:27017/issue-tracker")
 	});
 
 // Creation of server.
+// eslint-disable-next-line new-cap
 const server = Fastify({
 	logger: true,
 });
 
 // Routes.
-server.register(
+void server.register(
 	usersRoutes,
 	{
 		prefix: "/api/users",
@@ -28,6 +29,6 @@ server.register(
 );
 
 // Starting the server.
-server.listen({
+void server.listen({
 	port: 5000,
 });

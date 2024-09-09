@@ -7,7 +7,7 @@
 		"module": "ESNext",
 		"skipLibCheck": true,
 		"paths": {
-			"*": [
+			"@/*": [
 				"./src/*"
 			]
 		},
@@ -20,11 +20,13 @@
 		/* Linting */
 		"strict": true,
 		"noUnusedLocals": true,
-		"noUnusedParameters": true,
-		"noFallthroughCasesInSwitch": true
+		"noFallthroughCasesInSwitch": true,
+		// For JavaScript configs.
+		"allowJs": true
 	},
 	"include": [
+		"src",
 		"index.ts",
-		"src"
+		"eslint.config.js"
 	]
 }
