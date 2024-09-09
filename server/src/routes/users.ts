@@ -1,14 +1,24 @@
-import { UserModel } from "../models/user";
-import { UseRoutes } from "../types/server";
+import {
+	type FastifyPluginCallback,
+} from "fastify";
 
-const useUsersRoutes: UseRoutes = (server): void => {
-	server.get("/api/users", async (request, response) => {
-		const users = await UserModel.find();
+import {
+	UserModel,
+} from "../models/users";
 
-		response.send(users);
-	});
+const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
+	server.get(
+		"/",
+		async (request, response) => {
+			const users = await UserModel.find();
+
+			response.send(users);
+		},
+	);
+
+	done();
 };
 
 export {
-	useUsersRoutes,
+	usersRoutes,
 }

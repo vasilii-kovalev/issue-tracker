@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 
-import { transformJsonPlugin } from "../utilities/schema";
+import {
+	transformJsonPlugin,
+} from "../utilities/schema";
 
 const { Schema } = mongoose;
 

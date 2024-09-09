@@ -1,7 +1,9 @@
 import Fastify from "fastify";
 import mongoose from "mongoose";
 
-import { useUsersRoutes } from "./src/routes/users";
+import {
+	usersRoutes,
+} from "./src/routes/users";
 
 // Connection to database.
 mongoose.connect("mongodb://localhost:27017/issue-tracker")
@@ -18,7 +20,12 @@ const server = Fastify({
 });
 
 // Routes.
-useUsersRoutes(server);
+server.register(
+	usersRoutes,
+	{
+		prefix: "/api/users",
+	},
+);
 
 // Starting the server.
 server.listen({
