@@ -7,17 +7,18 @@ import {
 import {
 	useUuiContext,
 } from "@epam/uui-core";
-import reactLogo from "assets/react.svg";
-import {
-	type User,
-} from "models/user/types";
 import {
 	type FC,
 	useEffect,
 } from "react";
+
+import reactLogo from "@/assets/react.svg";
+import {
+	type User,
+} from "@/models/user/types";
 import {
 	logError,
-} from "utilities/log-error";
+} from "@/utilities/log-error";
 
 import styles from "./application.module.css";
 

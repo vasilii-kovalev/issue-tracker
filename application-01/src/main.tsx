@@ -17,12 +17,6 @@ import {
 	useUuiServices,
 	UuiContext,
 } from "@epam/uui-core";
-import {
-	Application,
-} from "application/application";
-import {
-	uuiContexts,
-} from "constants/uui-contexts";
 // eslint-disable-next-line import-x/no-extraneous-dependencies
 import {
 	createBrowserHistory,
@@ -38,6 +32,13 @@ import {
 import {
 	Router,
 } from "react-router-dom";
+
+import {
+	Application,
+} from "@/application/application";
+import {
+	uuiContexts,
+} from "@/constants/uui-contexts";
 
 const rootElement = document.getElementById("root");
 
