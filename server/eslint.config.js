@@ -1567,8 +1567,11 @@ const eslintConfig = config(
 						"camelCase",
 						// For map keys and enum-like objects.
 						"UPPER_CASE",
+						// For route types.
+						"PascalCase",
 					],
-					leadingUnderscore: "forbid",
+					// For "_id".
+					leadingUnderscore: "allow",
 					trailingUnderscore: "forbid",
 				},
 				// data- and aria- attributes.

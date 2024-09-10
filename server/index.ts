@@ -17,7 +17,9 @@ mongoose.connect("mongodb://localhost:27017/issue-tracker")
 // Creation of server.
 // eslint-disable-next-line new-cap
 const server = Fastify({
-	logger: true,
+	logger: {
+		level: "error",
+	},
 });
 
 // Routes.
