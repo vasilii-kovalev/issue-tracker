@@ -7,6 +7,10 @@ import {
 	ResponseStatus,
 } from "@/constants";
 import {
+	ErrorCode,
+	type ResponseError,
+} from "@/models/errors";
+import {
 	type User,
 	type UserId,
 	UserModel,
@@ -18,16 +22,26 @@ import {
 const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 	// Get users.
 	server.get<{
-		Reply: Array<User> | Error;
+		Reply: Array<User> | ResponseError;
 	}>(
 		"/",
 		async (request, response) => {
 			try {
 				const users = await UserModel.find();
 
-				void response.status(ResponseStatus.Ok).send(users);
+				void response
+					.status(ResponseStatus.OK)
+					.send(users);
 			} catch (error) {
-				void response.status(ResponseStatus.InternalServerError).send(error as Error);
+				const typedError = error as Error;
+				const status = ResponseStatus.INTERNAL_SERVER_ERROR;
+
+				void response
+					.status(status)
+					.send({
+						message: typedError.message,
+						status,
+					});
 			}
 		},
 	);
@@ -37,7 +51,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 		Params: {
 			id: UserId;
 		};
-		Reply: User | Error;
+		Reply: User | ResponseError;
 	}>(
 		"/:id",
 		async (request, response) => {
@@ -51,7 +65,17 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				const isValidId = mongoose.isValidObjectId(id);
 
 				if (!isValidId) {
-					void response.status(ResponseStatus.BadRequest);
+					const status = ResponseStatus.BAD_REQUEST;
+
+					void response
+						.status(status)
+						.send({
+							code: ErrorCode.BAD_REQUEST,
+							entities: [
+								"id",
+							],
+							status,
+						});
 
 					return;
 				}
@@ -59,14 +83,34 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				const user = await UserModel.findById(id);
 
 				if (isNull(user)) {
-					void response.status(ResponseStatus.NotFound);
+					const status = ResponseStatus.NOT_FOUND;
+
+					void response
+						.status(status)
+						.send({
+							code: ErrorCode.NOT_FOUND,
+							entities: [
+								"user",
+							],
+							status,
+						});
 
 					return;
 				}
 
-				void response.status(ResponseStatus.Ok).send(user);
+				void response
+					.status(ResponseStatus.OK)
+					.send(user);
 			} catch (error) {
-				void response.status(ResponseStatus.InternalServerError).send(error as Error);
+				const typedError = error as Error;
+				const status = ResponseStatus.INTERNAL_SERVER_ERROR;
+
+				void response
+					.status(status)
+					.send({
+						message: typedError.message,
+						status,
+					});
 			}
 		},
 	);
@@ -74,7 +118,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 	// Create user.
 	server.post<{
 		Body: User;
-		Reply: User | Error;
+		Reply: User | ResponseError;
 	}>(
 		"/create",
 		async (request, response) => {
@@ -97,9 +141,19 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 
 				await user.save();
 
-				void response.status(ResponseStatus.Created).send(user);
+				void response
+					.status(ResponseStatus.CREATED)
+					.send(user);
 			} catch (error) {
-				void response.status(ResponseStatus.InternalServerError).send(error as Error);
+				const typedError = error as Error;
+				const status = ResponseStatus.INTERNAL_SERVER_ERROR;
+
+				void response
+					.status(status)
+					.send({
+						message: typedError.message,
+						status,
+					});
 			}
 		},
 	);
@@ -110,7 +164,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 			id: UserId;
 		};
 		Body: Partial<User>;
-		Reply: User | Error;
+		Reply: User | ResponseError;
 	}>(
 		"/update/:id",
 		async (request, response) => {
@@ -130,7 +184,17 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				const isValidId = mongoose.isValidObjectId(id);
 
 				if (!isValidId) {
-					void response.status(ResponseStatus.BadRequest);
+					const status = ResponseStatus.BAD_REQUEST;
+
+					void response
+						.status(status)
+						.send({
+							code: ErrorCode.BAD_REQUEST,
+							entities: [
+								"id",
+							],
+							status,
+						});
 
 					return;
 				}
@@ -138,7 +202,17 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				const user = await UserModel.findById(id);
 
 				if (isNull(user)) {
-					void response.status(ResponseStatus.NotFound);
+					const status = ResponseStatus.NOT_FOUND;
+
+					void response
+						.status(status)
+						.send({
+							code: ErrorCode.NOT_FOUND,
+							entities: [
+								"user",
+							],
+							status,
+						});
 
 					return;
 				}
@@ -150,9 +224,19 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					userName,
 				});
 
-				void response.status(ResponseStatus.Ok).send(user);
+				void response
+					.status(ResponseStatus.OK)
+					.send(user);
 			} catch (error) {
-				void response.status(ResponseStatus.InternalServerError).send(error as Error);
+				const typedError = error as Error;
+				const status = ResponseStatus.INTERNAL_SERVER_ERROR;
+
+				void response
+					.status(status)
+					.send({
+						message: typedError.message,
+						status,
+					});
 			}
 		},
 	);
@@ -162,7 +246,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 		Params: {
 			id: UserId;
 		};
-		Reply: User | Error;
+		Reply: User | ResponseError;
 	}>(
 		"/delete/:id",
 		async (request, response) => {
@@ -176,7 +260,17 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				const isValidId = mongoose.isValidObjectId(id);
 
 				if (!isValidId) {
-					void response.status(ResponseStatus.BadRequest);
+					const status = ResponseStatus.BAD_REQUEST;
+
+					void response
+						.status(status)
+						.send({
+							code: ErrorCode.BAD_REQUEST,
+							entities: [
+								"id",
+							],
+							status,
+						});
 
 					return;
 				}
@@ -184,16 +278,36 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				const user = await UserModel.findById(id);
 
 				if (isNull(user)) {
-					void response.status(ResponseStatus.NotFound);
+					const status = ResponseStatus.NOT_FOUND;
+
+					void response
+						.status(status)
+						.send({
+							code: ErrorCode.NOT_FOUND,
+							entities: [
+								"user",
+							],
+							status,
+						});
 
 					return;
 				}
 
 				await user.deleteOne();
 
-				void response.status(ResponseStatus.Ok).send(user);
+				void response
+					.status(ResponseStatus.OK)
+					.send(user);
 			} catch (error) {
-				void response.status(ResponseStatus.InternalServerError).send(error as Error);
+				const typedError = error as Error;
+				const status = ResponseStatus.INTERNAL_SERVER_ERROR;
+
+				void response
+					.status(status)
+					.send({
+						message: typedError.message,
+						status,
+					});
 			}
 		},
 	);
