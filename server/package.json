@@ -12,7 +12,10 @@
 		"eslint:check": "bunx --bun eslint . --quiet"
 	},
 	"dependencies": {
+		"@fastify/cookie": "9.4.0",
+		"@fastify/jwt": "8.0.1",
 		"fastify": "4.28.1",
+		"fastify-plugin": "4.5.1",
 		"mongoose": "8.6.0"
 	},
 	"devDependencies": {

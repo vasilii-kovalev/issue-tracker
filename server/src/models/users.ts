@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 import {
 	transformJsonPlugin,
-} from "@/utilities/schema";
+} from "@/plugins/transform-json-plugin";
 
 const {
 	Schema,
@@ -33,7 +33,8 @@ const UserSchema = new Schema<User>(
 		},
 		password: {
 			required: true,
-			select: false,
+			// We allow to password to be present in query results, because it will be purged in `toJSON` method (see below).
+			select: true,
 			type: Schema.Types.String,
 		},
 		userName: {
@@ -81,10 +82,13 @@ UserSchema.pre(
 	},
 );
 
-UserSchema.methods.comparePassword = async function comparePassword(password: string): Promise<boolean> {
+const verifyPassword = async (
+	password: string,
+	hashedPassword: string,
+): Promise<boolean> => {
 	return await Bun.password.verify(
 		password,
-		this.password as string,
+		hashedPassword,
 	);
 };
 
@@ -98,4 +102,5 @@ export {
 	type User,
 	type UserId,
 	UserModel,
+	verifyPassword,
 };
