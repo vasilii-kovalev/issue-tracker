@@ -29,14 +29,14 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 			try {
 				const users = await UserModel.find();
 
-				void response
+				return await response
 					.status(ResponseStatus.OK)
 					.send(users);
 			} catch (error) {
 				const typedError = error as Error;
 				const status = ResponseStatus.INTERNAL_SERVER_ERROR;
 
-				void response
+				return await response
 					.status(status)
 					.send({
 						message: typedError.message,
@@ -67,7 +67,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				if (!isValidId) {
 					const status = ResponseStatus.BAD_REQUEST;
 
-					void response
+					return await response
 						.status(status)
 						.send({
 							code: ErrorCode.BAD_REQUEST,
@@ -76,8 +76,6 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 							],
 							status,
 						});
-
-					return;
 				}
 
 				const user = await UserModel.findById(id);
@@ -85,7 +83,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				if (isNull(user)) {
 					const status = ResponseStatus.NOT_FOUND;
 
-					void response
+					return await response
 						.status(status)
 						.send({
 							code: ErrorCode.NOT_FOUND,
@@ -94,18 +92,16 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 							],
 							status,
 						});
-
-					return;
 				}
 
-				void response
+				return await response
 					.status(ResponseStatus.OK)
 					.send(user);
 			} catch (error) {
 				const typedError = error as Error;
 				const status = ResponseStatus.INTERNAL_SERVER_ERROR;
 
-				void response
+				return await response
 					.status(status)
 					.send({
 						message: typedError.message,
@@ -139,16 +135,50 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					userName,
 				});
 
+				const [
+					userWithRequestEmail,
+					userWithRequestUserName,
+				] = await Promise.all([
+					UserModel.findOne({
+						email,
+					}),
+					UserModel.findOne({
+						userName,
+					}),
+				]);
+
+				const errorEntities: Array<string> = [];
+
+				if (!isNull(userWithRequestEmail)) {
+					errorEntities.push("email");
+				}
+
+				if (!isNull(userWithRequestUserName)) {
+					errorEntities.push("userName");
+				}
+
+				if (errorEntities.length > 0) {
+					const status = ResponseStatus.BAD_REQUEST;
+
+					return await response
+						.status(status)
+						.send({
+							code: ErrorCode.DUPLICATE_FIELD,
+							entities: errorEntities,
+							status,
+						});
+				}
+
 				await user.save();
 
-				void response
+				return await response
 					.status(ResponseStatus.CREATED)
 					.send(user);
 			} catch (error) {
 				const typedError = error as Error;
 				const status = ResponseStatus.INTERNAL_SERVER_ERROR;
 
-				void response
+				return await response
 					.status(status)
 					.send({
 						message: typedError.message,
@@ -186,7 +216,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				if (!isValidId) {
 					const status = ResponseStatus.BAD_REQUEST;
 
-					void response
+					return await response
 						.status(status)
 						.send({
 							code: ErrorCode.BAD_REQUEST,
@@ -195,8 +225,6 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 							],
 							status,
 						});
-
-					return;
 				}
 
 				const user = await UserModel.findById(id);
@@ -204,7 +232,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				if (isNull(user)) {
 					const status = ResponseStatus.NOT_FOUND;
 
-					void response
+					return await response
 						.status(status)
 						.send({
 							code: ErrorCode.NOT_FOUND,
@@ -213,8 +241,6 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 							],
 							status,
 						});
-
-					return;
 				}
 
 				await user.updateOne({
@@ -224,14 +250,14 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					userName,
 				});
 
-				void response
+				return await response
 					.status(ResponseStatus.OK)
 					.send(user);
 			} catch (error) {
 				const typedError = error as Error;
 				const status = ResponseStatus.INTERNAL_SERVER_ERROR;
 
-				void response
+				return await response
 					.status(status)
 					.send({
 						message: typedError.message,
@@ -262,7 +288,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				if (!isValidId) {
 					const status = ResponseStatus.BAD_REQUEST;
 
-					void response
+					return await response
 						.status(status)
 						.send({
 							code: ErrorCode.BAD_REQUEST,
@@ -271,8 +297,6 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 							],
 							status,
 						});
-
-					return;
 				}
 
 				const user = await UserModel.findById(id);
@@ -280,7 +304,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				if (isNull(user)) {
 					const status = ResponseStatus.NOT_FOUND;
 
-					void response
+					return await response
 						.status(status)
 						.send({
 							code: ErrorCode.NOT_FOUND,
@@ -289,20 +313,18 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 							],
 							status,
 						});
-
-					return;
 				}
 
 				await user.deleteOne();
 
-				void response
+				return await response
 					.status(ResponseStatus.OK)
 					.send(user);
 			} catch (error) {
 				const typedError = error as Error;
 				const status = ResponseStatus.INTERNAL_SERVER_ERROR;
 
-				void response
+				return await response
 					.status(status)
 					.send({
 						message: typedError.message,

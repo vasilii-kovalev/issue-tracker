@@ -3,8 +3,9 @@ import {
 } from "@/constants";
 
 enum ErrorCode {
-	INTERNAL_SERVER_ERROR = "errors.internalServerError",
 	BAD_REQUEST = "errors.badRequest",
+	DUPLICATE_FIELD = "errors.duplicateField",
+	INTERNAL_SERVER_ERROR = "errors.internalServerError",
 	NOT_FOUND = "errors.notFound",
 }
 
