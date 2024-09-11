@@ -17,7 +17,7 @@ interface User {
 	userName: string;
 }
 
-const userSchema = new Schema<User>(
+const UserSchema = new Schema<User>(
 	{
 		displayedName: {
 			required: true,
@@ -59,11 +59,38 @@ const userSchema = new Schema<User>(
 	},
 );
 
-userSchema.plugin(transformJsonPlugin);
+UserSchema.plugin(transformJsonPlugin);
+
+UserSchema.pre(
+	"save",
+	// In this case, function declaration is required to correctly work with `this`.
+	// eslint-disable-next-line prefer-arrow-callback
+	async function preSave(next) {
+		try {
+			if (
+				this.isModified("password")
+				|| this.isNew
+			) {
+				const hashedPassword = await Bun.password.hash(this.password);
+
+				this.password = hashedPassword;
+			}
+		} catch (error) {
+			next(error as Error);
+		}
+	},
+);
+
+UserSchema.methods.comparePassword = async function comparePassword(password: string): Promise<boolean> {
+	return await Bun.password.verify(
+		password,
+		this.password as string,
+	);
+};
 
 const UserModel = mongoose.model(
 	"user",
-	userSchema,
+	UserSchema,
 	"users",
 );
 
