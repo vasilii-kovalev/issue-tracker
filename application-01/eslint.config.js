@@ -535,22 +535,8 @@ const eslintConfig = config(
 			// https://eslint.org/docs/latest/rules/no-loop-func
 			"no-loop-func": ERROR,
 			// https://eslint.org/docs/latest/rules/no-magic-numbers
-			"no-magic-numbers": [
-				/*
-					The severity is set to "error" to discourage adding undocumented code. Instead of adding a comment about
-					meaning of this or that number, it is better to create a constant with a clear name.
-				*/
-				ERROR,
-				{
-					ignore: [
-						-1,
-						0,
-						1,
-					],
-					// We may define array indices on-the-fly, so we don't need to check this case.
-					enforceConst: true,
-				},
-			],
+			// This rule is disabled because it hinders more than helps.
+			"no-magic-numbers": DISABLED,
 			// https://eslint.org/docs/latest/rules/no-multi-assign
 			"no-multi-assign": ERROR,
 			// https://eslint.org/docs/latest/rules/no-multi-str
@@ -1717,17 +1703,8 @@ const eslintConfig = config(
 			// https://typescript-eslint.io/rules/no-loop-func
 			"@typescript-eslint/no-loop-func": ERROR,
 			// https://typescript-eslint.io/rules/no-magic-numbers
-			"@typescript-eslint/no-magic-numbers": [
-				ERROR,
-				{
-					ignore: [
-						-1,
-						0,
-						1,
-					],
-					enforceConst: true,
-				},
-			],
+			// This rule is disabled because it hinders more than helps.
+			"@typescript-eslint/no-magic-numbers": DISABLED,
 			// https://typescript-eslint.io/rules/no-meaningless-void-operator
 			"@typescript-eslint/no-meaningless-void-operator": ERROR,
 			// https://typescript-eslint.io/rules/no-misused-new
@@ -2266,7 +2243,6 @@ const eslintConfig = config(
 		],
 		rules: {
 			"no-autofix/capitalized-comments": DISABLED,
-			"no-magic-numbers": DISABLED,
 			"sort-keys": DISABLED,
 		},
 	},

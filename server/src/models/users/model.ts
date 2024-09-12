@@ -31,7 +31,6 @@ const UserSchema = new Schema<User>(
 		email: {
 			lowercase: true,
 			minlength: [
-				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 				3,
 				ErrorCode.USERS_DISPLAYED_EMAIL_MIN_LENGTH,
 			],
@@ -45,7 +44,6 @@ const UserSchema = new Schema<User>(
 		},
 		password: {
 			minlength: [
-				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 				3,
 				ErrorCode.USERS_DISPLAYED_PASSWORD_MIN_LENGTH,
 			],

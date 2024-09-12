@@ -1,6 +1,5 @@
 // Inspired by: https://github.com/axios/axios/blob/v1.x/lib/helpers/HttpStatusCode.js
 enum ResponseStatus {
-	/* eslint-disable @typescript-eslint/no-magic-numbers */
 	// Successful responses.
 	OK = 200,
 	CREATED = 201,
@@ -14,7 +13,6 @@ enum ResponseStatus {
 
 	// Server error responses.
 	INTERNAL_SERVER_ERROR = 500,
-	/* eslint-enable */
 }
 
 export {
