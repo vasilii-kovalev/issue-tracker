@@ -31,6 +31,9 @@ import {
 	type UserId,
 } from "@/models/users/types";
 import {
+	getUserValidationErrors,
+} from "@/models/users/utilities/get-user-validation-errors";
+import {
 	type ErrorResponse,
 	type MongooseValidationError,
 } from "@/types/errors";
@@ -153,6 +156,17 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 			} catch (error) {
 				const typedError = error as Error | MongooseValidationError;
 
+				if ("errors" in typedError) {
+					const validationErrors = getUserValidationErrors(typedError);
+
+					return await response
+						.status(ResponseStatus.BAD_REQUEST)
+						.send({
+							message: typedError.message,
+							validationErrors,
+						});
+				}
+
 				return await response
 					.status(ResponseStatus.INTERNAL_SERVER_ERROR)
 					.send({
@@ -235,6 +249,17 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					.send(user);
 			} catch (error) {
 				const typedError = error as Error | MongooseValidationError;
+
+				if ("errors" in typedError) {
+					const validationErrors = getUserValidationErrors(typedError);
+
+					return await response
+						.status(ResponseStatus.BAD_REQUEST)
+						.send({
+							message: typedError.message,
+							validationErrors,
+						});
+				}
 
 				return await response
 					.status(ResponseStatus.INTERNAL_SERVER_ERROR)

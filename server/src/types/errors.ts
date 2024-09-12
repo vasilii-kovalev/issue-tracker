@@ -3,8 +3,8 @@ import type mongoose from "mongoose";
 type MongooseValidationError = mongoose.Error.ValidationError;
 
 interface ValidationError {
-	entity: string;
 	message: string;
+	path: string;
 }
 
 interface ErrorResponseWithMessage {
@@ -22,4 +22,5 @@ type ErrorResponse =
 export type {
 	ErrorResponse,
 	MongooseValidationError,
+	ValidationError,
 };
