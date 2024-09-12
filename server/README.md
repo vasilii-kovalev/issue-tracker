@@ -45,3 +45,7 @@ It does the following:
 1. Stops the Docker container with name
 2. Removes the container (because it won't be possible to create a container with the same name next time)
 3. Removes all anonymous volumes (for some reason, when starting the container, a new anonymous volume is created and runs alongside with "issue-tracker-volume" one, though it doesn't contain any data)
+
+## Swagger
+
+After starting the server (see above), visit http://localhost:5000/swagger.

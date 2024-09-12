@@ -42,15 +42,39 @@ import {
 } from "@/utilities/is-null";
 
 const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
-	// Get users.
 	server.get<{
 		Reply: Array<User> | ErrorResponse;
 	}>(
-		"/",
+		"",
 		{
 			onRequest: [
 				checkJwt,
 			],
+			schema: {
+				response: {
+					// eslint-disable-next-line @typescript-eslint/naming-convention
+					200: {
+						items: {
+							$ref: "UserSchema",
+						},
+						type: "array",
+					},
+					// eslint-disable-next-line @typescript-eslint/naming-convention
+					401: {
+						$ref: "ErrorResponseWithMessageSchema",
+						description: "Unauthorized",
+					},
+					// eslint-disable-next-line @typescript-eslint/naming-convention
+					500: {
+						$ref: "ErrorResponseWithMessageSchema",
+						description: "Internal server error",
+					},
+				},
+				summary: "Get users",
+				tags: [
+					"users",
+				],
+			},
 		},
 		async (request, response) => {
 			try {
@@ -71,7 +95,6 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 		},
 	);
 
-	// Get user.
 	server.get<{
 		Params: {
 			id: UserId;
@@ -84,6 +107,47 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				checkJwt,
 				checkUserIdValidity,
 			],
+			schema: {
+				params: {
+					properties: {
+						id: {
+							description: "User ID",
+							type: "string",
+						},
+					},
+					type: "object",
+				},
+				response: {
+					// eslint-disable-next-line @typescript-eslint/naming-convention
+					200: {
+						$ref: "UserSchema",
+					},
+					// eslint-disable-next-line @typescript-eslint/naming-convention
+					400: {
+						$ref: "ErrorResponseWithMessageSchema",
+						description: "Invalid user ID",
+					},
+					// eslint-disable-next-line @typescript-eslint/naming-convention
+					401: {
+						$ref: "ErrorResponseWithMessageSchema",
+						description: "Unauthorized",
+					},
+					// eslint-disable-next-line @typescript-eslint/naming-convention
+					404: {
+						$ref: "ErrorResponseWithMessageSchema",
+						description: "User with provided user ID doesn't exist",
+					},
+					// eslint-disable-next-line @typescript-eslint/naming-convention
+					500: {
+						$ref: "ErrorResponseWithMessageSchema",
+						description: "Internal server error",
+					},
+				},
+				summary: "Get user",
+				tags: [
+					"users",
+				],
+			},
 		},
 		async (request, response) => {
 			try {
@@ -118,7 +182,6 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 		},
 	);
 
-	// Create user.
 	server.post<{
 		Body: User;
 		Reply: User | ErrorResponse;
@@ -131,6 +194,41 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					PermissionId.CAN_MANAGE_USERS,
 				]),
 			],
+			schema: {
+				body: {
+					$ref: "UserCreateSchema",
+				},
+				response: {
+					// eslint-disable-next-line @typescript-eslint/naming-convention
+					201: {
+						$ref: "UserSchema",
+					},
+					// eslint-disable-next-line @typescript-eslint/naming-convention
+					400: {
+						$ref: "ErrorResponseWithValidationErrorsSchema",
+						description: "Validation errors",
+					},
+					// eslint-disable-next-line @typescript-eslint/naming-convention
+					401: {
+						$ref: "ErrorResponseWithMessageSchema",
+						description: "Unauthorized",
+					},
+					// eslint-disable-next-line @typescript-eslint/naming-convention
+					403: {
+						description: "Forbidden by permissions",
+						type: "null",
+					},
+					// eslint-disable-next-line @typescript-eslint/naming-convention
+					500: {
+						$ref: "ErrorResponseWithMessageSchema",
+						description: "Internal server error",
+					},
+				},
+				summary: "Create user",
+				tags: [
+					"users",
+				],
+			},
 		},
 		async (request, response) => {
 			try {
@@ -190,6 +288,47 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				checkJwt,
 				checkUserIdValidity,
 			],
+			schema: {
+				params: {
+					properties: {
+						id: {
+							description: "User ID",
+							type: "string",
+						},
+					},
+					type: "object",
+				},
+				response: {
+					// eslint-disable-next-line @typescript-eslint/naming-convention
+					200: {
+						$ref: "UserSchema",
+					},
+					// eslint-disable-next-line @typescript-eslint/naming-convention
+					400: {
+						$ref: "ErrorResponseWithValidationErrorsSchema",
+						description: "Invalid user ID (only `message` is returned) or validation errors",
+					},
+					// eslint-disable-next-line @typescript-eslint/naming-convention
+					401: {
+						$ref: "ErrorResponseWithMessageSchema",
+						description: "Unauthorized",
+					},
+					// eslint-disable-next-line @typescript-eslint/naming-convention
+					404: {
+						$ref: "ErrorResponseWithMessageSchema",
+						description: "User with provided user ID doesn't exist",
+					},
+					// eslint-disable-next-line @typescript-eslint/naming-convention
+					500: {
+						$ref: "ErrorResponseWithMessageSchema",
+						description: "Internal server error",
+					},
+				},
+				summary: "Get user",
+				tags: [
+					"users",
+				],
+			},
 		},
 		async (request, response) => {
 			try {
@@ -201,6 +340,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 						displayedName,
 						email,
 						password,
+						roles,
 					},
 				} = request;
 
@@ -230,6 +370,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 						displayedName,
 						email,
 						password,
+						roles,
 					},
 					{
 						new: true,
@@ -270,7 +411,6 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 		},
 	);
 
-	// Delete user.
 	server.delete<{
 		Params: {
 			id: UserId;
@@ -286,6 +426,52 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				]),
 				checkUserIdValidity,
 			],
+			schema: {
+				params: {
+					properties: {
+						id: {
+							description: "User ID",
+							type: "string",
+						},
+					},
+					type: "object",
+				},
+				response: {
+					// eslint-disable-next-line @typescript-eslint/naming-convention
+					200: {
+						$ref: "UserSchema",
+					},
+					// eslint-disable-next-line @typescript-eslint/naming-convention
+					400: {
+						$ref: "ErrorResponseWithMessageSchema",
+						description: "Invalid user ID",
+					},
+					// eslint-disable-next-line @typescript-eslint/naming-convention
+					401: {
+						$ref: "ErrorResponseWithMessageSchema",
+						description: "Unauthorized",
+					},
+					// eslint-disable-next-line @typescript-eslint/naming-convention
+					403: {
+						description: "Forbidden by permissions",
+						type: "null",
+					},
+					// eslint-disable-next-line @typescript-eslint/naming-convention
+					404: {
+						$ref: "ErrorResponseWithMessageSchema",
+						description: "User with provided user ID doesn't exist",
+					},
+					// eslint-disable-next-line @typescript-eslint/naming-convention
+					500: {
+						$ref: "ErrorResponseWithMessageSchema",
+						description: "Internal server error",
+					},
+				},
+				summary: "Delete user",
+				tags: [
+					"users",
+				],
+			},
 		},
 		async (request, response) => {
 			try {

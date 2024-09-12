@@ -1,5 +1,7 @@
 import cookie from "@fastify/cookie";
 import jwt from "@fastify/jwt";
+import swagger from "@fastify/swagger";
+import swaggerUi from "@fastify/swagger-ui";
 import Fastify from "fastify";
 import mongoose from "mongoose";
 
@@ -9,6 +11,9 @@ import {
 import {
 	usersRoutes,
 } from "@/routes/users";
+import {
+	addSchemas,
+} from "@/schemas/utilities/add-schemas";
 
 // Connection to database.
 mongoose.connect("mongodb://localhost:27017/issue-tracker")
@@ -41,18 +46,30 @@ void server.register(
 
 void server.register(cookie);
 
-// Routes.
+void server.register(swagger);
+
 void server.register(
-	usersRoutes,
+	swaggerUi,
 	{
-		prefix: "/api/users",
+		routePrefix: "/swagger",
 	},
 );
 
+// Schemas.
+addSchemas(server);
+
+// Routes.
 void server.register(
 	authRoutes,
 	{
 		prefix: "/api/auth",
+	},
+);
+
+void server.register(
+	usersRoutes,
+	{
+		prefix: "/api/users",
 	},
 );
 

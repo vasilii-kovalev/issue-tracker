@@ -25,12 +25,44 @@ import {
 } from "@/utilities/is-null";
 
 const authRoutes: FastifyPluginCallback = (server, options, done): void => {
-	// Login a user.
 	server.post<{
 		Body: Pick<User, "email" | "password">;
 		Reply: User | ErrorResponse;
 	}>(
 		"/login",
+		{
+			schema: {
+				body: {
+					$ref: "UserLoginSchema",
+				},
+				description: `Sets "${COOKIE_JWT_TOKEN_NAME}" JWT cookie in headers.`,
+				response: {
+					// eslint-disable-next-line @typescript-eslint/naming-convention
+					200: {
+						type: "null",
+					},
+					// eslint-disable-next-line @typescript-eslint/naming-convention
+					400: {
+						$ref: "ErrorResponseWithMessageSchema",
+						description: "Incorrect password",
+					},
+					// eslint-disable-next-line @typescript-eslint/naming-convention
+					404: {
+						$ref: "ErrorResponseWithMessageSchema",
+						description: "User with provided email doesn't exist",
+					},
+					// eslint-disable-next-line @typescript-eslint/naming-convention
+					500: {
+						$ref: "ErrorResponseWithMessageSchema",
+						description: "Internal server error",
+					},
+				},
+				summary: "Login a user",
+				tags: [
+					"auth",
+				],
+			},
+		},
 		async (request, response) => {
 			try {
 				const {
@@ -89,11 +121,30 @@ const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 		},
 	);
 
-	// Logout a user.
 	server.post<{
 		Reply: undefined | ErrorResponse;
 	}>(
 		"/logout",
+		{
+			schema: {
+				description: `Removes "${COOKIE_JWT_TOKEN_NAME}" JWT cookie in headers.`,
+				response: {
+					// eslint-disable-next-line @typescript-eslint/naming-convention
+					200: {
+						type: "null",
+					},
+					// eslint-disable-next-line @typescript-eslint/naming-convention
+					500: {
+						$ref: "ErrorResponseWithMessageSchema",
+						description: "Internal server error",
+					},
+				},
+				summary: "Logout a user",
+				tags: [
+					"auth",
+				],
+			},
+		},
 		async (request, response) => {
 			try {
 				return await response
