@@ -1,12 +1,12 @@
 import {
 	type FastifyInstance,
 	type FastifyRequest,
-	type onRequestAsyncHookHandler,
 } from "fastify";
 
 import {
-	ResponseStatus,
-} from "@/constants";
+	type User,
+	type UserId,
+} from "@/models/users/types";
 import {
 	isNull,
 } from "@/utilities/is-null";
@@ -15,14 +15,8 @@ import {
 } from "@/utilities/is-undefined";
 
 import {
-	ErrorCode,
-} from "./errors";
-import {
-	type User,
-	type UserId,
-} from "./users";
-
-const COOKIE_JWT_TOKEN_NAME = "token";
+	COOKIE_JWT_TOKEN_NAME,
+} from "../constants";
 
 interface JwtPayload {
 	payload: User;
@@ -49,25 +43,6 @@ const getUserIdFromJwtCookie = (
 	return decodedToken.payload.id;
 };
 
-const checkJwt: onRequestAsyncHookHandler = async (request, response) => {
-	try {
-		await request.jwtVerify();
-	} catch (error) {
-		const typedError = error as Error;
-		const status = ResponseStatus.UNAUTHORIZED;
-
-		return await response
-			.status(status)
-			.send({
-				code: ErrorCode.UNAUTHORIZED,
-				message: typedError.message,
-				status,
-			});
-	}
-};
-
 export {
-	checkJwt,
-	COOKIE_JWT_TOKEN_NAME,
 	getUserIdFromJwtCookie,
 };

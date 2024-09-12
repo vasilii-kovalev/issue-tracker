@@ -5,23 +5,12 @@ import {
 } from "@/plugins/transform-json-plugin";
 
 import {
-	type RoleId,
-} from "./permissions";
+	type User,
+} from "./types";
 
 const {
 	Schema,
 } = mongoose;
-
-type UserId = string;
-
-interface User {
-	displayedName: string;
-	email: string;
-	id: UserId;
-	password: string;
-	userName: string;
-	roles: Array<RoleId>;
-}
 
 const UserSchema = new Schema<User>(
 	{
@@ -91,16 +80,6 @@ UserSchema.pre(
 	},
 );
 
-const verifyPassword = async (
-	password: string,
-	hashedPassword: string,
-): Promise<boolean> => {
-	return await Bun.password.verify(
-		password,
-		hashedPassword,
-	);
-};
-
 const UserModel = mongoose.model(
 	"user",
 	UserSchema,
@@ -108,8 +87,5 @@ const UserModel = mongoose.model(
 );
 
 export {
-	type User,
-	type UserId,
 	UserModel,
-	verifyPassword,
 };

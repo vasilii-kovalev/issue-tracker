@@ -8,22 +8,32 @@ import {
 } from "@/constants";
 import {
 	checkJwt,
+} from "@/models/auth/middleware/check-jwt";
+import {
 	getUserIdFromJwtCookie,
-} from "@/models/auth";
+} from "@/models/auth/utilities/get-user-id-from-jwt-cookie";
 import {
 	ErrorCode,
-	type ResponseError,
-} from "@/models/errors";
+} from "@/models/errors/constants";
+import {
+	type ErrorResponse,
+} from "@/models/errors/types";
+import {
+	PermissionId,
+} from "@/models/permissions/constants";
 import {
 	checkPermissions,
+} from "@/models/permissions/middleware/check-permissions";
+import {
 	hasPermissions,
-	PermissionId,
-} from "@/models/permissions";
+} from "@/models/permissions/utilities/has-permissions";
+import {
+	UserModel,
+} from "@/models/users/model";
 import {
 	type User,
 	type UserId,
-	UserModel,
-} from "@/models/users";
+} from "@/models/users/types";
 import {
 	isNull,
 } from "@/utilities/is-null";
@@ -31,7 +41,7 @@ import {
 const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 	// Get users.
 	server.get<{
-		Reply: Array<User> | ResponseError;
+		Reply: Array<User> | ErrorResponse;
 	}>(
 		"/",
 		{
@@ -65,7 +75,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 		Params: {
 			id: UserId;
 		};
-		Reply: User | ResponseError;
+		Reply: User | ErrorResponse;
 	}>(
 		"/:id",
 		{
@@ -133,7 +143,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 	// Create user.
 	server.post<{
 		Body: User;
-		Reply: User | ResponseError;
+		Reply: User | ErrorResponse;
 	}>(
 		"/create",
 		{
@@ -223,7 +233,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 			id: UserId;
 		};
 		Body: Partial<User>;
-		Reply: User | ResponseError;
+		Reply: User | ErrorResponse;
 	}>(
 		"/update/:id",
 		{
@@ -334,7 +344,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 		Params: {
 			id: UserId;
 		};
-		Reply: User | ResponseError;
+		Reply: User | ErrorResponse;
 	}>(
 		"/delete/:id",
 		{

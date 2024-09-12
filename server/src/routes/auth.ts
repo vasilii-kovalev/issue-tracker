@@ -7,16 +7,22 @@ import {
 } from "@/constants";
 import {
 	COOKIE_JWT_TOKEN_NAME,
-} from "@/models/auth";
+} from "@/models/auth/constants";
 import {
 	ErrorCode,
-	type ResponseError,
-} from "@/models/errors";
+} from "@/models/errors/constants";
+import {
+	type ErrorResponse,
+} from "@/models/errors/types";
+import {
+	UserModel,
+} from "@/models/users/model";
 import {
 	type User,
-	UserModel,
-	verifyPassword,
-} from "@/models/users";
+} from "@/models/users/types";
+import {
+	verifyUserPassword,
+} from "@/models/users/utilities/verify-user-password";
 import {
 	isNull,
 } from "@/utilities/is-null";
@@ -25,7 +31,7 @@ const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 	// Login a user.
 	server.post<{
 		Body: Pick<User, "email" | "password">;
-		Reply: User | ResponseError;
+		Reply: User | ErrorResponse;
 	}>(
 		"/login",
 		async (request, response) => {
@@ -53,7 +59,7 @@ const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 						});
 				}
 
-				const isPasswordCorrect = await verifyPassword(
+				const isPasswordCorrect = await verifyUserPassword(
 					password,
 					user.password,
 				);
@@ -69,7 +75,7 @@ const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 								"password",
 							],
 							status,
-						} satisfies ResponseError);
+						});
 				}
 
 				const token = server.jwt.sign({
@@ -102,7 +108,7 @@ const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 
 	// Logout a user.
 	server.post<{
-		Reply: undefined | ResponseError;
+		Reply: undefined | ErrorResponse;
 	}>(
 		"/logout",
 		async (request, response) => {
