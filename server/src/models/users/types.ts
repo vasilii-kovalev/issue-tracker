@@ -9,7 +9,6 @@ interface User {
 	email: string;
 	id: UserId;
 	password: string;
-	userName: string;
 	roles: Array<RoleId>;
 }
 

@@ -137,7 +137,6 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 						email,
 						password,
 						roles,
-						userName,
 					},
 				} = request;
 
@@ -146,7 +145,6 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					email,
 					password,
 					roles,
-					userName,
 				});
 
 				return await response
@@ -189,7 +187,6 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 						displayedName,
 						email,
 						password,
-						userName,
 					},
 				} = request;
 
@@ -219,7 +216,6 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 						displayedName,
 						email,
 						password,
-						userName,
 					},
 					{
 						new: true,

@@ -79,17 +79,6 @@ const UserSchema = new Schema<User>(
 				},
 			],
 		},
-		userName: {
-			lowercase: true,
-			required: [
-				true,
-				"User name is required.",
-			],
-			trim: true,
-			type: Schema.Types.String,
-			// TODO: Add a custom error for this validation.
-			unique: true,
-		},
 	},
 	{
 		toJSON: {
