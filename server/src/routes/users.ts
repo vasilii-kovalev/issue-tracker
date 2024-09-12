@@ -16,6 +16,7 @@ import {
 } from "@/models/errors/constants";
 import {
 	type ErrorResponse,
+	type ValidationError,
 } from "@/models/errors/types";
 import {
 	PermissionId,
@@ -165,7 +166,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					.status(ResponseStatus.CREATED)
 					.send(user);
 			} catch (error) {
-				const typedError = error as Error;
+				const typedError = error as Error | ValidationError;
 				const status = ResponseStatus.INTERNAL_SERVER_ERROR;
 
 				return await response
@@ -262,7 +263,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					.status(ResponseStatus.OK)
 					.send(user);
 			} catch (error) {
-				const typedError = error as Error;
+				const typedError = error as Error | ValidationError;
 				const status = ResponseStatus.INTERNAL_SERVER_ERROR;
 
 				return await response

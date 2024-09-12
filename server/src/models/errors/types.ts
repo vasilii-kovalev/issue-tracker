@@ -1,3 +1,5 @@
+import type mongoose from "mongoose";
+
 import {
 	type ResponseStatus,
 } from "@/constants";
@@ -5,6 +7,8 @@ import {
 import {
 	type ErrorCode,
 } from "./constants";
+
+type ValidationError = mongoose.Error.ValidationError;
 
 interface ErrorResponse {
 	status: ResponseStatus;
@@ -15,4 +19,5 @@ interface ErrorResponse {
 
 export type {
 	ErrorResponse,
+	ValidationError,
 };
