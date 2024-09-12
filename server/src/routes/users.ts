@@ -1,7 +1,6 @@
 import {
 	type FastifyPluginCallback,
 } from "fastify";
-import mongoose from "mongoose";
 
 import {
 	ResponseStatus,
@@ -27,6 +26,9 @@ import {
 import {
 	hasPermissions,
 } from "@/models/permissions/utilities/has-permissions";
+import {
+	checkUserIdValidity,
+} from "@/models/users/middleware/check-user-id-validity";
 import {
 	UserModel,
 } from "@/models/users/model";
@@ -81,6 +83,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 		{
 			onRequest: [
 				checkJwt,
+				checkUserIdValidity,
 			],
 		},
 		async (request, response) => {
@@ -90,22 +93,6 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 						id,
 					},
 				} = request;
-
-				const isValidId = mongoose.isValidObjectId(id);
-
-				if (!isValidId) {
-					const status = ResponseStatus.BAD_REQUEST;
-
-					return await response
-						.status(status)
-						.send({
-							code: ErrorCode.BAD_REQUEST,
-							entities: [
-								"id",
-							],
-							status,
-						});
-				}
 
 				const user = await UserModel.findById(id);
 
@@ -166,49 +153,13 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					},
 				} = request;
 
-				const user = new UserModel({
+				const user = await UserModel.create({
 					displayedName,
 					email,
 					password,
 					roles,
 					userName,
 				});
-
-				const [
-					userWithRequestEmail,
-					userWithRequestUserName,
-				] = await Promise.all([
-					UserModel.findOne({
-						email,
-					}),
-					UserModel.findOne({
-						userName,
-					}),
-				]);
-
-				const errorEntities: Array<string> = [];
-
-				if (!isNull(userWithRequestEmail)) {
-					errorEntities.push("email");
-				}
-
-				if (!isNull(userWithRequestUserName)) {
-					errorEntities.push("userName");
-				}
-
-				if (errorEntities.length > 0) {
-					const status = ResponseStatus.BAD_REQUEST;
-
-					return await response
-						.status(status)
-						.send({
-							code: ErrorCode.DUPLICATE_FIELD,
-							entities: errorEntities,
-							status,
-						});
-				}
-
-				await user.save();
 
 				return await response
 					.status(ResponseStatus.CREATED)
@@ -239,6 +190,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 		{
 			onRequest: [
 				checkJwt,
+				checkUserIdValidity,
 			],
 		},
 		async (request, response) => {
@@ -254,22 +206,6 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 						userName,
 					},
 				} = request;
-
-				const isValidId = mongoose.isValidObjectId(id);
-
-				if (!isValidId) {
-					const status = ResponseStatus.BAD_REQUEST;
-
-					return await response
-						.status(status)
-						.send({
-							code: ErrorCode.BAD_REQUEST,
-							entities: [
-								"id",
-							],
-							status,
-						});
-				}
 
 				const userIdFromJwtCookie = getUserIdFromJwtCookie(
 					server,
@@ -353,6 +289,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				checkPermissions([
 					PermissionId.CAN_MANAGE_USERS,
 				]),
+				checkUserIdValidity,
 			],
 		},
 		async (request, response) => {
@@ -362,22 +299,6 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 						id,
 					},
 				} = request;
-
-				const isValidId = mongoose.isValidObjectId(id);
-
-				if (!isValidId) {
-					const status = ResponseStatus.BAD_REQUEST;
-
-					return await response
-						.status(status)
-						.send({
-							code: ErrorCode.BAD_REQUEST,
-							entities: [
-								"id",
-							],
-							status,
-						});
-				}
 
 				const user = await UserModel.findByIdAndDelete(id);
 
