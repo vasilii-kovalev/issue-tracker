@@ -7,9 +7,18 @@ import {
 	ResponseStatus,
 } from "@/constants";
 import {
+	checkJwt,
+	getUserIdFromJwtCookie,
+} from "@/models/auth";
+import {
 	ErrorCode,
 	type ResponseError,
 } from "@/models/errors";
+import {
+	checkPermissions,
+	hasPermissions,
+	PermissionId,
+} from "@/models/permissions";
 import {
 	type User,
 	type UserId,
@@ -25,6 +34,11 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 		Reply: Array<User> | ResponseError;
 	}>(
 		"/",
+		{
+			onRequest: [
+				checkJwt,
+			],
+		},
 		async (request, response) => {
 			try {
 				const users = await UserModel.find();
@@ -54,6 +68,11 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 		Reply: User | ResponseError;
 	}>(
 		"/:id",
+		{
+			onRequest: [
+				checkJwt,
+			],
+		},
 		async (request, response) => {
 			try {
 				const {
@@ -117,6 +136,14 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 		Reply: User | ResponseError;
 	}>(
 		"/create",
+		{
+			onRequest: [
+				checkJwt,
+				checkPermissions([
+					PermissionId.CAN_MANAGE_USERS,
+				]),
+			],
+		},
 		async (request, response) => {
 			try {
 				const {
@@ -124,6 +151,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 						displayedName,
 						email,
 						password,
+						roles,
 						userName,
 					},
 				} = request;
@@ -132,6 +160,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					displayedName,
 					email,
 					password,
+					roles,
 					userName,
 				});
 
@@ -197,6 +226,11 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 		Reply: User | ResponseError;
 	}>(
 		"/update/:id",
+		{
+			onRequest: [
+				checkJwt,
+			],
+		},
 		async (request, response) => {
 			try {
 				const {
@@ -227,7 +261,42 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 						});
 				}
 
-				const user = await UserModel.findById(id);
+				const userIdFromJwtCookie = getUserIdFromJwtCookie(
+					server,
+					request,
+				);
+
+				if (userIdFromJwtCookie !== id) {
+					const hasPermissionsForRequest = await hasPermissions(
+						userIdFromJwtCookie,
+						[
+							PermissionId.CAN_MANAGE_USERS,
+						],
+					);
+
+					if (!hasPermissionsForRequest) {
+						const status = ResponseStatus.FORBIDDEN;
+
+						return await response
+							.status(status)
+							.send({
+								status,
+							});
+					}
+				}
+
+				const user = await UserModel.findByIdAndUpdate(
+					id,
+					{
+						displayedName,
+						email,
+						password,
+						userName,
+					},
+					{
+						new: true,
+					},
+				);
 
 				if (isNull(user)) {
 					const status = ResponseStatus.NOT_FOUND;
@@ -242,13 +311,6 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 							status,
 						});
 				}
-
-				await user.updateOne({
-					displayedName,
-					email,
-					password,
-					userName,
-				});
 
 				return await response
 					.status(ResponseStatus.OK)
@@ -275,6 +337,14 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 		Reply: User | ResponseError;
 	}>(
 		"/delete/:id",
+		{
+			onRequest: [
+				checkJwt,
+				checkPermissions([
+					PermissionId.CAN_MANAGE_USERS,
+				]),
+			],
+		},
 		async (request, response) => {
 			try {
 				const {
@@ -299,7 +369,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 						});
 				}
 
-				const user = await UserModel.findById(id);
+				const user = await UserModel.findByIdAndDelete(id);
 
 				if (isNull(user)) {
 					const status = ResponseStatus.NOT_FOUND;
@@ -314,8 +384,6 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 							status,
 						});
 				}
-
-				await user.deleteOne();
 
 				return await response
 					.status(ResponseStatus.OK)

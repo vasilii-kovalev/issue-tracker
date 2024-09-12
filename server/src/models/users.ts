@@ -4,6 +4,10 @@ import {
 	transformJsonPlugin,
 } from "@/plugins/transform-json-plugin";
 
+import {
+	type RoleId,
+} from "./permissions";
+
 const {
 	Schema,
 } = mongoose;
@@ -13,8 +17,10 @@ type UserId = string;
 interface User {
 	displayedName: string;
 	email: string;
+	id: UserId;
 	password: string;
 	userName: string;
+	roles: Array<RoleId>;
 }
 
 const UserSchema = new Schema<User>(
@@ -37,6 +43,9 @@ const UserSchema = new Schema<User>(
 			select: true,
 			type: Schema.Types.String,
 		},
+		roles: [
+			Schema.Types.String,
+		],
 		userName: {
 			lowercase: true,
 			required: true,

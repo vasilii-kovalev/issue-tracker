@@ -4,13 +4,6 @@ import Fastify from "fastify";
 import mongoose from "mongoose";
 
 import {
-	ResponseStatus,
-} from "@/constants";
-import {
-	ErrorCode,
-	type ResponseError,
-} from "@/models/errors";
-import {
 	authRoutes,
 } from "@/routes/auth";
 import {
@@ -47,33 +40,6 @@ void server.register(
 );
 
 void server.register(cookie);
-
-// Hooks.
-server.addHook<{
-	Reply: undefined | ResponseError;
-}>(
-	"onRequest",
-	async (request, response) => {
-		try {
-			if (request.url.startsWith("/api/auth")) {
-				return;
-			}
-
-			await request.jwtVerify();
-		} catch (error) {
-			const typedError = error as Error;
-			const status = ResponseStatus.UNAUTHORIZED;
-
-			return await response
-				.status(status)
-				.send({
-					code: ErrorCode.UNAUTHORIZED,
-					message: typedError.message,
-					status,
-				});
-		}
-	},
-);
 
 // Routes.
 void server.register(

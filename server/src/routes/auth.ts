@@ -6,6 +6,9 @@ import {
 	ResponseStatus,
 } from "@/constants";
 import {
+	COOKIE_JWT_TOKEN_NAME,
+} from "@/models/auth";
+import {
 	ErrorCode,
 	type ResponseError,
 } from "@/models/errors";
@@ -19,6 +22,7 @@ import {
 } from "@/utilities/is-null";
 
 const authRoutes: FastifyPluginCallback = (server, options, done): void => {
+	// Login a user.
 	server.post<{
 		Body: Pick<User, "email" | "password">;
 		Reply: User | ResponseError;
@@ -74,7 +78,7 @@ const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 
 				return await response
 					.setCookie(
-						"token",
+						COOKIE_JWT_TOKEN_NAME,
 						token,
 						{
 							path: "/",
@@ -96,6 +100,7 @@ const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 		},
 	);
 
+	// Logout a user.
 	server.post<{
 		Reply: undefined | ResponseError;
 	}>(
@@ -103,7 +108,7 @@ const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 		async (request, response) => {
 			try {
 				return await response
-					.clearCookie("token")
+					.clearCookie(COOKIE_JWT_TOKEN_NAME)
 					.status(ResponseStatus.OK)
 					.send();
 			} catch (error) {
