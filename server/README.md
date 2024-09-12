@@ -11,6 +11,13 @@ Technologies:
 * [Docker](https://www.docker.com)
 * [Bun](https://bun.sh)
 
+## Preparation
+
+1. [Install Docker](https://docs.docker.com/desktop)
+2. [Install Bun](https://bun.sh/docs/installation)
+3. Run `bun install` command in the application to install dependencies
+4. Start Docker
+
 ## Start/stop scripts
 
 Before running the script, make sure the Docker is installed.

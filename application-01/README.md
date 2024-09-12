@@ -10,3 +10,8 @@ Technologies:
 * [UUI](https://uui.epam.com)
 * [CSS Modules](https://github.com/css-modules/css-modules)
 * [Bun](https://bun.sh)
+
+## Preparation
+
+1. [Install Bun](https://bun.sh/docs/installation)
+2. Run `bun install` command in the application to install dependencies
