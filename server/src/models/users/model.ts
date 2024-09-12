@@ -1,9 +1,6 @@
 import mongoose from "mongoose";
 
 import {
-	ErrorCode,
-} from "@/models/errors/constants";
-import {
 	ROLES,
 } from "@/models/permissions/constants";
 import {
@@ -23,7 +20,7 @@ const UserSchema = new Schema<User>(
 		displayedName: {
 			required: [
 				true,
-				ErrorCode.USERS_DISPLAYED_NAME_REQUIRED,
+				"Displayed name is required.",
 			],
 			trim: true,
 			type: Schema.Types.String,
@@ -32,24 +29,25 @@ const UserSchema = new Schema<User>(
 			lowercase: true,
 			minlength: [
 				3,
-				ErrorCode.USERS_DISPLAYED_EMAIL_MIN_LENGTH,
+				"Email should have be at least 3 characters.",
 			],
 			required: [
 				true,
-				ErrorCode.USERS_DISPLAYED_EMAIL_REQUIRED,
+				"Email is required.",
 			],
 			trim: true,
 			type: Schema.Types.String,
+			// TODO: Add a custom error for this validation.
 			unique: true,
 		},
 		password: {
 			minlength: [
 				3,
-				ErrorCode.USERS_DISPLAYED_PASSWORD_MIN_LENGTH,
+				"Password should have be at least 3 characters.",
 			],
 			required: [
 				true,
-				ErrorCode.USERS_DISPLAYED_PASSWORD_REQUIRED,
+				"Password is required.",
 			],
 			// We allow to password to be present in query results, because it will be purged in `toJSON` method (see below).
 			select: true,
@@ -59,19 +57,19 @@ const UserSchema = new Schema<User>(
 			// Otherwise an empty object is set and `required` validation is not triggered.
 			default: undefined,
 			enum: {
-				message: ErrorCode.USERS_ROLES_INVALID,
+				message: "Unsupported role.",
 				values: ROLES,
 			},
 			required: [
 				true,
-				ErrorCode.USERS_ROLES_REQUIRED,
+				"Roles list is required.",
 			],
 			type: [
 				Schema.Types.String,
 			],
 			validate: [
 				{
-					message: ErrorCode.USERS_ROLES_EMPTY,
+					message: "User should have at least one role.",
 					validator: (value) => {
 						return (
 							Array.isArray(value)
@@ -85,7 +83,7 @@ const UserSchema = new Schema<User>(
 			lowercase: true,
 			required: [
 				true,
-				ErrorCode.USERS_USER_NAME_REQUIRED,
+				"User name is required.",
 			],
 			trim: true,
 			type: Schema.Types.String,

@@ -10,11 +10,8 @@ import {
 	ResponseStatus,
 } from "@/constants";
 import {
-	ErrorCode,
-} from "@/models/errors/constants";
-import {
 	type ErrorResponse,
-} from "@/models/errors/types";
+} from "@/types/errors";
 
 import {
 	type UserId,
@@ -35,16 +32,10 @@ const checkUserIdValidity: onRequestAsyncHookHandler<
 	const isValidUserId = mongoose.isValidObjectId(userId);
 
 	if (!isValidUserId) {
-		const status = ResponseStatus.BAD_REQUEST;
-
 		return await response
-			.status(status)
+			.status(ResponseStatus.BAD_REQUEST)
 			.send({
-				code: ErrorCode.BAD_REQUEST,
-				entities: [
-					"id",
-				],
-				status,
+				message: `Incorrect user ID "${userId}".`,
 			} satisfies ErrorResponse);
 	}
 };

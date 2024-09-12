@@ -12,13 +12,6 @@ import {
 	getUserIdFromJwtCookie,
 } from "@/models/auth/utilities/get-user-id-from-jwt-cookie";
 import {
-	ErrorCode,
-} from "@/models/errors/constants";
-import {
-	type ErrorResponse,
-	type ValidationError,
-} from "@/models/errors/types";
-import {
 	PermissionId,
 } from "@/models/permissions/constants";
 import {
@@ -37,6 +30,10 @@ import {
 	type User,
 	type UserId,
 } from "@/models/users/types";
+import {
+	type ErrorResponse,
+	type MongooseValidationError,
+} from "@/types/errors";
 import {
 	isNull,
 } from "@/utilities/is-null";
@@ -61,13 +58,11 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					.send(users);
 			} catch (error) {
 				const typedError = error as Error;
-				const status = ResponseStatus.INTERNAL_SERVER_ERROR;
 
 				return await response
-					.status(status)
+					.status(ResponseStatus.INTERNAL_SERVER_ERROR)
 					.send({
 						message: typedError.message,
-						status,
 					});
 			}
 		},
@@ -98,16 +93,10 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				const user = await UserModel.findById(id);
 
 				if (isNull(user)) {
-					const status = ResponseStatus.NOT_FOUND;
-
 					return await response
-						.status(status)
+						.status(ResponseStatus.NOT_FOUND)
 						.send({
-							code: ErrorCode.NOT_FOUND,
-							entities: [
-								"user",
-							],
-							status,
+							message: `User with id "${id}" doesn't exist.`,
 						});
 				}
 
@@ -116,13 +105,11 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					.send(user);
 			} catch (error) {
 				const typedError = error as Error;
-				const status = ResponseStatus.INTERNAL_SERVER_ERROR;
 
 				return await response
-					.status(status)
+					.status(ResponseStatus.INTERNAL_SERVER_ERROR)
 					.send({
 						message: typedError.message,
-						status,
 					});
 			}
 		},
@@ -166,14 +153,12 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					.status(ResponseStatus.CREATED)
 					.send(user);
 			} catch (error) {
-				const typedError = error as Error | ValidationError;
-				const status = ResponseStatus.INTERNAL_SERVER_ERROR;
+				const typedError = error as Error | MongooseValidationError;
 
 				return await response
-					.status(status)
+					.status(ResponseStatus.INTERNAL_SERVER_ERROR)
 					.send({
 						message: typedError.message,
-						status,
 					});
 			}
 		},
@@ -222,13 +207,9 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					);
 
 					if (!hasPermissionsForRequest) {
-						const status = ResponseStatus.FORBIDDEN;
-
 						return await response
-							.status(status)
-							.send({
-								status,
-							});
+							.status(ResponseStatus.FORBIDDEN)
+							.send();
 					}
 				}
 
@@ -246,16 +227,10 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				);
 
 				if (isNull(user)) {
-					const status = ResponseStatus.NOT_FOUND;
-
 					return await response
-						.status(status)
+						.status(ResponseStatus.NOT_FOUND)
 						.send({
-							code: ErrorCode.NOT_FOUND,
-							entities: [
-								"user",
-							],
-							status,
+							message: `User with id "${id}" doesn't exist.`,
 						});
 				}
 
@@ -263,14 +238,12 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					.status(ResponseStatus.OK)
 					.send(user);
 			} catch (error) {
-				const typedError = error as Error | ValidationError;
-				const status = ResponseStatus.INTERNAL_SERVER_ERROR;
+				const typedError = error as Error | MongooseValidationError;
 
 				return await response
-					.status(status)
+					.status(ResponseStatus.INTERNAL_SERVER_ERROR)
 					.send({
 						message: typedError.message,
-						status,
 					});
 			}
 		},
@@ -304,16 +277,10 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				const user = await UserModel.findByIdAndDelete(id);
 
 				if (isNull(user)) {
-					const status = ResponseStatus.NOT_FOUND;
-
 					return await response
-						.status(status)
+						.status(ResponseStatus.NOT_FOUND)
 						.send({
-							code: ErrorCode.NOT_FOUND,
-							entities: [
-								"user",
-							],
-							status,
+							message: `User with id "${id}" doesn't exist.`,
 						});
 				}
 
@@ -322,13 +289,11 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					.send(user);
 			} catch (error) {
 				const typedError = error as Error;
-				const status = ResponseStatus.INTERNAL_SERVER_ERROR;
 
 				return await response
-					.status(status)
+					.status(ResponseStatus.INTERNAL_SERVER_ERROR)
 					.send({
 						message: typedError.message,
-						status,
 					});
 			}
 		},

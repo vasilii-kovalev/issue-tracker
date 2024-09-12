@@ -9,12 +9,6 @@ import {
 	COOKIE_JWT_TOKEN_NAME,
 } from "@/models/auth/constants";
 import {
-	ErrorCode,
-} from "@/models/errors/constants";
-import {
-	type ErrorResponse,
-} from "@/models/errors/types";
-import {
 	UserModel,
 } from "@/models/users/model";
 import {
@@ -23,6 +17,9 @@ import {
 import {
 	verifyUserPassword,
 } from "@/models/users/utilities/verify-user-password";
+import {
+	type ErrorResponse,
+} from "@/types/errors";
 import {
 	isNull,
 } from "@/utilities/is-null";
@@ -46,16 +43,10 @@ const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 				});
 
 				if (isNull(user)) {
-					const status = ResponseStatus.NOT_FOUND;
-
 					return await response
-						.status(status)
+						.status(ResponseStatus.NOT_FOUND)
 						.send({
-							code: ErrorCode.NOT_FOUND,
-							entities: [
-								"user",
-							],
-							status,
+							message: `User with email "${email}" doesn't exist.`,
 						});
 				}
 
@@ -65,16 +56,10 @@ const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 				);
 
 				if (!isPasswordCorrect) {
-					const status = ResponseStatus.BAD_REQUEST;
-
 					return await response
-						.status(status)
+						.status(ResponseStatus.BAD_REQUEST)
 						.send({
-							code: ErrorCode.BAD_REQUEST,
-							entities: [
-								"password",
-							],
-							status,
+							message: "Password is incorrect.",
 						});
 				}
 
@@ -94,13 +79,11 @@ const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 					.send();
 			} catch (error) {
 				const typedError = error as Error;
-				const status = ResponseStatus.INTERNAL_SERVER_ERROR;
 
 				return await response
-					.status(status)
+					.status(ResponseStatus.INTERNAL_SERVER_ERROR)
 					.send({
 						message: typedError.message,
-						status,
 					});
 			}
 		},
@@ -119,13 +102,11 @@ const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 					.send();
 			} catch (error) {
 				const typedError = error as Error;
-				const status = ResponseStatus.INTERNAL_SERVER_ERROR;
 
 				return await response
-					.status(status)
+					.status(ResponseStatus.INTERNAL_SERVER_ERROR)
 					.send({
 						message: typedError.message,
-						status,
 					});
 			}
 		},

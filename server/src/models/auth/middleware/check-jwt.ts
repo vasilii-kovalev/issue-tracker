@@ -6,23 +6,20 @@ import {
 	ResponseStatus,
 } from "@/constants";
 import {
-	ErrorCode,
-} from "@/models/errors/constants";
+	type ErrorResponse,
+} from "@/types/errors";
 
 const checkJwt: onRequestAsyncHookHandler = async (request, response) => {
 	try {
 		await request.jwtVerify();
 	} catch (error) {
 		const typedError = error as Error;
-		const status = ResponseStatus.UNAUTHORIZED;
 
 		return await response
-			.status(status)
+			.status(ResponseStatus.UNAUTHORIZED)
 			.send({
-				code: ErrorCode.UNAUTHORIZED,
 				message: typedError.message,
-				status,
-			});
+			} satisfies ErrorResponse);
 	}
 };
 

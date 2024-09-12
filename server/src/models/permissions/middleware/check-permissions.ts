@@ -31,13 +31,9 @@ const checkPermissions = (
 		);
 
 		if (!hasPermissionsForRequest) {
-			const status = ResponseStatus.FORBIDDEN;
-
 			return await response
-				.status(status)
-				.send({
-					status,
-				});
+				.status(ResponseStatus.FORBIDDEN)
+				.send();
 		}
 	};
 };
