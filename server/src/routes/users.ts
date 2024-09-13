@@ -58,20 +58,17 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 			],
 			schema: {
 				response: {
-					// eslint-disable-next-line @typescript-eslint/naming-convention
-					200: {
+					[ResponseStatus.OK]: {
 						items: {
 							$ref: "UserSchema",
 						},
 						type: "array",
 					},
-					// eslint-disable-next-line @typescript-eslint/naming-convention
-					401: {
+					[ResponseStatus.UNAUTHORIZED]: {
 						$ref: "ErrorResponseWithMessageSchema",
 						description: "Unauthorized",
 					},
-					// eslint-disable-next-line @typescript-eslint/naming-convention
-					500: {
+					[ResponseStatus.INTERNAL_SERVER_ERROR]: {
 						$ref: "ErrorResponseWithMessageSchema",
 						description: "Internal server error",
 					},
@@ -124,27 +121,22 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					type: "object",
 				},
 				response: {
-					// eslint-disable-next-line @typescript-eslint/naming-convention
-					200: {
+					[ResponseStatus.OK]: {
 						$ref: "UserSchema",
 					},
-					// eslint-disable-next-line @typescript-eslint/naming-convention
-					400: {
+					[ResponseStatus.BAD_REQUEST]: {
 						$ref: "ErrorResponseWithMessageSchema",
 						description: "Invalid user ID",
 					},
-					// eslint-disable-next-line @typescript-eslint/naming-convention
-					401: {
+					[ResponseStatus.UNAUTHORIZED]: {
 						$ref: "ErrorResponseWithMessageSchema",
 						description: "Unauthorized",
 					},
-					// eslint-disable-next-line @typescript-eslint/naming-convention
-					404: {
+					[ResponseStatus.NOT_FOUND]: {
 						$ref: "ErrorResponseWithMessageSchema",
 						description: "User with provided user ID doesn't exist",
 					},
-					// eslint-disable-next-line @typescript-eslint/naming-convention
-					500: {
+					[ResponseStatus.INTERNAL_SERVER_ERROR]: {
 						$ref: "ErrorResponseWithMessageSchema",
 						description: "Internal server error",
 					},
@@ -205,27 +197,22 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					$ref: "UserCreateSchema",
 				},
 				response: {
-					// eslint-disable-next-line @typescript-eslint/naming-convention
-					201: {
+					[ResponseStatus.CREATED]: {
 						$ref: "UserSchema",
 					},
-					// eslint-disable-next-line @typescript-eslint/naming-convention
-					400: {
+					[ResponseStatus.BAD_REQUEST]: {
 						$ref: "ErrorResponseWithValidationErrorsSchema",
 						description: "Validation errors",
 					},
-					// eslint-disable-next-line @typescript-eslint/naming-convention
-					401: {
+					[ResponseStatus.UNAUTHORIZED]: {
 						$ref: "ErrorResponseWithMessageSchema",
 						description: "Unauthorized",
 					},
-					// eslint-disable-next-line @typescript-eslint/naming-convention
-					403: {
+					[ResponseStatus.FORBIDDEN]: {
 						description: "Forbidden by permissions",
 						type: "null",
 					},
-					// eslint-disable-next-line @typescript-eslint/naming-convention
-					500: {
+					[ResponseStatus.INTERNAL_SERVER_ERROR]: {
 						$ref: "ErrorResponseWithMessageSchema",
 						description: "Internal server error",
 					},
@@ -322,27 +309,22 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					type: "object",
 				},
 				response: {
-					// eslint-disable-next-line @typescript-eslint/naming-convention
-					200: {
+					[ResponseStatus.OK]: {
 						$ref: "UserSchema",
 					},
-					// eslint-disable-next-line @typescript-eslint/naming-convention
-					400: {
+					[ResponseStatus.BAD_REQUEST]: {
 						$ref: "ErrorResponseWithValidationErrorsSchema",
 						description: "Invalid user ID (only `message` is returned) or validation errors",
 					},
-					// eslint-disable-next-line @typescript-eslint/naming-convention
-					401: {
+					[ResponseStatus.UNAUTHORIZED]: {
 						$ref: "ErrorResponseWithMessageSchema",
 						description: "Unauthorized",
 					},
-					// eslint-disable-next-line @typescript-eslint/naming-convention
-					404: {
+					[ResponseStatus.NOT_FOUND]: {
 						$ref: "ErrorResponseWithMessageSchema",
 						description: "User with provided user ID doesn't exist",
 					},
-					// eslint-disable-next-line @typescript-eslint/naming-convention
-					500: {
+					[ResponseStatus.INTERNAL_SERVER_ERROR]: {
 						$ref: "ErrorResponseWithMessageSchema",
 						description: "Internal server error",
 					},
@@ -479,32 +461,26 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					type: "object",
 				},
 				response: {
-					// eslint-disable-next-line @typescript-eslint/naming-convention
-					200: {
+					[ResponseStatus.OK]: {
 						$ref: "UserSchema",
 					},
-					// eslint-disable-next-line @typescript-eslint/naming-convention
-					400: {
+					[ResponseStatus.BAD_REQUEST]: {
 						$ref: "ErrorResponseWithMessageSchema",
 						description: "Invalid user ID",
 					},
-					// eslint-disable-next-line @typescript-eslint/naming-convention
-					401: {
+					[ResponseStatus.UNAUTHORIZED]: {
 						$ref: "ErrorResponseWithMessageSchema",
 						description: "Unauthorized",
 					},
-					// eslint-disable-next-line @typescript-eslint/naming-convention
-					403: {
+					[ResponseStatus.FORBIDDEN]: {
 						description: "Forbidden by permissions",
 						type: "null",
 					},
-					// eslint-disable-next-line @typescript-eslint/naming-convention
-					404: {
+					[ResponseStatus.NOT_FOUND]: {
 						$ref: "ErrorResponseWithMessageSchema",
 						description: "User with provided user ID doesn't exist",
 					},
-					// eslint-disable-next-line @typescript-eslint/naming-convention
-					500: {
+					[ResponseStatus.INTERNAL_SERVER_ERROR]: {
 						$ref: "ErrorResponseWithMessageSchema",
 						description: "Internal server error",
 					},

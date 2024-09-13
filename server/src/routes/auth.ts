@@ -37,22 +37,18 @@ const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 				},
 				description: `Sets "${COOKIE_JWT_TOKEN_NAME}" JWT cookie in headers.`,
 				response: {
-					// eslint-disable-next-line @typescript-eslint/naming-convention
-					200: {
+					[ResponseStatus.OK]: {
 						type: "null",
 					},
-					// eslint-disable-next-line @typescript-eslint/naming-convention
-					400: {
+					[ResponseStatus.BAD_REQUEST]: {
 						$ref: "ErrorResponseWithMessageSchema",
 						description: "Incorrect password",
 					},
-					// eslint-disable-next-line @typescript-eslint/naming-convention
-					404: {
+					[ResponseStatus.NOT_FOUND]: {
 						$ref: "ErrorResponseWithMessageSchema",
 						description: "User with provided email doesn't exist",
 					},
-					// eslint-disable-next-line @typescript-eslint/naming-convention
-					500: {
+					[ResponseStatus.INTERNAL_SERVER_ERROR]: {
 						$ref: "ErrorResponseWithMessageSchema",
 						description: "Internal server error",
 					},
@@ -129,12 +125,10 @@ const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 			schema: {
 				description: `Removes "${COOKIE_JWT_TOKEN_NAME}" JWT cookie in headers.`,
 				response: {
-					// eslint-disable-next-line @typescript-eslint/naming-convention
-					200: {
+					[ResponseStatus.OK]: {
 						type: "null",
 					},
-					// eslint-disable-next-line @typescript-eslint/naming-convention
-					500: {
+					[ResponseStatus.INTERNAL_SERVER_ERROR]: {
 						$ref: "ErrorResponseWithMessageSchema",
 						description: "Internal server error",
 					},

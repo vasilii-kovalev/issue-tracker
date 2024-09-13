@@ -3,7 +3,6 @@ enum ResponseStatus {
 	// Successful responses.
 	OK = 200,
 	CREATED = 201,
-	NO_CONTENT = 204,
 
 	// Client error responses.
 	BAD_REQUEST = 400,
