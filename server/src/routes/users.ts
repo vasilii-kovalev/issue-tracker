@@ -31,6 +31,9 @@ import {
 	type UserId,
 } from "@/models/users/types";
 import {
+	getEmailDuplicationValidationError,
+} from "@/models/users/utilities/get-email-duplication-validation-error";
+import {
 	getUserValidationErrors,
 } from "@/models/users/utilities/get-user-validation-errors";
 import {
@@ -40,6 +43,9 @@ import {
 import {
 	isNull,
 } from "@/utilities/is-null";
+import {
+	isUndefined,
+} from "@/utilities/is-undefined";
 
 const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 	server.get<{
@@ -150,13 +156,13 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 			},
 		},
 		async (request, response) => {
-			try {
-				const {
-					params: {
-						id,
-					},
-				} = request;
+			const {
+				params: {
+					id,
+				},
+			} = request;
 
+			try {
 				const user = await UserModel.findById(id);
 
 				if (isNull(user)) {
@@ -231,16 +237,16 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 			},
 		},
 		async (request, response) => {
-			try {
-				const {
-					body: {
-						displayedName,
-						email,
-						password,
-						roles,
-					},
-				} = request;
+			const {
+				body: {
+					displayedName,
+					email,
+					password,
+					roles,
+				},
+			} = request;
 
+			try {
 				const user = await UserModel.create({
 					displayedName,
 					email,
@@ -253,6 +259,23 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					.send(user);
 			} catch (error) {
 				const typedError = error as Error | MongooseValidationError;
+				const errorMessage = typedError.message;
+
+				const emailDuplicationValidationError = getEmailDuplicationValidationError(
+					errorMessage,
+					email,
+				);
+
+				if (!isUndefined(emailDuplicationValidationError)) {
+					return await response
+						.status(ResponseStatus.BAD_REQUEST)
+						.send({
+							message: errorMessage,
+							validationErrors: [
+								emailDuplicationValidationError,
+							],
+						});
+				}
 
 				if ("errors" in typedError) {
 					const validationErrors = getUserValidationErrors(typedError);
@@ -260,7 +283,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					return await response
 						.status(ResponseStatus.BAD_REQUEST)
 						.send({
-							message: typedError.message,
+							message: errorMessage,
 							validationErrors,
 						});
 				}
@@ -268,7 +291,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				return await response
 					.status(ResponseStatus.INTERNAL_SERVER_ERROR)
 					.send({
-						message: typedError.message,
+						message: errorMessage,
 					});
 			}
 		},
@@ -331,19 +354,19 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 			},
 		},
 		async (request, response) => {
-			try {
-				const {
-					params: {
-						id,
-					},
-					body: {
-						displayedName,
-						email,
-						password,
-						roles,
-					},
-				} = request;
+			const {
+				params: {
+					id,
+				},
+				body: {
+					displayedName,
+					email,
+					password,
+					roles,
+				},
+			} = request;
 
+			try {
 				const userIdFromJwtCookie = getUserIdFromJwtCookie(
 					server,
 					request,
@@ -390,6 +413,25 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					.send(user);
 			} catch (error) {
 				const typedError = error as Error | MongooseValidationError;
+				const errorMessage = typedError.message;
+
+				const emailDuplicationValidationError = getEmailDuplicationValidationError(
+					errorMessage,
+					// If this error occurs, then the email is present in the request.
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					email!,
+				);
+
+				if (!isUndefined(emailDuplicationValidationError)) {
+					return await response
+						.status(ResponseStatus.BAD_REQUEST)
+						.send({
+							message: errorMessage,
+							validationErrors: [
+								emailDuplicationValidationError,
+							],
+						});
+				}
 
 				if ("errors" in typedError) {
 					const validationErrors = getUserValidationErrors(typedError);
@@ -397,7 +439,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					return await response
 						.status(ResponseStatus.BAD_REQUEST)
 						.send({
-							message: typedError.message,
+							message: errorMessage,
 							validationErrors,
 						});
 				}
@@ -405,7 +447,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				return await response
 					.status(ResponseStatus.INTERNAL_SERVER_ERROR)
 					.send({
-						message: typedError.message,
+						message: errorMessage,
 					});
 			}
 		},
@@ -474,13 +516,13 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 			},
 		},
 		async (request, response) => {
-			try {
-				const {
-					params: {
-						id,
-					},
-				} = request;
+			const {
+				params: {
+					id,
+				},
+			} = request;
 
+			try {
 				const user = await UserModel.findByIdAndDelete(id);
 
 				if (isNull(user)) {

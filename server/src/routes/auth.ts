@@ -64,12 +64,12 @@ const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 			},
 		},
 		async (request, response) => {
-			try {
-				const {
-					email,
-					password,
-				} = request.body;
+			const {
+				email,
+				password,
+			} = request.body;
 
+			try {
 				const user = await UserModel.findOne({
 					email,
 				});
