@@ -6,6 +6,9 @@ import {
 	ResponseStatus,
 } from "@/constants";
 import {
+	COOKIE_JWT_TOKEN_NAME,
+} from "@/models/auth/constants";
+import {
 	checkJwt,
 } from "@/models/auth/middleware/check-jwt";
 import {
@@ -451,6 +454,8 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				checkUserIdValidity,
 			],
 			schema: {
+				description: `Deletes user by ID.
+				Note: admins can also remove themselves. In this case, they are logged out automatically.`,
 				params: {
 					properties: {
 						id: {
@@ -507,6 +512,18 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 						.send({
 							message: `User with id "${id}" doesn't exist.`,
 						});
+				}
+
+				const userIdFromJwtCookie = getUserIdFromJwtCookie(
+					server,
+					request,
+				);
+
+				if (userIdFromJwtCookie === id) {
+					return await response
+						.clearCookie(COOKIE_JWT_TOKEN_NAME)
+						.status(ResponseStatus.OK)
+						.send(user);
 				}
 
 				return await response
