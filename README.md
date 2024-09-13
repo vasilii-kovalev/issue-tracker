@@ -35,6 +35,10 @@ I use it to learn and experiment with different technologies, which I think shin
 * Right-to-left (RTL) **possibly** included
 * Minimum to no animations
 
+## Documentation
+
+The project's documentation can be found [here](./documentation).
+
 ## Applications
 
 ### Server

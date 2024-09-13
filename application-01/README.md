@@ -15,3 +15,13 @@ Technologies:
 
 1. [Install Bun](https://bun.sh/docs/installation)
 2. Run `bun install` command in the application to install dependencies
+
+## Scripts overview
+
+* `dev` - starts the application
+* `build` - builds the application
+* `preview` - starts the built application
+* `analyze-bundle` - creates a static page with tree structure of the application's dependencies
+* `check:types` - checks for TypeScript errors
+* `check:eslint` - checks for ESLint errors
+* `check:stylelint` - checks for Stylelint errors
