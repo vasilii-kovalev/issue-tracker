@@ -12,7 +12,13 @@ interface User {
 	roles: Array<RoleId>;
 }
 
+type UserCreate = Omit<
+	User,
+	"id"
+>;
+
 export type {
 	User,
+	UserCreate,
 	UserId,
 };

@@ -6,6 +6,9 @@ import Fastify from "fastify";
 import mongoose from "mongoose";
 
 import {
+	populateData,
+} from "@/mocks/utilities/populate-data";
+import {
 	authRoutes,
 } from "@/routes/auth";
 import {
@@ -19,6 +22,8 @@ import {
 mongoose.connect("mongodb://localhost:27017/issue-tracker")
 	.then(() => {
 		console.info("Connection to database is successful.");
+
+		void populateData();
 	})
 	.catch((error) => {
 		console.error(error);

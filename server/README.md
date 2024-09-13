@@ -32,7 +32,7 @@ It does the following:
 2. Creates a Docker container with name "issue-tracker-container"
 3. Creates a volume with name "issue-tracker-volume" (for data persistence)
 4. Run the container and attaches the volume to it
-5. Starts a local server (via Bun in watch mode) on port 5000
+5. Starts a local server (via Bun in watch mode) on <http://localhost:5000>
 
 ### Stop
 
@@ -48,4 +48,10 @@ It does the following:
 
 ## Swagger
 
-After starting the server (see above), visit http://localhost:5000/swagger.
+After starting the server (see above), visit <http://localhost:5000/swagger>.
+
+## Mock data
+
+When a collection doesn't have documents in it, several documents are created automatically in that collection on the server's start or reload.
+
+Check `populateData` function's call in [index.ts](./index.ts) file to learn more.
