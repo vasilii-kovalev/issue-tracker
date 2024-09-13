@@ -37,7 +37,6 @@ const UserSchema = new Schema<User>(
 			],
 			trim: true,
 			type: Schema.Types.String,
-			// TODO: Add a custom error for this validation.
 			unique: true,
 		},
 		password: {

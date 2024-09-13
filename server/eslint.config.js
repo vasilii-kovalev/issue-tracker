@@ -904,15 +904,8 @@ const eslintConfig = config(
 				"prefer-inline",
 			],
 			// https://github.com/un-ts/eslint-plugin-import-x/blob/master/docs/rules/dynamic-import-chunkname.md
-			"import-x/dynamic-import-chunkname": [
-				// TODO: enable when it starts working.
-				DISABLED,
-				{
-					// kebab-case.
-					webpackChunknameFormat: "([a-z][a-z0-9]*)(-[a-z0-9]+)*",
-					allowEmpty: false,
-				},
-			],
+			// This rule is disabled because this application doesn't have chunks.
+			"import-x/dynamic-import-chunkname": DISABLED,
 			// https://github.com/un-ts/eslint-plugin-import-x/blob/master/docs/rules/exports-last.md
 			"import-x/exports-last": ERROR,
 			// https://github.com/un-ts/eslint-plugin-import-x/blob/master/docs/rules/extensions.md
