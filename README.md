@@ -45,7 +45,7 @@ The project's documentation can be found [here](./documentation).
 
 Status: in progress.
 
-[Link to source code](https://github.com/vasilii-kovalev/issue-tracker/tree/main/server)
+[Link to source code](./server)
 
 Technologies:
 
@@ -60,7 +60,7 @@ Technologies:
 
 Status: in progress.
 
-[Link to source code](https://github.com/vasilii-kovalev/issue-tracker/tree/main/application-01)
+[Link to source code](./application-01)
 
 Technologies:
 
