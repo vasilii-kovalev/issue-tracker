@@ -45,7 +45,7 @@ It does the following:
 
 ### Stop
 
-Stop the server in the same command line it was started ("Ctrl + C" for Window).
+Stop the server in the same command line it was started (<kbd>Ctrl + C</kbd> for Windows).
 
 Then run script `stop:database`.
 
