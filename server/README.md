@@ -18,7 +18,16 @@ Technologies:
 3. Run `bun install` command in the application to install dependencies
 4. Start Docker
 
-## Start/stop scripts
+## Scripts overview
+
+* `start` - starts a Docker container with database and the server (see a more detailed description in the next section)
+* `stop:database` - stops the Docker container with database (see a more detailed description in the next section)
+* `check:types` - checks for TypeScript errors
+* `check:eslint` - checks for ESLint errors
+
+Other scrips are a part of `start` and `stop:database` scripts and have self-explanatory names.
+
+## Start/stop the application
 
 Before running the script, make sure the Docker is installed.
 

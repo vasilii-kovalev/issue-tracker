@@ -8,8 +8,8 @@
 		"start:database": "docker run -d -p 27017:27017 -v issue-tracker-volume:/data/db --name issue-tracker-container mongo:latest",
 		"start": "bun run start:database && bun --watch ./index.ts",
 		"stop:database": "bun run container:stop && bun run container:remove && bun run remove-anonymous-volumes",
-		"types:check": "tsc --noEmit",
-		"eslint:check": "bunx --bun eslint . --quiet"
+		"check:types": "tsc --noEmit",
+		"check:eslint": "bunx --bun eslint . --quiet"
 	},
 	"dependencies": {
 		"@fastify/cookie": "9.4.0",
