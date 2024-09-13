@@ -45,7 +45,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 	server.get<{
 		Reply: Array<User> | ErrorResponse;
 	}>(
-		"",
+		"/api/users",
 		{
 			onRequest: [
 				checkJwt,
@@ -101,7 +101,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 		};
 		Reply: User | ErrorResponse;
 	}>(
-		"/:id",
+		"/api/users/:id",
 		{
 			onRequest: [
 				checkJwt,
@@ -186,7 +186,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 		Body: User;
 		Reply: User | ErrorResponse;
 	}>(
-		"/create",
+		"/api/users/create",
 		{
 			onRequest: [
 				checkJwt,
@@ -282,7 +282,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 		Body: Partial<User>;
 		Reply: User | ErrorResponse;
 	}>(
-		"/update/:id",
+		"/api/users/update/:id",
 		{
 			onRequest: [
 				checkJwt,
@@ -417,7 +417,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 		};
 		Reply: User | ErrorResponse;
 	}>(
-		"/delete/:id",
+		"/api/users/delete/:id",
 		{
 			onRequest: [
 				checkJwt,

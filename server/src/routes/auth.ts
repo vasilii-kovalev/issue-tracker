@@ -29,7 +29,7 @@ const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 		Body: Pick<User, "email" | "password">;
 		Reply: User | ErrorResponse;
 	}>(
-		"/login",
+		"/api/auth/login",
 		{
 			schema: {
 				body: {
@@ -124,7 +124,7 @@ const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 	server.post<{
 		Reply: undefined | ErrorResponse;
 	}>(
-		"/logout",
+		"/api/auth/logout",
 		{
 			schema: {
 				description: `Removes "${COOKIE_JWT_TOKEN_NAME}" JWT cookie in headers.`,

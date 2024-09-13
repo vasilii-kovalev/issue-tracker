@@ -59,19 +59,9 @@ void server.register(
 addSchemas(server);
 
 // Routes.
-void server.register(
-	authRoutes,
-	{
-		prefix: "/api/auth",
-	},
-);
+void server.register(authRoutes);
 
-void server.register(
-	usersRoutes,
-	{
-		prefix: "/api/users",
-	},
-);
+void server.register(usersRoutes);
 
 // Starting the server.
 void server.listen({
