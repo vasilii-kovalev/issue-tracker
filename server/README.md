@@ -27,6 +27,10 @@ Technologies:
 
 Other scrips are a part of `start` and `stop:database` scripts and have self-explanatory names.
 
+To run a script, execute the following command in a command line: `bun run <script>`.
+
+To stop a running script, press <kbd>Ctrl + C</kbd> (for Windows, maybe different in other operating systems) in the command line window the script is running in. Confirm the choice if prompted.
+
 ## Start/stop the application
 
 Before running the script, make sure the Docker is installed.
