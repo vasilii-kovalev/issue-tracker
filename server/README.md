@@ -20,6 +20,8 @@ Technologies:
 
 ## Scripts overview
 
+All scripts are defined in [package.json](./package.json).
+
 * `start` - starts a Docker container with database and the server (see a more detailed description in the next section)
 * `stop:database` - stops the Docker container with database (see a more detailed description in the next section)
 * `check:types` - checks for TypeScript errors

@@ -1,8 +1,9 @@
 {
 	"name": "application-01",
 	"private": true,
-	"version": "0.0.0",
+	"version": "0.1.0",
 	"type": "module",
+	"main": "./src/main.tsx",
 	"scripts": {
 		"dev": "bunx --bun vite",
 		"build": "bunx --bun vite build",

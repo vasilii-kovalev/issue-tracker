@@ -18,6 +18,8 @@ Technologies:
 
 ## Scripts overview
 
+All scripts are defined in [package.json](./package.json).
+
 * `dev` - starts the application
 * `build` - builds the application
 * `preview` - starts the built application
@@ -25,3 +27,7 @@ Technologies:
 * `check:types` - checks for TypeScript errors
 * `check:eslint` - checks for ESLint errors
 * `check:stylelint` - checks for Stylelint errors
+
+To run a script, execute the following command in a command line: `bun run <script>`.
+
+To stop a running script, press <kbd>Ctrl + C</kbd> (for Windows, maybe different in other operating systems) in the command line window the script is running in. Confirm the choice if prompted.
