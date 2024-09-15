@@ -287,7 +287,6 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 		},
 	);
 
-	// Update user.
 	server.patch<{
 		Params: {
 			id: UserId;
@@ -302,6 +301,8 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				checkUserIdValidity,
 			],
 			schema: {
+				description: `Updates user by ID.
+				Note: after user data update, a new JWT token with the new data is set to cookies.`,
 				params: {
 					properties: {
 						id: {
@@ -332,7 +333,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 						description: "Internal server error",
 					},
 				},
-				summary: "Get user",
+				summary: "Update user",
 				tags: [
 					"users",
 				],
@@ -393,7 +394,19 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 						});
 				}
 
+				const token = server.jwt.sign({
+					payload: user.toJSON(),
+				});
+
 				return await response
+					// Like in `/api/auth/login`.
+					.setCookie(
+						COOKIE_JWT_TOKEN_NAME,
+						token,
+						{
+							path: "/",
+						},
+					)
 					.status(ResponseStatus.OK)
 					.send(user);
 			} catch (error) {
@@ -521,6 +534,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 
 				if (userIdFromJwtCookie === id) {
 					return await response
+						// Like in `/api/auth/logout`.
 						.clearCookie(COOKIE_JWT_TOKEN_NAME)
 						.status(ResponseStatus.OK)
 						.send(user);
