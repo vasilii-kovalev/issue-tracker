@@ -317,8 +317,16 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 						$ref: "UserSchema",
 					},
 					[ResponseStatus.BAD_REQUEST]: {
-						$ref: "ErrorResponseWithValidationErrorsSchema",
-						description: "Invalid user ID (only `message` is returned) or validation errors",
+						oneOf: [
+							{
+								$ref: "ErrorResponseWithMessageSchema",
+								description: "Invalid user ID",
+							},
+							{
+								$ref: "ErrorResponseWithValidationErrorsSchema",
+								description: "Validation errors",
+							},
+						],
 					},
 					[ResponseStatus.UNAUTHORIZED]: {
 						$ref: "ErrorResponseWithMessageSchema",

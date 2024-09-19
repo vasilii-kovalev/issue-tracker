@@ -51,7 +51,15 @@ void server.register(
 
 void server.register(cookie);
 
-void server.register(swagger);
+void server.register(
+	swagger,
+	{
+		openapi: {
+			// Should be set to 3+, otherwise `oneOf` won't work.
+			openapi: "3.1.0",
+		},
+	},
+);
 
 void server.register(
 	swaggerUi,
