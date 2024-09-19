@@ -55,8 +55,22 @@ void server.register(
 	swagger,
 	{
 		openapi: {
-			// Should be set to 3+, otherwise `oneOf` won't work.
-			openapi: "3.1.0",
+			/*
+				Default version (2.0) doesn't support `oneOf`.
+				Version 3.1.0 has the following issues:
+				* `oneOf` doesn't render the schema names when `buildLocalReference` is defined
+				* Array of schema doesn't render the schema name
+			*/
+			openapi: "3.0.0",
+		},
+		refResolver: {
+			// eslint-disable-next-line @typescript-eslint/max-params
+			buildLocalReference: (json, baseUri, fragment, index) => {
+				return (
+					json.$id
+					?? `Unknown schema ${index}`
+				) as string;
+			},
 		},
 	},
 );
