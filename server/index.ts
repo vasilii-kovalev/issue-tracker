@@ -30,6 +30,9 @@ mongoose.connect("mongodb://localhost:27017/issue-tracker")
 	});
 
 // Creation of server.
+/**
+ * {@link https://fastify.dev/docs/latest/Reference/Server | Documentation}
+ */
 // eslint-disable-next-line new-cap
 const server = Fastify({
 	logger: {
@@ -38,6 +41,9 @@ const server = Fastify({
 });
 
 // Plugins.
+/**
+ * {@link https://github.com/fastify/fastify-jwt?tab=readme-ov-file#usage | Documentation}
+ */
 void server.register(
 	jwt,
 	{
@@ -49,8 +55,14 @@ void server.register(
 	},
 );
 
+/**
+ * {@link https://github.com/fastify/fastify-cookie?tab=readme-ov-file#example | Documentation}
+ */
 void server.register(cookie);
 
+/**
+ * {@link https://github.com/fastify/fastify-swagger?tab=readme-ov-file#usage | Documentation}
+ */
 void server.register(
 	swagger,
 	{
@@ -75,6 +87,9 @@ void server.register(
 	},
 );
 
+/**
+ * {@link https://github.com/fastify/fastify-swagger-ui?tab=readme-ov-file#usage | Documentation}
+ */
 void server.register(
 	swaggerUi,
 	{
