@@ -18,6 +18,10 @@ import {
 	verifyUserPassword,
 } from "@/models/users/utilities/verify-user-password";
 import {
+	SchemaId,
+	SchemaTag,
+} from "@/schemas/constants";
+import {
 	type ErrorResponse,
 } from "@/types/errors";
 import {
@@ -33,7 +37,7 @@ const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 		{
 			schema: {
 				body: {
-					$ref: "UserLoginSchema",
+					$ref: SchemaId.USER_LOGIN,
 				},
 				description: `Sets "${COOKIE_JWT_TOKEN_NAME}" JWT cookie in headers.`,
 				response: {
@@ -41,21 +45,21 @@ const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 						type: "null",
 					},
 					[ResponseStatus.BAD_REQUEST]: {
-						$ref: "ErrorResponseWithMessageSchema",
+						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
 						description: "Incorrect password",
 					},
 					[ResponseStatus.NOT_FOUND]: {
-						$ref: "ErrorResponseWithMessageSchema",
+						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
 						description: "User with provided email doesn't exist",
 					},
 					[ResponseStatus.INTERNAL_SERVER_ERROR]: {
-						$ref: "ErrorResponseWithMessageSchema",
+						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
 						description: "Internal server error",
 					},
 				},
 				summary: "Login a user",
 				tags: [
-					"auth",
+					SchemaTag.AUTH,
 				],
 			},
 		},
@@ -129,13 +133,13 @@ const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 						type: "null",
 					},
 					[ResponseStatus.INTERNAL_SERVER_ERROR]: {
-						$ref: "ErrorResponseWithMessageSchema",
+						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
 						description: "Internal server error",
 					},
 				},
 				summary: "Logout a user",
 				tags: [
-					"auth",
+					SchemaTag.AUTH,
 				],
 			},
 		},

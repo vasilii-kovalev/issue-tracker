@@ -2,6 +2,10 @@ import {
 	ROLES,
 } from "@/models/permissions/constants";
 
+import {
+	SchemaId,
+} from "./constants";
+
 const UserSchemaCommon = {
 	properties: {
 		displayedName: {
@@ -33,7 +37,7 @@ const UserSchemaCommonWithPassword = {
 
 const UserSchema = {
 	...UserSchemaCommon,
-	$id: "UserSchema",
+	$id: SchemaId.USER,
 	properties: {
 		...UserSchemaCommon.properties,
 		id: {
@@ -50,7 +54,7 @@ const UserSchema = {
 
 const UserCreateSchema = {
 	...UserSchemaCommonWithPassword,
-	$id: "UserCreateSchema",
+	$id: SchemaId.USER_CREATE,
 	required: [
 		"displayedName",
 		"email",
@@ -61,12 +65,12 @@ const UserCreateSchema = {
 
 const UserUpdateSchema = {
 	...UserSchemaCommonWithPassword,
-	$id: "UserUpdateSchema",
+	$id: SchemaId.USER_UPDATE,
 };
 
 const UserLoginSchema = {
 	...UserSchemaCommonWithPassword,
-	$id: "UserLoginSchema",
+	$id: SchemaId.USER_LOGIN,
 	properties: {
 		email: UserSchemaCommonWithPassword.properties.email,
 		password: UserSchemaCommonWithPassword.properties.password,

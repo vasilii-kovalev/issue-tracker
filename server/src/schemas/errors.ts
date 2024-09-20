@@ -1,3 +1,7 @@
+import {
+	SchemaId,
+} from "./constants";
+
 const ErrorResponseCommon = {
 	properties: {
 		message: {
@@ -9,7 +13,7 @@ const ErrorResponseCommon = {
 
 const ErrorResponseWithMessageSchema = {
 	...ErrorResponseCommon,
-	$id: "ErrorResponseWithMessageSchema",
+	$id: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
 	required: [
 		"message",
 	],
@@ -17,7 +21,7 @@ const ErrorResponseWithMessageSchema = {
 
 const ErrorResponseWithValidationErrorsSchema = {
 	...ErrorResponseCommon,
-	$id: "ErrorResponseWithValidationErrorsSchema",
+	$id: SchemaId.ERROR_RESPONSE_WITH_VALIDATION_ERRORS,
 	properties: {
 		...ErrorResponseCommon.properties,
 		validationErrors: {

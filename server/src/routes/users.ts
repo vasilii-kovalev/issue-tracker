@@ -40,6 +40,10 @@ import {
 	getUserValidationErrors,
 } from "@/models/users/utilities/get-user-validation-errors";
 import {
+	SchemaId,
+	SchemaTag,
+} from "@/schemas/constants";
+import {
 	type ErrorResponse,
 	type MongooseValidationError,
 } from "@/types/errors";
@@ -63,22 +67,22 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				response: {
 					[ResponseStatus.OK]: {
 						items: {
-							$ref: "UserSchema",
+							$ref: SchemaId.USER,
 						},
 						type: "array",
 					},
 					[ResponseStatus.UNAUTHORIZED]: {
-						$ref: "ErrorResponseWithMessageSchema",
+						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
 						description: "Unauthorized",
 					},
 					[ResponseStatus.INTERNAL_SERVER_ERROR]: {
-						$ref: "ErrorResponseWithMessageSchema",
+						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
 						description: "Internal server error",
 					},
 				},
 				summary: "Get users",
 				tags: [
-					"users",
+					SchemaTag.USERS,
 				],
 			},
 		},
@@ -125,28 +129,28 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				},
 				response: {
 					[ResponseStatus.OK]: {
-						$ref: "UserSchema",
+						$ref: SchemaId.USER,
 					},
 					[ResponseStatus.BAD_REQUEST]: {
-						$ref: "ErrorResponseWithMessageSchema",
+						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
 						description: "Invalid user ID",
 					},
 					[ResponseStatus.UNAUTHORIZED]: {
-						$ref: "ErrorResponseWithMessageSchema",
+						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
 						description: "Unauthorized",
 					},
 					[ResponseStatus.NOT_FOUND]: {
-						$ref: "ErrorResponseWithMessageSchema",
+						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
 						description: "User with provided user ID doesn't exist",
 					},
 					[ResponseStatus.INTERNAL_SERVER_ERROR]: {
-						$ref: "ErrorResponseWithMessageSchema",
+						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
 						description: "Internal server error",
 					},
 				},
 				summary: "Get user",
 				tags: [
-					"users",
+					SchemaTag.USERS,
 				],
 			},
 		},
@@ -197,18 +201,18 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 			],
 			schema: {
 				body: {
-					$ref: "UserCreateSchema",
+					$ref: SchemaId.USER_CREATE,
 				},
 				response: {
 					[ResponseStatus.CREATED]: {
-						$ref: "UserSchema",
+						$ref: SchemaId.USER,
 					},
 					[ResponseStatus.BAD_REQUEST]: {
-						$ref: "ErrorResponseWithValidationErrorsSchema",
+						$ref: SchemaId.ERROR_RESPONSE_WITH_VALIDATION_ERRORS,
 						description: "Validation errors",
 					},
 					[ResponseStatus.UNAUTHORIZED]: {
-						$ref: "ErrorResponseWithMessageSchema",
+						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
 						description: "Unauthorized",
 					},
 					[ResponseStatus.FORBIDDEN]: {
@@ -216,13 +220,13 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 						type: "null",
 					},
 					[ResponseStatus.INTERNAL_SERVER_ERROR]: {
-						$ref: "ErrorResponseWithMessageSchema",
+						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
 						description: "Internal server error",
 					},
 				},
 				summary: "Create user",
 				tags: [
-					"users",
+					SchemaTag.USERS,
 				],
 			},
 		},
@@ -301,6 +305,9 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				checkUserIdValidity,
 			],
 			schema: {
+				body: {
+					$ref: SchemaId.USER_UPDATE,
+				},
 				description: `Updates user by ID.
 				Note: after user data update, a new JWT token with the new data is set to cookies.`,
 				params: {
@@ -314,36 +321,36 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				},
 				response: {
 					[ResponseStatus.OK]: {
-						$ref: "UserSchema",
+						$ref: SchemaId.USER,
 					},
 					[ResponseStatus.BAD_REQUEST]: {
 						oneOf: [
 							{
-								$ref: "ErrorResponseWithMessageSchema",
+								$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
 								description: "Invalid user ID",
 							},
 							{
-								$ref: "ErrorResponseWithValidationErrorsSchema",
+								$ref: SchemaId.ERROR_RESPONSE_WITH_VALIDATION_ERRORS,
 								description: "Validation errors",
 							},
 						],
 					},
 					[ResponseStatus.UNAUTHORIZED]: {
-						$ref: "ErrorResponseWithMessageSchema",
+						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
 						description: "Unauthorized",
 					},
 					[ResponseStatus.NOT_FOUND]: {
-						$ref: "ErrorResponseWithMessageSchema",
+						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
 						description: "User with provided user ID doesn't exist",
 					},
 					[ResponseStatus.INTERNAL_SERVER_ERROR]: {
-						$ref: "ErrorResponseWithMessageSchema",
+						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
 						description: "Internal server error",
 					},
 				},
 				summary: "Update user",
 				tags: [
-					"users",
+					SchemaTag.USERS,
 				],
 			},
 		},
@@ -488,14 +495,14 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				},
 				response: {
 					[ResponseStatus.OK]: {
-						$ref: "UserSchema",
+						$ref: SchemaId.USER,
 					},
 					[ResponseStatus.BAD_REQUEST]: {
-						$ref: "ErrorResponseWithMessageSchema",
+						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
 						description: "Invalid user ID",
 					},
 					[ResponseStatus.UNAUTHORIZED]: {
-						$ref: "ErrorResponseWithMessageSchema",
+						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
 						description: "Unauthorized",
 					},
 					[ResponseStatus.FORBIDDEN]: {
@@ -503,17 +510,17 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 						type: "null",
 					},
 					[ResponseStatus.NOT_FOUND]: {
-						$ref: "ErrorResponseWithMessageSchema",
+						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
 						description: "User with provided user ID doesn't exist",
 					},
 					[ResponseStatus.INTERNAL_SERVER_ERROR]: {
-						$ref: "ErrorResponseWithMessageSchema",
+						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
 						description: "Internal server error",
 					},
 				},
 				summary: "Delete user",
 				tags: [
-					"users",
+					SchemaTag.USERS,
 				],
 			},
 		},
