@@ -81,7 +81,7 @@ Check `populateData` function's call in [index.ts](./index.ts) file to learn mor
   * Routes registering
   * Initial data population
 * [src](./src) folder:
-  * [models](./src/models) - code, related to models of the project. Main models are described in the [Models document](../documentation/models.md), but the folder may also contain other "utility" models (like auth, errors, dates and so on) to create a place for related code. Each model may contain:
+  * [models](./src/models) - code, related to models of the project. Main models are described in the ["Models" document](../documentation/models.md), but the folder may also contain other "utility" models (like auth, errors, dates and so on) to create a place for related code. Each model may contain:
     * Constants (`constants.ts`)
     * Types (`types.ts`)
     * Utility functions (`utilities/*`)

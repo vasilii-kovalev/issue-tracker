@@ -43,7 +43,7 @@ A hashed version of user's password.
 
 #### `roles`
 
-A list of user's roles. The roles are described in the [Permissions document](./permissions.md).
+A list of user's roles. The roles are described in the ["Roles and permissions" document](./roles-and-permissions.md).
 
 * **Type**: `Array<string>`
 * **Required**: true

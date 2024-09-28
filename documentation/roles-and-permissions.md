@@ -1,4 +1,4 @@
-# Permissions
+# Roles and permissions
 
 This document contains information about user roles and permissions.
 
