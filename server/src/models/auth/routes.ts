@@ -4,10 +4,11 @@ import {
 
 import {
 	ResponseStatus,
-} from "@/constants";
+} from "@/constants/api";
 import {
-	COOKIE_JWT_TOKEN_NAME,
-} from "@/models/auth/constants";
+	SchemaId,
+	SchemaTag,
+} from "@/constants/schemas";
 import {
 	type ErrorResponse,
 } from "@/models/errors/types";
@@ -15,23 +16,26 @@ import {
 	UserModel,
 } from "@/models/users/model";
 import {
-	type User,
+	type UserLogin,
 } from "@/models/users/types";
 import {
 	verifyUserPassword,
 } from "@/models/users/utilities/verify-user-password";
 import {
-	SchemaId,
-	SchemaTag,
-} from "@/schemas/constants";
-import {
 	isNull,
 } from "@/utilities/is-null";
 
+import {
+	COOKIE_JWT_TOKEN_NAME,
+} from "./constants";
+import {
+	type JwtPayload,
+} from "./types";
+
 const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 	server.post<{
-		Body: Pick<User, "email" | "password">;
-		Reply: User | ErrorResponse;
+		Body: UserLogin;
+		Reply: undefined | ErrorResponse;
 	}>(
 		"/api/auth/login",
 		{
@@ -97,7 +101,7 @@ const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 
 				const token = server.jwt.sign({
 					payload: user.toJSON(),
-				});
+				} satisfies JwtPayload);
 
 				return await response
 					.setCookie(

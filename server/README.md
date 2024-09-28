@@ -81,18 +81,16 @@ Check `populateData` function's call in [index.ts](./index.ts) file to learn mor
   * Routes registering
   * Initial data population
 * [src](./src) folder:
+  * [constants.ts](./src/constants.ts) - global constants
   * [models](./src/models) - code, related to models of the project. Main models are described in the ["Models" document](../documentation/models.md), but the folder may also contain other "utility" models (like auth, errors, dates and so on) to create a place for related code. Each model may contain:
     * Constants (`constants.ts`)
     * Types (`types.ts`)
     * Utility functions (`utilities/*`)
-    * Middleware (`middleware/*`) - used in route definitions
     * Mongoose schema and model (`model.ts`)
+    * Middleware (`middleware/*`) - used in route definitions
+    * Routes (`routes.ts`) - route definitions
     * OpenAPI schema (`schema.ts`) - used in route definitions
     * Stubs (`stubs.ts`) - used in tests and initial data population
-  * [plugins](./src/plugins) - plugins for Mongoose
-  * [routes](./src/routes) - route definitions
-  * [schemas](./src/schemas) - OpenAPI schemas. It contains
-    * [`addSchemas` function](./src/schemas/utilities/add-schemas.ts) for schemas registering
-    * [`constants`](./src/schemas/constants.ts) with schema IDs (used in schemas and route definitions) and schema tags (used in route definitions)
+  * [plugins](./src/plugins) - global plugins
+  * [types](./src/types) - global types
   * [utilities](./src/utilities) - global utility functions
-  * [constants.ts](./src/constants.ts) - global constants

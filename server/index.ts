@@ -7,13 +7,13 @@ import mongoose from "mongoose";
 
 import {
 	authRoutes,
-} from "@/routes/auth";
+} from "@/models/auth/routes";
 import {
 	usersRoutes,
-} from "@/routes/users";
+} from "@/models/users/routes";
 import {
 	addSchemas,
-} from "@/schemas/utilities/add-schemas";
+} from "@/utilities/add-schemas";
 import {
 	populateData,
 } from "@/utilities/populate-data";

@@ -9,13 +9,22 @@ import {
 } from "@epam/uui-core";
 import {
 	type FC,
-	useEffect,
+	useState,
 } from "react";
 
 import reactLogo from "@/assets/react.svg";
 import {
+	type ErrorResponse,
+} from "@/models/errors/types";
+import {
+	getUsers,
+} from "@/models/user/endpoints";
+import {
 	type User,
 } from "@/models/user/types";
+import {
+	isEmpty,
+} from "@/utilities/is-empty";
 import {
 	logError,
 } from "@/utilities/log-error";
@@ -27,28 +36,23 @@ const Application: FC = () => {
 		uuiNotifications,
 	} = useUuiContext();
 
-	useEffect(
-		() => {
-			const getUsers = async (): Promise<void> => {
-				try {
-					const response = await fetch("/api/users");
+	const [
+		users,
+		setUsers,
+	] = useState<Array<User>>([]);
 
-					const users = (await response.json()) as Array<User>;
-
-					console.info(users);
-				} catch (error) {
-					logError(error);
-				}
-			};
-
-			void getUsers();
-		},
-		[],
-	);
-
-	const handleClick = async (): Promise<void> => {
+	const fetchUsers = async (): Promise<void> => {
 		try {
-			await uuiNotifications.show((notificationProps) => {
+			const {
+				data: paginatedUsers,
+			} = await getUsers({
+				count: 1,
+				pageNumber: 1,
+			});
+
+			setUsers(paginatedUsers);
+
+			void uuiNotifications.show((notificationProps) => {
 				return (
 					<NotificationCard
 						{...notificationProps}
@@ -57,13 +61,42 @@ const Application: FC = () => {
 						<Text
 							color="primary"
 						>
-							Hello!
+							Users are fetched successfully.
 						</Text>
 					</NotificationCard>
 				);
 			});
 		} catch (error) {
 			logError(error);
+
+			const typedError = error as ErrorResponse | Error;
+
+			const notifications: Array<string> = (
+				"validationErrors" in typedError
+					? typedError.validationErrors.map((validationError) => {
+						return validationError.message;
+					})
+					: [
+						typedError.message,
+					]
+			);
+
+			notifications.forEach((notificationTex) => {
+				void uuiNotifications.show((notificationProps) => {
+					return (
+						<NotificationCard
+							{...notificationProps}
+							color="error"
+						>
+							<Text
+								color="primary"
+							>
+								{notificationTex}
+							</Text>
+						</NotificationCard>
+					);
+				});
+			});
 		}
 	};
 
@@ -72,27 +105,47 @@ const Application: FC = () => {
 			<FlexRow
 				spacing={null}
 			>
-				<Text
-					color="primary"
-					fontSize="24"
-					size="48"
-				>
-					Project 1
-				</Text>
+				<img
+					alt="React logo"
+					className={`${styles.logo} ${styles.react}`}
+					src={reactLogo}
+				/>
 			</FlexRow>
 
-			<img
-				alt="React logo"
-				className={`${styles.logo} ${styles.react}`}
-				src={reactLogo}
-			/>
+			<FlexRow
+				spacing={null}
+			>
+				<Button
+					caption="Click me"
+					onClick={() => {
+						void fetchUsers();
+					}}
+				/>
+			</FlexRow>
 
-			<Button
-				caption="Click me"
-				onClick={() => {
-					void handleClick();
-				}}
-			/>
+			{
+				!isEmpty(users)
+					? (
+						<ul>
+							{
+								users.map((user) => {
+									return (
+										<li
+											key={user.id}
+										>
+											<Text
+												color="primary"
+											>
+												{user.displayedName}
+											</Text>
+										</li>
+									);
+								})
+							}
+						</ul>
+					)
+					: null
+			}
 		</>
 	);
 };

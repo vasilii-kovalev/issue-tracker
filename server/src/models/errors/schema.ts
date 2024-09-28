@@ -1,6 +1,6 @@
 import {
 	SchemaId,
-} from "@/schemas/constants";
+} from "@/constants/schemas";
 
 const ErrorResponseCommon = {
 	properties: {

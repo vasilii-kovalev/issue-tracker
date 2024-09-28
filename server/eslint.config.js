@@ -1120,7 +1120,7 @@ const eslintConfig = config(
 			// https://eslint.style/rules/default/no-extra-parens
 			"@stylistic/no-extra-parens": [
 				ERROR,
-				"all",
+				"functions",
 			],
 			// https://eslint.style/rules/default/no-extra-semi
 			"@stylistic/no-extra-semi": ERROR,

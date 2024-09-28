@@ -4,7 +4,11 @@ import {
 
 import {
 	ResponseStatus,
-} from "@/constants";
+} from "@/constants/api";
+import {
+	SchemaId,
+	SchemaTag,
+} from "@/constants/schemas";
 import {
 	COOKIE_JWT_TOKEN_NAME,
 } from "@/models/auth/constants";
@@ -12,12 +16,21 @@ import {
 	checkJwt,
 } from "@/models/auth/middleware/check-jwt";
 import {
+	type JwtPayload,
+} from "@/models/auth/types";
+import {
 	getUserIdFromJwtCookie,
 } from "@/models/auth/utilities/get-user-id-from-jwt-cookie";
 import {
 	type ErrorResponse,
 	type MongooseValidationError,
 } from "@/models/errors/types";
+import {
+	checkPaginationPageQueryParams,
+} from "@/models/pagination/middleware/check-pagination-query-params";
+import {
+	type PaginatedPageQueryParams,
+} from "@/models/pagination/types";
 import {
 	PermissionId,
 } from "@/models/permissions/constants";
@@ -28,25 +41,8 @@ import {
 	hasPermissions,
 } from "@/models/permissions/utilities/has-permissions";
 import {
-	checkUserIdValidity,
-} from "@/models/users/middleware/check-user-id-validity";
-import {
-	UserModel,
-} from "@/models/users/model";
-import {
-	type User,
-	type UserId,
-} from "@/models/users/types";
-import {
-	getEmailDuplicationValidationError,
-} from "@/models/users/utilities/get-email-duplication-validation-error";
-import {
-	getUserValidationErrors,
-} from "@/models/users/utilities/get-user-validation-errors";
-import {
-	SchemaId,
-	SchemaTag,
-} from "@/schemas/constants";
+	type SortingOptions,
+} from "@/types/mongoose";
 import {
 	isNull,
 } from "@/utilities/is-null";
@@ -54,22 +50,45 @@ import {
 	isUndefined,
 } from "@/utilities/is-undefined";
 
+import {
+	checkUserIdValidity,
+} from "./middleware/check-user-id-validity";
+import {
+	UserModel,
+} from "./model";
+import {
+	type User,
+	type UserCreate,
+	type UserId,
+	type UsersPaginatedPage,
+	type UserUpdate,
+} from "./types";
+import {
+	getEmailDuplicationValidationError,
+} from "./utilities/get-email-duplication-validation-error";
+import {
+	getUserValidationErrors,
+} from "./utilities/get-user-validation-errors";
+
 const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 	server.get<{
-		Reply: Array<User> | ErrorResponse;
+		Querystring: PaginatedPageQueryParams;
+		Reply: UsersPaginatedPage | ErrorResponse;
 	}>(
 		"/api/users",
 		{
 			onRequest: [
 				checkJwt,
+				checkPaginationPageQueryParams,
 			],
 			schema: {
+				querystring: {
+					$ref: SchemaId.PAGINATION_PAGE_QUERY_PARAMS,
+				},
 				response: {
 					[ResponseStatus.OK]: {
-						items: {
-							$ref: SchemaId.USER,
-						},
-						type: "array",
+						$ref: SchemaId.USERS_PAGINATED_PAGE,
+						description: "Paginated users",
 					},
 					[ResponseStatus.UNAUTHORIZED]: {
 						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
@@ -88,11 +107,47 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 		},
 		async (request, response) => {
 			try {
-				const users = await UserModel.find();
+				const {
+					query: {
+						count,
+						pageNumber,
+					},
+				} = request;
+
+				const parsedCount = Number.parseInt(
+					count,
+					10,
+				);
+				const parsedPageNumber = Number.parseInt(
+					pageNumber,
+					10,
+				);
+
+				const [
+					users,
+					usersTotalCount,
+				] = await Promise.all([
+					UserModel.find(
+						{},
+						undefined,
+						{
+							limit: parsedCount,
+							skip: parsedCount * (parsedPageNumber - 1),
+							sort: {
+								displayedName: "asc",
+							} satisfies SortingOptions<User>,
+						},
+					),
+					UserModel.countDocuments(),
+				]);
 
 				return await response
 					.status(ResponseStatus.OK)
-					.send(users);
+					.send({
+						data: users,
+						itemsCount: users.length,
+						pagesTotalCount: Math.ceil(usersTotalCount / parsedCount),
+					});
 			} catch (error) {
 				const typedError = error as Error;
 
@@ -188,7 +243,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 	);
 
 	server.post<{
-		Body: User;
+		Body: UserCreate;
 		Reply: User | ErrorResponse;
 	}>(
 		"/api/users/create",
@@ -295,7 +350,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 		Params: {
 			id: UserId;
 		};
-		Body: Partial<User>;
+		Body: UserUpdate;
 		Reply: User | ErrorResponse;
 	}>(
 		"/api/users/update/:id",
@@ -411,7 +466,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 
 				const token = server.jwt.sign({
 					payload: user.toJSON(),
-				});
+				} satisfies JwtPayload);
 
 				return await response
 					// Like in `/api/auth/login`.

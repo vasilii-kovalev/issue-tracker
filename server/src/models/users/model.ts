@@ -5,17 +5,21 @@ import {
 } from "@/models/permissions/constants";
 import {
 	transformJsonPlugin,
-} from "@/plugins/transform-json-plugin";
+} from "@/plugins/mongoose";
+import {
+	isEmpty,
+} from "@/utilities/is-empty";
 
 import {
 	type User,
+	type UserFull,
 } from "./types";
 
 const {
 	Schema,
 } = mongoose;
 
-const UserSchema = new Schema<User>(
+const UserSchema = new Schema<UserFull>(
 	{
 		displayedName: {
 			required: [
@@ -72,7 +76,7 @@ const UserSchema = new Schema<User>(
 					validator: (value) => {
 						return (
 							Array.isArray(value)
-							&& value.length > 0
+							&& !isEmpty(value)
 						);
 					},
 				},
@@ -88,7 +92,7 @@ const UserSchema = new Schema<User>(
 					...restFields
 				} = record;
 
-				return restFields;
+				return restFields as User;
 			},
 		},
 	},

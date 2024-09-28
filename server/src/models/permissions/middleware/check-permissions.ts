@@ -4,7 +4,7 @@ import {
 
 import {
 	ResponseStatus,
-} from "@/constants";
+} from "@/constants/api";
 import {
 	getUserIdFromJwtCookie,
 } from "@/models/auth/utilities/get-user-id-from-jwt-cookie";

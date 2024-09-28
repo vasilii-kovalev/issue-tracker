@@ -1,7 +1,3 @@
-import type mongoose from "mongoose";
-
-type MongooseValidationError = mongoose.Error.ValidationError;
-
 interface ValidationError {
 	message: string;
 	path: string;
@@ -21,7 +17,4 @@ type ErrorResponse =
 
 export type {
 	ErrorResponse,
-	ErrorResponseWithValidationErrors,
-	MongooseValidationError,
-	ValidationError,
 };

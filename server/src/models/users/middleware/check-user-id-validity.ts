@@ -8,7 +8,7 @@ import mongoose from "mongoose";
 
 import {
 	ResponseStatus,
-} from "@/constants";
+} from "@/constants/api";
 import {
 	type ErrorResponse,
 } from "@/models/errors/types";

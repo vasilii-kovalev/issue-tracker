@@ -1,9 +1,12 @@
 import {
+	SchemaId,
+} from "@/constants/schemas";
+import {
+	PaginatedPage,
+} from "@/models/pagination/schema";
+import {
 	ROLES,
 } from "@/models/permissions/constants";
-import {
-	SchemaId,
-} from "@/schemas/constants";
 
 const UserSchemaCommon = {
 	properties: {
@@ -80,9 +83,24 @@ const UserLoginSchema = {
 	],
 };
 
+const UsersPaginatedPageSchema = {
+	...PaginatedPage,
+	$id: SchemaId.USERS_PAGINATED_PAGE,
+	properties: {
+		...PaginatedPage.properties,
+		data: {
+			...PaginatedPage.properties.data,
+			items: {
+				$ref: SchemaId.USER,
+			},
+		},
+	},
+};
+
 export {
 	UserCreateSchema,
 	UserLoginSchema,
 	UserSchema,
+	UsersPaginatedPageSchema,
 	UserUpdateSchema,
 };

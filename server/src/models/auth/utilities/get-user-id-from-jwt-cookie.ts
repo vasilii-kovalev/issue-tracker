@@ -4,7 +4,6 @@ import {
 } from "fastify";
 
 import {
-	type User,
 	type UserId,
 } from "@/models/users/types";
 import {
@@ -17,10 +16,9 @@ import {
 import {
 	COOKIE_JWT_TOKEN_NAME,
 } from "../constants";
-
-interface JwtPayload {
-	payload: User;
-}
+import {
+	type JwtPayload,
+} from "../types";
 
 const getUserIdFromJwtCookie = (
 	server: FastifyInstance,
