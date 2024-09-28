@@ -1731,7 +1731,22 @@ const eslintConfig = config(
 			// The "import-x/no-commonjs" rule takes care of it.
 			"@typescript-eslint/no-require-imports": DISABLED,
 			// https://typescript-eslint.io/rules/no-restricted-imports
-			"@typescript-eslint/no-restricted-imports": ERROR,
+			"@typescript-eslint/no-restricted-imports": [
+				ERROR,
+				{
+					paths: [
+						{
+							name: "@epam/loveship",
+							importNames: [
+								"DropdownMenuBody",
+								"Text",
+							],
+							message: "Please use components from `src/components/uui` instead.",
+							allowTypeImports: true,
+						},
+					],
+				},
+			],
 			// https://typescript-eslint.io/rules/no-restricted-types
 			"@typescript-eslint/no-restricted-types": ERROR,
 			// https://typescript-eslint.io/rules/no-shadow

@@ -2,7 +2,6 @@ import {
 	Button,
 	FlexRow,
 	NotificationCard,
-	Text,
 } from "@epam/loveship";
 import {
 	useUuiContext,
@@ -13,6 +12,9 @@ import {
 } from "react";
 
 import reactLogo from "@/assets/react.svg";
+import {
+	Text,
+} from "@/components/uui/text";
 import {
 	type ErrorResponse,
 } from "@/models/errors/types";
@@ -58,9 +60,7 @@ const Application: FC = () => {
 						{...notificationProps}
 						color="info"
 					>
-						<Text
-							color="primary"
-						>
+						<Text>
 							Users are fetched successfully.
 						</Text>
 					</NotificationCard>
@@ -88,9 +88,7 @@ const Application: FC = () => {
 							{...notificationProps}
 							color="error"
 						>
-							<Text
-								color="primary"
-							>
+							<Text>
 								{notificationTex}
 							</Text>
 						</NotificationCard>
@@ -133,9 +131,7 @@ const Application: FC = () => {
 										<li
 											key={user.id}
 										>
-											<Text
-												color="primary"
-											>
+											<Text>
 												{user.displayedName}
 											</Text>
 										</li>
