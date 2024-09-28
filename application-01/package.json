@@ -9,7 +9,7 @@
 		"build": "bunx --bun vite build",
 		"preview": "bunx --bun vite preview",
 		"analyze-bundle": "bunx --bun vite-bundle-visualizer",
-		"check:types": "tsc --noEmit --project tsconfig.app.json",
+		"check:types": "bunx --bun tsc --noEmit --project tsconfig.app.json",
 		"check:eslint": "bunx --bun eslint . --quiet",
 		"check:stylelint": "bunx --bun stylelint \"src/**/*.css\" --quiet"
 	},
