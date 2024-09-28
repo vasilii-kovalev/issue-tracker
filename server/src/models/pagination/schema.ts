@@ -26,9 +26,12 @@ const PaginatedPageQueryParamsSchema = {
 	$id: SchemaId.PAGINATION_PAGE_QUERY_PARAMS,
 	properties: {
 		count: {
+			maximum: 100,
+			minimum: 1,
 			type: "number",
 		},
 		pageNumber: {
+			minimum: 1,
 			type: "number",
 		},
 	},

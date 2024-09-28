@@ -5,8 +5,8 @@ interface PaginatedPage<Entity> {
 }
 
 interface PaginatedPageQueryParams {
-	count: string;
-	pageNumber: string;
+	count: number;
+	pageNumber: number;
 }
 
 export type {

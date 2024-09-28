@@ -24,13 +24,15 @@ const getUserIdFromJwtCookie = (
 	server: FastifyInstance,
 	request: FastifyRequest,
 ): UserId | undefined => {
-	const cookieHeader = request.headers.cookie;
+	const {
+		cookie,
+	} = request.headers;
 
-	if (isUndefined(cookieHeader)) {
+	if (isUndefined(cookie)) {
 		return undefined;
 	}
 
-	const parsedCookie = server.parseCookie(cookieHeader);
+	const parsedCookie = server.parseCookie(cookie);
 	const token = parsedCookie[COOKIE_JWT_TOKEN_NAME];
 	const decodedToken = server.jwt.decode<JwtPayload>(token);
 

@@ -3,8 +3,7 @@ import {
 } from "fastify";
 
 import {
-	ErrorResponseWithMessageSchema,
-	ErrorResponseWithValidationErrorsSchema,
+	ErrorResponseSchema,
 } from "@/models/errors/schema";
 import {
 	PaginatedPageQueryParamsSchema,
@@ -30,9 +29,7 @@ const addSchemas = (server: FastifyInstance): void => {
 	server.addSchema(UsersPaginatedPageSchema);
 
 	// Errors.
-	server.addSchema(ErrorResponseWithMessageSchema);
-
-	server.addSchema(ErrorResponseWithValidationErrorsSchema);
+	server.addSchema(ErrorResponseSchema);
 
 	// Pagination.
 	server.addSchema(PaginatedPageQueryParamsSchema);

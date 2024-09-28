@@ -7,21 +7,13 @@ interface ValidationError {
 	path: string;
 }
 
-interface ErrorResponseWithMessage {
-	message?: string;
-}
-
-interface ErrorResponseWithValidationErrors extends ErrorResponseWithMessage {
+interface ErrorResponse {
+	message: string;
 	validationErrors: Array<ValidationError>;
 }
 
-type ErrorResponse =
-	| ErrorResponseWithValidationErrors
-	| Required<ErrorResponseWithMessage>;
-
 export type {
 	ErrorResponse,
-	ErrorResponseWithValidationErrors,
 	MongooseValidationError,
 	ValidationError,
 };

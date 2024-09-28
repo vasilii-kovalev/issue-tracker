@@ -19,6 +19,7 @@ const checkJwt: onRequestAsyncHookHandler = async (request, response) => {
 			.status(ResponseStatus.UNAUTHORIZED)
 			.send({
 				message: typedError.message,
+				validationErrors: [],
 			} satisfies ErrorResponse);
 	}
 };

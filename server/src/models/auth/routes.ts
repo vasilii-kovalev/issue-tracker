@@ -24,6 +24,9 @@ import {
 import {
 	isNull,
 } from "@/utilities/is-null";
+import {
+	isUndefined,
+} from "@/utilities/is-undefined";
 
 import {
 	COOKIE_JWT_TOKEN_NAME,
@@ -39,6 +42,7 @@ const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 	}>(
 		"/api/auth/login",
 		{
+			attachValidation: true,
 			schema: {
 				body: {
 					$ref: SchemaId.USER_LOGIN,
@@ -49,15 +53,15 @@ const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 						type: "null",
 					},
 					[ResponseStatus.BAD_REQUEST]: {
-						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
+						$ref: SchemaId.ERROR_RESPONSE,
 						description: "Incorrect password",
 					},
 					[ResponseStatus.NOT_FOUND]: {
-						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
+						$ref: SchemaId.ERROR_RESPONSE,
 						description: "User with provided email doesn't exist",
 					},
 					[ResponseStatus.INTERNAL_SERVER_ERROR]: {
-						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
+						$ref: SchemaId.ERROR_RESPONSE,
 						description: "Internal server error",
 					},
 				},
@@ -68,6 +72,19 @@ const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 			},
 		},
 		async (request, response) => {
+			const {
+				validationError,
+			} = request;
+
+			if (!isUndefined(validationError)) {
+				return await response
+					.status(ResponseStatus.BAD_REQUEST)
+					.send({
+						message: validationError.message,
+						validationErrors: [],
+					});
+			}
+
 			const {
 				email,
 				password,
@@ -83,6 +100,7 @@ const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 						.status(ResponseStatus.NOT_FOUND)
 						.send({
 							message: `User with email "${email}" doesn't exist.`,
+							validationErrors: [],
 						});
 				}
 
@@ -96,6 +114,12 @@ const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 						.status(ResponseStatus.BAD_REQUEST)
 						.send({
 							message: "Password is incorrect.",
+							validationErrors: [
+								{
+									message: "Password is incorrect.",
+									path: "body.password",
+								},
+							],
 						});
 				}
 
@@ -120,6 +144,7 @@ const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 					.status(ResponseStatus.INTERNAL_SERVER_ERROR)
 					.send({
 						message: typedError.message,
+						validationErrors: [],
 					});
 			}
 		},
@@ -130,6 +155,7 @@ const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 	}>(
 		"/api/auth/logout",
 		{
+			attachValidation: true,
 			schema: {
 				description: `Removes "${COOKIE_JWT_TOKEN_NAME}" JWT cookie in headers.`,
 				response: {
@@ -137,7 +163,7 @@ const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 						type: "null",
 					},
 					[ResponseStatus.INTERNAL_SERVER_ERROR]: {
-						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
+						$ref: SchemaId.ERROR_RESPONSE,
 						description: "Internal server error",
 					},
 				},
@@ -148,6 +174,19 @@ const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 			},
 		},
 		async (request, response) => {
+			const {
+				validationError,
+			} = request;
+
+			if (!isUndefined(validationError)) {
+				return await response
+					.status(ResponseStatus.BAD_REQUEST)
+					.send({
+						message: validationError.message,
+						validationErrors: [],
+					});
+			}
+
 			try {
 				return await response
 					.clearCookie(COOKIE_JWT_TOKEN_NAME)
@@ -160,6 +199,7 @@ const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 					.status(ResponseStatus.INTERNAL_SERVER_ERROR)
 					.send({
 						message: typedError.message,
+						validationErrors: [],
 					});
 			}
 		},

@@ -27,15 +27,23 @@ const checkUserIdValidity: onRequestAsyncHookHandler<
 		};
 	}
 > = async (request, response) => {
-	const userId = request.params.id;
+	const {
+		id,
+	} = request.params;
 
-	const isValidUserId = mongoose.isValidObjectId(userId);
+	const isValidUserId = mongoose.isValidObjectId(id);
 
 	if (!isValidUserId) {
 		return await response
 			.status(ResponseStatus.BAD_REQUEST)
 			.send({
-				message: `Incorrect user ID "${userId}".`,
+				message: `Incorrect user ID: "${id}".`,
+				validationErrors: [
+					{
+						message: `Incorrect user ID: "${id}".`,
+						path: "params.id",
+					},
+				],
 			} satisfies ErrorResponse);
 	}
 };

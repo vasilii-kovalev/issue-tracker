@@ -7,8 +7,7 @@ enum SchemaId {
 	USERS_PAGINATED_PAGE = "UsersPaginatedPage",
 
 	// Errors.
-	ERROR_RESPONSE_WITH_MESSAGE = "ErrorResponseWithMessage",
-	ERROR_RESPONSE_WITH_VALIDATION_ERRORS = "ErrorResponseWithValidationErrors",
+	ERROR_RESPONSE = "ErrorResponse",
 
 	// Pagination.
 	PAGINATION_PAGE_QUERY_PARAMS = "PaginationPageQueryParams",

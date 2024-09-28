@@ -2,28 +2,12 @@ import {
 	SchemaId,
 } from "@/constants/schemas";
 
-const ErrorResponseCommon = {
+const ErrorResponseSchema = {
+	$id: SchemaId.ERROR_RESPONSE,
 	properties: {
 		message: {
 			type: "string",
 		},
-	},
-	type: "object",
-};
-
-const ErrorResponseWithMessageSchema = {
-	...ErrorResponseCommon,
-	$id: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
-	required: [
-		"message",
-	],
-};
-
-const ErrorResponseWithValidationErrorsSchema = {
-	...ErrorResponseCommon,
-	$id: SchemaId.ERROR_RESPONSE_WITH_VALIDATION_ERRORS,
-	properties: {
-		...ErrorResponseCommon.properties,
 		validationErrors: {
 			items: {
 				properties: {
@@ -44,11 +28,12 @@ const ErrorResponseWithValidationErrorsSchema = {
 		},
 	},
 	required: [
+		"message",
 		"validationErrors",
 	],
+	type: "object",
 };
 
 export {
-	ErrorResponseWithMessageSchema,
-	ErrorResponseWithValidationErrorsSchema,
+	ErrorResponseSchema,
 };

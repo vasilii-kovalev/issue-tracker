@@ -13,11 +13,19 @@ const getUserValidationErrors = (
 			const {
 				path,
 				message,
+				kind,
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+				value,
 			} = validationError;
 
 			return validationErrors.concat({
-				message,
-				path,
+				message: (
+					path.startsWith("roles")
+					&& kind === "enum"
+				)
+					? `Unsupported role: "${value}".`
+					: message,
+				path: `body.${path}`,
 			});
 		},
 		[],

@@ -26,9 +26,6 @@ import {
 	type MongooseValidationError,
 } from "@/models/errors/types";
 import {
-	checkPaginationPageQueryParams,
-} from "@/models/pagination/middleware/check-pagination-query-params";
-import {
 	type PaginatedPageQueryParams,
 } from "@/models/pagination/types";
 import {
@@ -77,9 +74,9 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 	}>(
 		"/api/users",
 		{
+			attachValidation: true,
 			onRequest: [
 				checkJwt,
-				checkPaginationPageQueryParams,
 			],
 			schema: {
 				querystring: {
@@ -91,15 +88,15 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 						description: "Paginated users",
 					},
 					[ResponseStatus.BAD_REQUEST]: {
-						$ref: SchemaId.ERROR_RESPONSE_WITH_VALIDATION_ERRORS,
-						description: "Validation errors for query parameters",
+						$ref: SchemaId.ERROR_RESPONSE,
+						description: "Validation errors (schema)",
 					},
 					[ResponseStatus.UNAUTHORIZED]: {
-						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
+						$ref: SchemaId.ERROR_RESPONSE,
 						description: "Unauthorized",
 					},
 					[ResponseStatus.INTERNAL_SERVER_ERROR]: {
-						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
+						$ref: SchemaId.ERROR_RESPONSE,
 						description: "Internal server error",
 					},
 				},
@@ -110,23 +107,25 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 			},
 		},
 		async (request, response) => {
+			const {
+				validationError,
+			} = request;
+
+			if (!isUndefined(validationError)) {
+				return await response
+					.status(ResponseStatus.BAD_REQUEST)
+					.send({
+						message: validationError.message,
+						validationErrors: [],
+					});
+			}
+
+			const {
+				count,
+				pageNumber,
+			} = request.query;
+
 			try {
-				const {
-					query: {
-						count,
-						pageNumber,
-					},
-				} = request;
-
-				const parsedCount = Number.parseInt(
-					count,
-					10,
-				);
-				const parsedPageNumber = Number.parseInt(
-					pageNumber,
-					10,
-				);
-
 				const [
 					users,
 					usersTotalCount,
@@ -135,8 +134,8 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 						{},
 						undefined,
 						{
-							limit: parsedCount,
-							skip: parsedCount * (parsedPageNumber - 1),
+							limit: count,
+							skip: count * (pageNumber - 1),
 							sort: {
 								displayedName: "asc",
 							} satisfies SortingOptions<User>,
@@ -150,7 +149,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					.send({
 						data: users,
 						itemsCount: users.length,
-						pagesTotalCount: Math.ceil(usersTotalCount / parsedCount),
+						pagesTotalCount: Math.ceil(usersTotalCount / count),
 					});
 			} catch (error) {
 				const typedError = error as Error;
@@ -159,6 +158,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					.status(ResponseStatus.INTERNAL_SERVER_ERROR)
 					.send({
 						message: typedError.message,
+						validationErrors: [],
 					});
 			}
 		},
@@ -172,8 +172,11 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 	}>(
 		"/api/users/:id",
 		{
+			attachValidation: true,
 			onRequest: [
 				checkJwt,
+			],
+			preHandler: [
 				checkUserIdValidity,
 			],
 			schema: {
@@ -191,19 +194,19 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 						$ref: SchemaId.USER,
 					},
 					[ResponseStatus.BAD_REQUEST]: {
-						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
+						$ref: SchemaId.ERROR_RESPONSE,
 						description: "Invalid user ID",
 					},
 					[ResponseStatus.UNAUTHORIZED]: {
-						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
+						$ref: SchemaId.ERROR_RESPONSE,
 						description: "Unauthorized",
 					},
 					[ResponseStatus.NOT_FOUND]: {
-						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
+						$ref: SchemaId.ERROR_RESPONSE,
 						description: "User with provided user ID doesn't exist",
 					},
 					[ResponseStatus.INTERNAL_SERVER_ERROR]: {
-						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
+						$ref: SchemaId.ERROR_RESPONSE,
 						description: "Internal server error",
 					},
 				},
@@ -215,10 +218,21 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 		},
 		async (request, response) => {
 			const {
-				params: {
-					id,
-				},
+				validationError,
 			} = request;
+
+			if (!isUndefined(validationError)) {
+				return await response
+					.status(ResponseStatus.BAD_REQUEST)
+					.send({
+						message: validationError.message,
+						validationErrors: [],
+					});
+			}
+
+			const {
+				id,
+			} = request.params;
 
 			try {
 				const user = await UserModel.findById(id);
@@ -228,6 +242,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 						.status(ResponseStatus.NOT_FOUND)
 						.send({
 							message: `User with id "${id}" doesn't exist.`,
+							validationErrors: [],
 						});
 				}
 
@@ -241,6 +256,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					.status(ResponseStatus.INTERNAL_SERVER_ERROR)
 					.send({
 						message: typedError.message,
+						validationErrors: [],
 					});
 			}
 		},
@@ -252,6 +268,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 	}>(
 		"/api/users/create",
 		{
+			attachValidation: true,
 			onRequest: [
 				checkJwt,
 				checkPermissions([
@@ -267,11 +284,11 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 						$ref: SchemaId.USER,
 					},
 					[ResponseStatus.BAD_REQUEST]: {
-						$ref: SchemaId.ERROR_RESPONSE_WITH_VALIDATION_ERRORS,
-						description: "Validation errors",
+						$ref: SchemaId.ERROR_RESPONSE,
+						description: "Validation errors (schema or manual)",
 					},
 					[ResponseStatus.UNAUTHORIZED]: {
-						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
+						$ref: SchemaId.ERROR_RESPONSE,
 						description: "Unauthorized",
 					},
 					[ResponseStatus.FORBIDDEN]: {
@@ -279,7 +296,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 						type: "null",
 					},
 					[ResponseStatus.INTERNAL_SERVER_ERROR]: {
-						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
+						$ref: SchemaId.ERROR_RESPONSE,
 						description: "Internal server error",
 					},
 				},
@@ -291,13 +308,27 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 		},
 		async (request, response) => {
 			const {
-				body: {
-					displayedName,
-					email,
-					password,
-					roles,
-				},
+				validationError,
 			} = request;
+
+			if (
+				!isUndefined(validationError)
+				&& validationError.message === "body must be object"
+			) {
+				return await response
+					.status(ResponseStatus.BAD_REQUEST)
+					.send({
+						message: validationError.message,
+						validationErrors: [],
+					});
+			}
+
+			const {
+				displayedName,
+				email,
+				password,
+				roles,
+			} = request.body;
 
 			try {
 				const user = await UserModel.create({
@@ -345,6 +376,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					.status(ResponseStatus.INTERNAL_SERVER_ERROR)
 					.send({
 						message: errorMessage,
+						validationErrors: [],
 					});
 			}
 		},
@@ -359,8 +391,11 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 	}>(
 		"/api/users/update/:id",
 		{
+			attachValidation: true,
 			onRequest: [
 				checkJwt,
+			],
+			preHandler: [
 				checkUserIdValidity,
 			],
 			schema: {
@@ -383,27 +418,19 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 						$ref: SchemaId.USER,
 					},
 					[ResponseStatus.BAD_REQUEST]: {
-						oneOf: [
-							{
-								$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
-								description: "Invalid user ID",
-							},
-							{
-								$ref: SchemaId.ERROR_RESPONSE_WITH_VALIDATION_ERRORS,
-								description: "Validation errors",
-							},
-						],
+						$ref: SchemaId.ERROR_RESPONSE,
+						description: "Validation errors (schema or manual)",
 					},
 					[ResponseStatus.UNAUTHORIZED]: {
-						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
+						$ref: SchemaId.ERROR_RESPONSE,
 						description: "Unauthorized",
 					},
 					[ResponseStatus.NOT_FOUND]: {
-						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
+						$ref: SchemaId.ERROR_RESPONSE,
 						description: "User with provided user ID doesn't exist",
 					},
 					[ResponseStatus.INTERNAL_SERVER_ERROR]: {
-						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
+						$ref: SchemaId.ERROR_RESPONSE,
 						description: "Internal server error",
 					},
 				},
@@ -414,6 +441,22 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 			},
 		},
 		async (request, response) => {
+			const {
+				validationError,
+			} = request;
+
+			if (
+				!isUndefined(validationError)
+				&& validationError.message === "body must be object"
+			) {
+				return await response
+					.status(ResponseStatus.BAD_REQUEST)
+					.send({
+						message: validationError.message,
+						validationErrors: [],
+					});
+			}
+
 			const {
 				params: {
 					id,
@@ -457,6 +500,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					},
 					{
 						new: true,
+						runValidators: true,
 					},
 				);
 
@@ -465,6 +509,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 						.status(ResponseStatus.NOT_FOUND)
 						.send({
 							message: `User with id "${id}" doesn't exist.`,
+							validationErrors: [],
 						});
 				}
 
@@ -520,6 +565,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					.status(ResponseStatus.INTERNAL_SERVER_ERROR)
 					.send({
 						message: errorMessage,
+						validationErrors: [],
 					});
 			}
 		},
@@ -533,11 +579,14 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 	}>(
 		"/api/users/delete/:id",
 		{
+			attachValidation: true,
 			onRequest: [
 				checkJwt,
 				checkPermissions([
 					PermissionId.CAN_MANAGE_USERS,
 				]),
+			],
+			preHandler: [
 				checkUserIdValidity,
 			],
 			schema: {
@@ -557,11 +606,11 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 						$ref: SchemaId.USER,
 					},
 					[ResponseStatus.BAD_REQUEST]: {
-						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
+						$ref: SchemaId.ERROR_RESPONSE,
 						description: "Invalid user ID",
 					},
 					[ResponseStatus.UNAUTHORIZED]: {
-						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
+						$ref: SchemaId.ERROR_RESPONSE,
 						description: "Unauthorized",
 					},
 					[ResponseStatus.FORBIDDEN]: {
@@ -569,11 +618,11 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 						type: "null",
 					},
 					[ResponseStatus.NOT_FOUND]: {
-						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
+						$ref: SchemaId.ERROR_RESPONSE,
 						description: "User with provided user ID doesn't exist",
 					},
 					[ResponseStatus.INTERNAL_SERVER_ERROR]: {
-						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
+						$ref: SchemaId.ERROR_RESPONSE,
 						description: "Internal server error",
 					},
 				},
@@ -585,10 +634,21 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 		},
 		async (request, response) => {
 			const {
-				params: {
-					id,
-				},
+				validationError,
 			} = request;
+
+			if (!isUndefined(validationError)) {
+				return await response
+					.status(ResponseStatus.BAD_REQUEST)
+					.send({
+						message: validationError.message,
+						validationErrors: [],
+					});
+			}
+
+			const {
+				id,
+			} = request.params;
 
 			try {
 				const user = await UserModel.findByIdAndDelete(id);
@@ -598,6 +658,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 						.status(ResponseStatus.NOT_FOUND)
 						.send({
 							message: `User with id "${id}" doesn't exist.`,
+							validationErrors: [],
 						});
 				}
 
@@ -624,6 +685,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					.status(ResponseStatus.INTERNAL_SERVER_ERROR)
 					.send({
 						message: typedError.message,
+						validationErrors: [],
 					});
 			}
 		},
