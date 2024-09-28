@@ -12,6 +12,9 @@ import {
 	usersRoutes,
 } from "@/models/users/routes";
 import {
+	ajvErrors,
+} from "@/plugins/fastify";
+import {
 	addSchemas,
 } from "@/utilities/add-schemas";
 import {
@@ -35,6 +38,14 @@ mongoose.connect("mongodb://localhost:27017/issue-tracker")
  */
 // eslint-disable-next-line new-cap
 const server = Fastify({
+	ajv: {
+		customOptions: {
+			allErrors: true,
+		},
+		plugins: [
+			ajvErrors,
+		],
+	},
 	logger: {
 		level: "error",
 	},
