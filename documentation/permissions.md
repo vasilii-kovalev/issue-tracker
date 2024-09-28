@@ -1,11 +1,18 @@
 # Permissions
 
-## Permissions description
+This document contains information about user roles and permissions.
+
+## Permissions list
 
 * `can-manage-users` - CRUD operations on users
 
+## Roles list
+
+* `admin`
+* `user`
+
 ## Role-to-permission table
 
-| Permission/Role | Admin | User |
-| --- | :---: | :---: |
-| `can-manage-users` | ✓ | |
+| Permission/Role    | `admin` | `user` |
+| ------------------ | :-----: | :----: |
+| `can-manage-users` | ✓       |        |

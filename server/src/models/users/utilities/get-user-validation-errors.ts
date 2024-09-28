@@ -1,7 +1,7 @@
 import {
 	type MongooseValidationError,
 	type ValidationError,
-} from "@/types/errors";
+} from "@/models/errors/types";
 
 const getUserValidationErrors = (
 	mongooseValidationError: MongooseValidationError,

@@ -70,3 +70,29 @@ After starting the server (see above), visit <http://localhost:5000/swagger>.
 When a collection doesn't have documents in it, several documents are created automatically in that collection on the server's start or reload.
 
 Check `populateData` function's call in [index.ts](./index.ts) file to learn more.
+
+## Code structure
+
+* [index.ts](./index.ts) - the application's entry points. It contains
+  * Connection to the database
+  * Server initialization and launch
+  * Server plugins registering
+  * OpenAPI schemas registering
+  * Routes registering
+  * Initial data population
+* [src](./src) folder:
+  * [models](./src/models) - code, related to models of the project. Main models are described in the [Models document](../documentation/models.md), but the folder may also contain other "utility" models (like auth, errors, dates and so on) to create a place for related code. Each model may contain:
+    * Constants (`constants.ts`)
+    * Types (`types.ts`)
+    * Utility functions (`utilities/*`)
+    * Middleware (`middleware/*`) - used in route definitions
+    * Mongoose schema and model (`model.ts`)
+    * OpenAPI schema (`schema.ts`) - used in route definitions
+    * Stubs (`stubs.ts`) - used in tests and initial data population
+  * [plugins](./src/plugins) - plugins for Mongoose
+  * [routes](./src/routes) - route definitions
+  * [schemas](./src/schemas) - OpenAPI schemas. It contains
+    * [`addSchemas` function](./src/schemas/utilities/add-schemas.ts) for schemas registering
+    * [`constants`](./src/schemas/constants.ts) with schema IDs (used in schemas and route definitions) and schema tags (used in route definitions)
+  * [utilities](./src/utilities) - global utility functions
+  * [constants.ts](./src/constants.ts) - global constants

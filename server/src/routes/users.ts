@@ -15,6 +15,10 @@ import {
 	getUserIdFromJwtCookie,
 } from "@/models/auth/utilities/get-user-id-from-jwt-cookie";
 import {
+	type ErrorResponse,
+	type MongooseValidationError,
+} from "@/models/errors/types";
+import {
 	PermissionId,
 } from "@/models/permissions/constants";
 import {
@@ -43,10 +47,6 @@ import {
 	SchemaId,
 	SchemaTag,
 } from "@/schemas/constants";
-import {
-	type ErrorResponse,
-	type MongooseValidationError,
-} from "@/types/errors";
 import {
 	isNull,
 } from "@/utilities/is-null";

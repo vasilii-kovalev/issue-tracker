@@ -6,9 +6,6 @@ import Fastify from "fastify";
 import mongoose from "mongoose";
 
 import {
-	populateData,
-} from "@/mocks/utilities/populate-data";
-import {
 	authRoutes,
 } from "@/routes/auth";
 import {
@@ -17,6 +14,9 @@ import {
 import {
 	addSchemas,
 } from "@/schemas/utilities/add-schemas";
+import {
+	populateData,
+} from "@/utilities/populate-data";
 
 // Connection to database.
 mongoose.connect("mongodb://localhost:27017/issue-tracker")

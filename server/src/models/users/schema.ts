@@ -1,10 +1,9 @@
 import {
 	ROLES,
 } from "@/models/permissions/constants";
-
 import {
 	SchemaId,
-} from "./constants";
+} from "@/schemas/constants";
 
 const UserSchemaCommon = {
 	properties: {

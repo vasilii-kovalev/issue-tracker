@@ -7,7 +7,7 @@ import {
 } from "@/constants";
 import {
 	type ErrorResponse,
-} from "@/types/errors";
+} from "@/models/errors/types";
 
 const checkJwt: onRequestAsyncHookHandler = async (request, response) => {
 	try {

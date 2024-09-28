@@ -11,7 +11,7 @@ import {
 } from "@/constants";
 import {
 	type ErrorResponse,
-} from "@/types/errors";
+} from "@/models/errors/types";
 
 import {
 	type UserId,

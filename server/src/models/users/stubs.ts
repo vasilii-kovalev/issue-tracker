@@ -5,7 +5,7 @@ import {
 	type UserCreate,
 } from "@/models/users/types";
 
-const userMocks: Array<UserCreate> = [
+const usersCreate: Array<UserCreate> = [
 	{
 		displayedName: "Admin",
 		email: "admin@issue-tracker.com",
@@ -25,5 +25,5 @@ const userMocks: Array<UserCreate> = [
 ];
 
 export {
-	userMocks,
+	usersCreate,
 };

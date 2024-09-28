@@ -1,10 +1,9 @@
 import {
 	UserModel,
 } from "@/models/users/model";
-
 import {
-	userMocks,
-} from "../users";
+	usersCreate,
+} from "@/models/users/stubs";
 
 const populateUsers = async (): Promise<void> => {
 	/*
@@ -18,7 +17,7 @@ const populateUsers = async (): Promise<void> => {
 	}
 
 	try {
-		await UserModel.create(userMocks);
+		await UserModel.create(usersCreate);
 	} catch (error) {
 		console.error(error);
 	}

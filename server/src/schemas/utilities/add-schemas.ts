@@ -5,13 +5,13 @@ import {
 import {
 	ErrorResponseWithMessageSchema,
 	ErrorResponseWithValidationErrorsSchema,
-} from "../errors";
+} from "@/models/errors/schema";
 import {
 	UserCreateSchema,
 	UserLoginSchema,
 	UserSchema,
 	UserUpdateSchema,
-} from "../users";
+} from "@/models/users/schema";
 
 const addSchemas = (server: FastifyInstance): void => {
 	// Errors.

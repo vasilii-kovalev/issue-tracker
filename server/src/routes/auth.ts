@@ -9,6 +9,9 @@ import {
 	COOKIE_JWT_TOKEN_NAME,
 } from "@/models/auth/constants";
 import {
+	type ErrorResponse,
+} from "@/models/errors/types";
+import {
 	UserModel,
 } from "@/models/users/model";
 import {
@@ -21,9 +24,6 @@ import {
 	SchemaId,
 	SchemaTag,
 } from "@/schemas/constants";
-import {
-	type ErrorResponse,
-} from "@/types/errors";
 import {
 	isNull,
 } from "@/utilities/is-null";

@@ -1,6 +1,6 @@
 import {
 	type ValidationError,
-} from "@/types/errors";
+} from "@/models/errors/types";
 
 const getEmailDuplicationValidationError = (
 	errorMessage: string,
