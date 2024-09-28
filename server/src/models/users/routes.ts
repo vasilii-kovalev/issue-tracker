@@ -90,6 +90,10 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 						$ref: SchemaId.USERS_PAGINATED_PAGE,
 						description: "Paginated users",
 					},
+					[ResponseStatus.BAD_REQUEST]: {
+						$ref: SchemaId.ERROR_RESPONSE_WITH_VALIDATION_ERRORS,
+						description: "Validation errors for query parameters",
+					},
 					[ResponseStatus.UNAUTHORIZED]: {
 						$ref: SchemaId.ERROR_RESPONSE_WITH_MESSAGE,
 						description: "Unauthorized",
