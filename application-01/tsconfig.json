@@ -1,5 +1,14 @@
 {
 	"files": [],
+	// For "CSS Modules" VS Code extension.
+	"compilerOptions": {
+		"baseUrl": ".",
+		"paths": {
+			"@/*": [
+				"src/*"
+			]
+		},
+	},
 	"references": [
 		{
 			"path": "./tsconfig.app.json"
