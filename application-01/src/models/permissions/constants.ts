@@ -1,8 +1,8 @@
-enum RoleId {
-	ADMIN = "admin",
-	USER = "user",
+enum Role {
+	ADMIN = "ADMIN",
+	USER = "USER",
 }
 
 export {
-	RoleId,
+	Role,
 };

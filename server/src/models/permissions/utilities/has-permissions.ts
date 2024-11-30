@@ -1,40 +1,48 @@
 import {
-	UserModel,
-} from "@/models/users/model";
+	prismaClient,
+} from "@/db/client";
 import {
 	type UserId,
 } from "@/models/users/types";
 import {
-	isNull,
-} from "@/utilities/is-null";
+	isEmpty,
+} from "@/utilities/is-empty";
 
 import {
-	type PermissionId,
-	ROLE_TO_PERMISSIONS_MAP,
+	type Permission,
 } from "../constants";
 
 const hasPermissions = async (
 	userId: UserId | undefined,
-	permissions: Array<PermissionId>,
+	permissions: Array<Permission>,
 ): Promise<boolean> => {
-	const user = await UserModel.findById(userId);
-
-	if (isNull(user)) {
-		return false;
-	}
-
-	for (const role of user.roles) {
-		const permissionsForRole = ROLE_TO_PERMISSIONS_MAP[role];
-		const hasRequiredPermission = permissionsForRole.some((permission) => {
-			return permissions.includes(permission);
+	try {
+		const foundPermissions = await prismaClient.permission.findMany({
+			select: {
+				id: true,
+			},
+			where: {
+				id: {
+					in: permissions,
+				},
+				roles: {
+					every: {
+						users: {
+							every: {
+								id: userId,
+							},
+						},
+					},
+				},
+			},
 		});
 
-		if (hasRequiredPermission) {
-			return true;
-		}
-	}
+		return !isEmpty(foundPermissions);
+	} catch (error) {
+		console.error(error);
 
-	return false;
+		return false;
+	}
 };
 
 export {

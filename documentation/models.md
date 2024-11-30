@@ -16,6 +16,8 @@ User's name. Displayed in tickets, profile, etc.
 
 * **Type**: `string`
 * **Required**: true
+* **Min length**: 1
+* **Max length**: 100
 * **Example**: `John Doe`
 
 #### `email`
@@ -32,7 +34,7 @@ User's ID. Used for any operations on a user, like update, delete, etc.
 
 * **Type**: `string`
 * **Required**: true
-* **Example**: `66e45ecebc42d1f7afb1059e`
+* **Example**: `cm441ynf30001v2mk6ka140x4`
 
 #### `password`
 
@@ -40,11 +42,12 @@ A hashed version of user's password.
 
 * **Type**: `string`
 * **Required**: true
+* **Min length**: 3
 
-#### `roles`
+#### `role`
 
-A list of user's roles. The roles are described in the ["Roles and permissions" document](./roles-and-permissions.md).
+User's role. The roles are described in the ["Roles and permissions" document](./roles-and-permissions.md).
 
-* **Type**: `Array<string>`
+* **Type**: `string`
 * **Required**: true
-* **Example**: `["admin"]`
+* **Example**: `ADMIN`

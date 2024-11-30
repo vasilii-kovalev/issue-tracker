@@ -4,15 +4,15 @@ This document contains information about user roles and permissions.
 
 ## Permissions list
 
-* `can-manage-users` - CRUD operations on users
+* `CAN_MANAGE_USERS` - CRUD operations on users
 
 ## Roles list
 
-* `admin`
-* `user`
+* `ADMIN`
+* `USER`
 
 ## Role-to-permission table
 
-| Permission/Role    | `admin` | `user` |
+| Permission/Role    | `ADMIN` | `USER` |
 | ------------------ | :-----: | :----: |
-| `can-manage-users` | ✓       |        |
+| `CAN_MANAGE_USERS` | ✓       |        |

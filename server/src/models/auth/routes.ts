@@ -10,17 +10,20 @@ import {
 	SchemaTag,
 } from "@/constants/schemas";
 import {
+	prismaClient,
+} from "@/db/client";
+import {
 	type ErrorResponse,
 } from "@/models/errors/types";
 import {
-	UserModel,
-} from "@/models/users/model";
+	USER_SELECTOR,
+} from "@/models/users/selectors";
 import {
 	type UserLogin,
 } from "@/models/users/types";
 import {
 	verifyUserPassword,
-} from "@/models/users/utilities/verify-user-password";
+} from "@/models/users/utilities/user-password";
 import {
 	isNull,
 } from "@/utilities/is-null";
@@ -91,11 +94,17 @@ const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 			} = request.body;
 
 			try {
-				const user = await UserModel.findOne({
-					email,
+				const userWithPassword = await prismaClient.user.findUnique({
+					select: {
+						...USER_SELECTOR,
+						password: true,
+					},
+					where: {
+						email,
+					},
 				});
 
-				if (isNull(user)) {
+				if (isNull(userWithPassword)) {
 					return await response
 						.status(ResponseStatus.NOT_FOUND)
 						.send({
@@ -104,9 +113,14 @@ const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 						});
 				}
 
+				const {
+					password: userPassword,
+					...user
+				} = userWithPassword;
+
 				const isPasswordCorrect = await verifyUserPassword(
 					password,
-					user.password,
+					userPassword,
 				);
 
 				if (!isPasswordCorrect) {
@@ -124,7 +138,7 @@ const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 				}
 
 				const token = server.jwt.sign({
-					payload: user.toJSON(),
+					payload: user,
 				} satisfies JwtPayload);
 
 				return await response

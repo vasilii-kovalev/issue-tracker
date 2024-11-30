@@ -5,23 +5,27 @@ import {
 	PaginatedPage,
 } from "@/models/pagination/schema";
 import {
-	ROLES,
+	Role,
 } from "@/models/permissions/constants";
 
 const UserSchemaCommon = {
 	properties: {
 		displayedName: {
+			maxLength: 1,
+			minLength: 100,
 			type: "string",
 		},
 		email: {
+			/**
+			 * Provided by `ajv-formats`, which is a part of `fastify` package.\
+			 * {@link https://www.npmjs.com/package/ajv-formats#formats | Formats list}
+			 */
+			format: "email",
 			type: "string",
 		},
-		roles: {
-			items: {
-				enum: ROLES,
-				type: "string",
-			},
-			type: "array",
+		role: {
+			enum: Object.values(Role),
+			type: "string",
 		},
 	},
 	type: "object",
@@ -32,6 +36,8 @@ const UserSchemaCommonWithPassword = {
 	properties: {
 		...UserSchemaCommon.properties,
 		password: {
+			format: "password",
+			minLength: 3,
 			type: "string",
 		},
 	},
@@ -50,7 +56,7 @@ const UserSchema = {
 		"displayedName",
 		"email",
 		"id",
-		"roles",
+		"role",
 	],
 };
 
@@ -61,7 +67,7 @@ const UserCreateSchema = {
 		"displayedName",
 		"email",
 		"password",
-		"roles",
+		"role",
 	],
 };
 

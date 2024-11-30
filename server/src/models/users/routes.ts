@@ -1,4 +1,7 @@
 import {
+	Prisma,
+} from "@prisma/client";
+import {
 	type FastifyPluginCallback,
 } from "fastify";
 
@@ -9,6 +12,9 @@ import {
 	SchemaId,
 	SchemaTag,
 } from "@/constants/schemas";
+import {
+	prismaClient,
+} from "@/db/client";
 import {
 	COOKIE_JWT_TOKEN_NAME,
 } from "@/models/auth/constants";
@@ -23,13 +29,12 @@ import {
 } from "@/models/auth/utilities/get-user-id-from-jwt-cookie";
 import {
 	type ErrorResponse,
-	type MongooseValidationError,
 } from "@/models/errors/types";
 import {
 	type PaginatedPageQueryParams,
 } from "@/models/pagination/types";
 import {
-	PermissionId,
+	Permission,
 } from "@/models/permissions/constants";
 import {
 	checkPermissions,
@@ -38,9 +43,6 @@ import {
 	hasPermissions,
 } from "@/models/permissions/utilities/has-permissions";
 import {
-	type SortingOptions,
-} from "@/types/mongoose";
-import {
 	isNull,
 } from "@/utilities/is-null";
 import {
@@ -48,11 +50,8 @@ import {
 } from "@/utilities/is-undefined";
 
 import {
-	checkUserIdValidity,
-} from "./middleware/check-user-id-validity";
-import {
-	UserModel,
-} from "./model";
+	USER_SELECTOR,
+} from "./selectors";
 import {
 	type User,
 	type UserCreate,
@@ -61,11 +60,8 @@ import {
 	type UserUpdate,
 } from "./types";
 import {
-	getEmailDuplicationValidationError,
-} from "./utilities/get-email-duplication-validation-error";
-import {
-	getUserValidationErrors,
-} from "./utilities/get-user-validation-errors";
+	hashUserPassword,
+} from "./utilities/user-password";
 
 const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 	server.get<{
@@ -129,26 +125,22 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				const [
 					users,
 					usersTotalCount,
-				] = await Promise.all([
-					UserModel.find(
-						{},
-						undefined,
-						{
-							limit: count,
-							skip: count * (pageNumber - 1),
-							sort: {
-								displayedName: "asc",
-							} satisfies SortingOptions<User>,
+				] = await prismaClient.$transaction([
+					prismaClient.user.findMany({
+						orderBy: {
+							displayedName: "asc",
 						},
-					),
-					UserModel.countDocuments(),
+						select: USER_SELECTOR,
+						skip: count * (pageNumber - 1),
+						take: count,
+					}),
+					prismaClient.user.count(),
 				]);
 
 				return await response
 					.status(ResponseStatus.OK)
 					.send({
 						data: users,
-						itemsCount: users.length,
 						pagesTotalCount: Math.ceil(usersTotalCount / count),
 					});
 			} catch (error) {
@@ -175,9 +167,6 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 			attachValidation: true,
 			onRequest: [
 				checkJwt,
-			],
-			preHandler: [
-				checkUserIdValidity,
 			],
 			schema: {
 				params: {
@@ -235,7 +224,12 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 			} = request.params;
 
 			try {
-				const user = await UserModel.findById(id);
+				const user = await prismaClient.user.findUnique({
+					select: USER_SELECTOR,
+					where: {
+						id,
+					},
+				});
 
 				if (isNull(user)) {
 					return await response
@@ -272,7 +266,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 			onRequest: [
 				checkJwt,
 				checkPermissions([
-					PermissionId.CAN_MANAGE_USERS,
+					Permission.CAN_MANAGE_USERS,
 				]),
 			],
 			schema: {
@@ -311,10 +305,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				validationError,
 			} = request;
 
-			if (
-				!isUndefined(validationError)
-				&& validationError.message === "body must be object"
-			) {
+			if (!isUndefined(validationError)) {
 				return await response
 					.status(ResponseStatus.BAD_REQUEST)
 					.send({
@@ -327,55 +318,53 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				displayedName,
 				email,
 				password,
-				roles,
+				role,
 			} = request.body;
 
 			try {
-				const user = await UserModel.create({
-					displayedName,
-					email,
-					password,
-					roles,
+				const user = await prismaClient.user.create({
+					data: {
+						displayedName,
+						email: email.toLowerCase(),
+						password: await hashUserPassword(password),
+						role,
+					},
+					select: USER_SELECTOR,
 				});
 
 				return await response
 					.status(ResponseStatus.CREATED)
 					.send(user);
 			} catch (error) {
-				const typedError = error as Error | MongooseValidationError;
-				const errorMessage = typedError.message;
-
-				const emailDuplicationValidationError = getEmailDuplicationValidationError(
-					errorMessage,
-					email,
-				);
-
-				if (!isUndefined(emailDuplicationValidationError)) {
+				if (
+					error instanceof Prisma.PrismaClientKnownRequestError
+					/**
+					 * {@link https://www.prisma.io/docs/orm/reference/error-reference#p2002 | P2002 error code description}
+					 */
+					&& error.code === "P2002"
+					// @ts-expect-error This code is correct.
+					// eslint-disable-next-line no-autofix/@typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-unsafe-call
+					&& error.meta?.target.includes("email")
+				) {
 					return await response
 						.status(ResponseStatus.BAD_REQUEST)
 						.send({
-							message: errorMessage,
+							message: error.message,
 							validationErrors: [
-								emailDuplicationValidationError,
+								{
+									message: `User with email "${email}" already exists.`,
+									path: "body.email",
+								},
 							],
 						});
 				}
 
-				if ("errors" in typedError) {
-					const validationErrors = getUserValidationErrors(typedError);
-
-					return await response
-						.status(ResponseStatus.BAD_REQUEST)
-						.send({
-							message: errorMessage,
-							validationErrors,
-						});
-				}
+				const typedError = error as Error;
 
 				return await response
 					.status(ResponseStatus.INTERNAL_SERVER_ERROR)
 					.send({
-						message: errorMessage,
+						message: typedError.message,
 						validationErrors: [],
 					});
 			}
@@ -394,9 +383,6 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 			attachValidation: true,
 			onRequest: [
 				checkJwt,
-			],
-			preHandler: [
-				checkUserIdValidity,
 			],
 			schema: {
 				body: {
@@ -445,10 +431,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				validationError,
 			} = request;
 
-			if (
-				!isUndefined(validationError)
-				&& validationError.message === "body must be object"
-			) {
+			if (!isUndefined(validationError)) {
 				return await response
 					.status(ResponseStatus.BAD_REQUEST)
 					.send({
@@ -465,7 +448,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					displayedName,
 					email,
 					password,
-					roles,
+					role,
 				},
 			} = request;
 
@@ -479,7 +462,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					const hasPermissionsForRequest = await hasPermissions(
 						userIdFromJwtCookie,
 						[
-							PermissionId.CAN_MANAGE_USERS,
+							Permission.CAN_MANAGE_USERS,
 						],
 					);
 
@@ -490,31 +473,25 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					}
 				}
 
-				const user = await UserModel.findByIdAndUpdate(
-					id,
-					{
+				const user = await prismaClient.user.update({
+					data: {
 						displayedName,
-						email,
-						password,
-						roles,
+						email: !isUndefined(email)
+							? email.toLowerCase()
+							: email,
+						password: !isUndefined(password)
+							? await hashUserPassword(password)
+							: password,
+						role,
 					},
-					{
-						new: true,
-						runValidators: true,
+					select: USER_SELECTOR,
+					where: {
+						id,
 					},
-				);
-
-				if (isNull(user)) {
-					return await response
-						.status(ResponseStatus.NOT_FOUND)
-						.send({
-							message: `User with id "${id}" doesn't exist.`,
-							validationErrors: [],
-						});
-				}
+				});
 
 				const token = server.jwt.sign({
-					payload: user.toJSON(),
+					payload: user,
 				} satisfies JwtPayload);
 
 				return await response
@@ -529,42 +506,50 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					.status(ResponseStatus.OK)
 					.send(user);
 			} catch (error) {
-				const typedError = error as Error | MongooseValidationError;
-				const errorMessage = typedError.message;
+				if (error instanceof Prisma.PrismaClientKnownRequestError) {
+					if (
+						/**
+						 * {@link https://www.prisma.io/docs/orm/reference/error-reference#p2025 | P2025 error code description}
+						 */
+						error.code === "P2025"
+					) {
+						return await response
+							.status(ResponseStatus.NOT_FOUND)
+							.send({
+								message: `User with id "${id}" doesn't exist.`,
+								validationErrors: [],
+							});
+					}
 
-				const emailDuplicationValidationError = getEmailDuplicationValidationError(
-					errorMessage,
-					// If this error occurs, then the email is present in the request.
-					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-					email!,
-				);
-
-				if (!isUndefined(emailDuplicationValidationError)) {
-					return await response
-						.status(ResponseStatus.BAD_REQUEST)
-						.send({
-							message: errorMessage,
-							validationErrors: [
-								emailDuplicationValidationError,
-							],
-						});
+					if (
+						/**
+						 * {@link https://www.prisma.io/docs/orm/reference/error-reference#p2002 | P2002 error code description}
+						 */
+						error.code === "P2002"
+						// @ts-expect-error This code is correct.
+						// eslint-disable-next-line no-autofix/@typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-unsafe-call
+						&& error.meta?.target.includes("email")
+					) {
+						return await response
+							.status(ResponseStatus.BAD_REQUEST)
+							.send({
+								message: error.message,
+								validationErrors: [
+									{
+										message: `User with email "${email}" already exists.`,
+										path: "body.email",
+									},
+								],
+							});
+					}
 				}
 
-				if ("errors" in typedError) {
-					const validationErrors = getUserValidationErrors(typedError);
-
-					return await response
-						.status(ResponseStatus.BAD_REQUEST)
-						.send({
-							message: errorMessage,
-							validationErrors,
-						});
-				}
+				const typedError = error as Error;
 
 				return await response
 					.status(ResponseStatus.INTERNAL_SERVER_ERROR)
 					.send({
-						message: errorMessage,
+						message: typedError.message,
 						validationErrors: [],
 					});
 			}
@@ -583,11 +568,8 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 			onRequest: [
 				checkJwt,
 				checkPermissions([
-					PermissionId.CAN_MANAGE_USERS,
+					Permission.CAN_MANAGE_USERS,
 				]),
-			],
-			preHandler: [
-				checkUserIdValidity,
 			],
 			schema: {
 				description: `Deletes user by ID.
@@ -651,16 +633,12 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 			} = request.params;
 
 			try {
-				const user = await UserModel.findByIdAndDelete(id);
-
-				if (isNull(user)) {
-					return await response
-						.status(ResponseStatus.NOT_FOUND)
-						.send({
-							message: `User with id "${id}" doesn't exist.`,
-							validationErrors: [],
-						});
-				}
+				const user = await prismaClient.user.delete({
+					select: USER_SELECTOR,
+					where: {
+						id,
+					},
+				});
 
 				const userIdFromJwtCookie = getUserIdFromJwtCookie(
 					server,
@@ -679,6 +657,21 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					.status(ResponseStatus.OK)
 					.send(user);
 			} catch (error) {
+				if (
+					error instanceof Prisma.PrismaClientKnownRequestError
+					/**
+					 * {@link https://www.prisma.io/docs/orm/reference/error-reference#p2025 | P2025 error code description}
+					 */
+					&& error.code === "P2025"
+				) {
+					return await response
+						.status(ResponseStatus.NOT_FOUND)
+						.send({
+							message: `User with id "${id}" doesn't exist.`,
+							validationErrors: [],
+						});
+				}
+
 				const typedError = error as Error;
 
 				return await response

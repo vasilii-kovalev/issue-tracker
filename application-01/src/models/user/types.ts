@@ -1,23 +1,24 @@
 import {
-	type RoleId,
+	type Role,
 } from "@/models/permissions/constants";
 import {
 	type PaginatedPage,
 } from "@/types/pagination";
 
-type UserId = string;
-
 interface UserFull {
 	displayedName: string;
 	email: string;
-	id: UserId;
+	id: string;
 	password: string;
-	roles: Array<RoleId>;
+	role: Role;
 }
 
-type User = Omit<
+type User = Pick<
 	UserFull,
-	"password"
+	| "displayedName"
+	| "email"
+	| "id"
+	| "role"
 >;
 
 type PaginatedUsers = PaginatedPage<User>;

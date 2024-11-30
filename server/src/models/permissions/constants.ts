@@ -1,24 +1,13 @@
-enum PermissionId {
-	CAN_MANAGE_USERS = "can-manage-users",
+enum Permission {
+	CAN_MANAGE_USERS = "CAN_MANAGE_USERS",
 }
 
-enum RoleId {
-	ADMIN = "admin",
-	USER = "user",
+enum Role {
+	ADMIN = "ADMIN",
+	USER = "USER",
 }
-
-const ROLES = Object.values(RoleId);
-
-const ROLE_TO_PERMISSIONS_MAP: Record<RoleId, Array<PermissionId>> = {
-	[RoleId.ADMIN]: [
-		PermissionId.CAN_MANAGE_USERS,
-	],
-	[RoleId.USER]: [],
-};
 
 export {
-	PermissionId,
-	ROLE_TO_PERMISSIONS_MAP,
-	RoleId,
-	ROLES,
+	Permission,
+	Role,
 };

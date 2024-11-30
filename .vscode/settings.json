@@ -1,0 +1,27 @@
+{
+	"[css]": {
+		"editor.defaultFormatter": "stylelint.vscode-stylelint"
+	},
+	"[javascript][javascriptreact][typescript][typescriptreact]": {
+		"editor.defaultFormatter": "dbaeumer.vscode-eslint"
+	},
+	"[prisma]": {
+		"editor.defaultFormatter": "Prisma.prisma",
+		"editor.formatOnSave": true
+	},
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": "explicit",
+		"source.fixAll.markdownlint": "explicit",
+		"source.fixAll.stylelint": "explicit"
+	},
+	"markdownlint.config": {
+		"no-inline-html": {
+			"allowed_elements": [
+				"kbd"
+			]
+		}
+	},
+	"workbench.editorAssociations": {
+    "*.db": "sqlite-viewer.view"
+	}
+}

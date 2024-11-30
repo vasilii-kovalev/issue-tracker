@@ -19,7 +19,7 @@ I use it to learn and experiment with different technologies, which I think shin
 
 * Each implementation is called "application"
 * Focus on front-end technologies mostly
-* Minimalistic server with MongoDB database
+* Minimalistic server with Prisma as ORM as SQLite as database
 * No deployed preview. Since there will be no focus on the server, its optimization and security, the server will not be deployed anywhere, which means the applications can only be observed locally - run the [server](#server) and the application you need
   * I tried to use IndexedDB (using [Dexie](https://dexie.org)) to avoid relying on a dedicated server and serve the preview of the applications via GitHub Pages, but realized that too much code will be shipped alongside the "front-end" part, slowing it down and making the code harder to maintain
 * Markdown support in text fields (issue description, comments, etc.)
@@ -51,9 +51,8 @@ Technologies:
 
 * [TypeScript](https://www.typescriptlang.org)
 * [Fastify](https://fastify.dev)
-* [MongoDB](https://www.mongodb.com)
-* [Mongoose](https://mongoosejs.com)
-* [Docker](https://www.docker.com)
+* [Prisma](https://www.prisma.io)
+* [SQLite](https://www.sqlite.org)
 * [Bun](https://bun.sh)
 
 ### Application 01

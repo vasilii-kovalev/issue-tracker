@@ -7,15 +7,11 @@ const PaginatedPage = {
 		data: {
 			type: "array",
 		},
-		itemsCount: {
-			type: "number",
-		},
 		pagesTotalCount: {
 			type: "number",
 		},
 	},
 	required: [
-		"itemsCount",
 		"data",
 		"pagesTotalCount",
 	],

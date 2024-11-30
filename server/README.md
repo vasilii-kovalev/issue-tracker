@@ -6,91 +6,67 @@ Technologies:
 
 * [TypeScript](https://www.typescriptlang.org)
 * [Fastify](https://fastify.dev)
-* [MongoDB](https://www.mongodb.com)
-* [Mongoose](https://mongoosejs.com)
-* [Docker](https://www.docker.com)
+* [Prisma](https://www.prisma.io)
+* [SQLite](https://www.sqlite.org)
 * [Bun](https://bun.sh)
-
-## Preparation
-
-1. [Install Docker](https://docs.docker.com/desktop)
-2. [Install Bun](https://bun.sh/docs/installation)
-3. Run `bun install` command in the application to install dependencies
-4. Start Docker
 
 ## Scripts overview
 
 All scripts are defined in [package.json](./package.json).
 
-* `start` - starts a Docker container with database and the server (see a more detailed description in the next section)
-* `stop:database` - stops the Docker container with database (see a more detailed description in the next section)
+* `prisma:update` - alias for [Prisma's `db push` script](https://www.prisma.io/docs/orm/reference/prisma-cli-reference#db-push). Creates database (and tables in it) or updates it after changes in the [Prisma's schema](./prisma/schema.prisma)
+* `prisma:seed` - alias for [Prisma's `db seed` script](https://www.prisma.io/docs/orm/reference/prisma-cli-reference#db-seed). Removes existing data in the database and populates it with mock data using the [seed script](./src/db/seed.ts)
+* `prisma:studio` - alias for [Prisma's `studio` script](https://www.prisma.io/docs/orm/reference/prisma-cli-reference#studio-1). Opens [Prisma Studio](https://www.prisma.io/docs/orm/tools/prisma-studio) in the browser
+* `start` - starts a local HTTP server and connects to the local database
 * `check:types` - checks for TypeScript errors
 * `check:eslint` - checks for ESLint errors
 
-Other scrips are a part of `start` and `stop:database` scripts and have self-explanatory names.
-
 To run a script, execute the following command in a command line: `bun run <script>`.
 
-To stop a running script, press <kbd>Ctrl + C</kbd> (for Windows, maybe different in other operating systems) in the command line window the script is running in. Confirm the choice if prompted.
+To stop a running script, press <kbd>Ctrl + C</kbd> (for Windows, maybe different in other operating systems) in the command line window the script is running in. Confirm the choice if prompted by entering <kbd>y</kbd> (yes).
 
-## Start/stop the application
+### Preparation
 
-Before running the script, make sure the Docker is installed.
+1. [Install Bun](https://bun.sh/docs/installation)
+2. Run `bun install` command in the application to install dependencies
+3. Run `prisma:update` script
+4. Run `prisma:seed` script (if you need to create the mock data for the first time or replace the existing data)
 
-### Start
+## Starting the server
 
-Run script `start`.
-
-It does the following:
-
-1. Pulls "mongo" Docker image
-2. Creates a Docker container with name "issue-tracker-container"
-3. Creates a volume with name "issue-tracker-volume" (for data persistence)
-4. Run the container and attaches the volume to it
-5. Starts a local server (via Bun in watch mode) on <http://localhost:5000>
-
-### Stop
-
-Stop the server in the same command line it was started (<kbd>Ctrl + C</kbd> for Windows).
-
-Then run script `stop:database`.
+Run the `start` script.
 
 It does the following:
 
-1. Stops the Docker container with name
-2. Removes the container (because it won't be possible to create a container with the same name next time)
-3. Removes all anonymous volumes (for some reason, when starting the container, a new anonymous volume is created and runs alongside with "issue-tracker-volume" one, though it doesn't contain any data)
+1. Starts a local server (via Bun in watch mode with hot reloading) on <http://localhost:5000>
+2. Connects to the local database
+
+## Stopping the server
+
+Stop the server in the same command line it was started (<kbd>Ctrl + C</kbd> for Windows). Confirm the choice if prompted by entering <kbd>y</kbd> (yes).
 
 ## Swagger
 
-After starting the server (see above), visit <http://localhost:5000/swagger>.
-
-## Mock data
-
-When a collection doesn't have documents in it, several documents are created automatically in that collection on the server's start or reload.
-
-Check `populateData` function's call in [index.ts](./index.ts) file to learn more.
+After starting the server, visit <http://localhost:5000/swagger>.
 
 ## Code structure
 
-* [index.ts](./index.ts) - the application's entry points. It contains
-  * Connection to the database
+* [index.ts](./index.ts) - the application's entry points. It contains the following:
   * Server initialization and launch
   * Server plugins registering
   * OpenAPI schemas registering
   * Routes registering
-  * Initial data population
+  * Connection to the database
 * [src](./src) folder:
-  * [constants.ts](./src/constants.ts) - global constants
+  * [db](./src/db) - Prisma-related code
+    * [client](./src/db/client.ts) - creates, configures and exports a Prisma client
+    * [seed](./src/db/seed.ts) - a seed script, that populates the database with mock data. Used in `prisma:seed` script
   * [models](./src/models) - code, related to models of the project. Main models are described in the ["Models" document](../documentation/models.md), but the folder may also contain other "utility" models (like auth, errors, dates and so on) to create a place for related code. Each model may contain:
     * Constants (`constants.ts`)
     * Types (`types.ts`)
     * Utility functions (`utilities/*`)
-    * Mongoose schema and model (`model.ts`)
-    * Middleware (`middleware/*`) - used in route definitions
+    * Selectors (`selectors`) - contains objects, that are used in Prisma models to select data (for example, in `select` field). Their usage prevents inconsistency when selecting data for similar cases
     * Routes (`routes.ts`) - route definitions
     * OpenAPI schema (`schema.ts`) - used in route definitions
-    * Stubs (`stubs.ts`) - used in tests and initial data population
-  * [plugins](./src/plugins) - global plugins
-  * [types](./src/types) - global types
+    * Middleware (`middleware/*`) - used in route definitions
   * [utilities](./src/utilities) - global utility functions

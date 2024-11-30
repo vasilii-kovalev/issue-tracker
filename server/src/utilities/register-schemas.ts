@@ -16,7 +16,7 @@ import {
 	UserUpdateSchema,
 } from "@/models/users/schema";
 
-const addSchemas = (server: FastifyInstance): void => {
+const registerSchemas = (server: FastifyInstance): void => {
 	// Users.
 	server.addSchema(UserSchema);
 
@@ -36,5 +36,5 @@ const addSchemas = (server: FastifyInstance): void => {
 };
 
 export {
-	addSchemas,
+	registerSchemas,
 };

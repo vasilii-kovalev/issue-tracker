@@ -3,7 +3,6 @@ import jwt from "@fastify/jwt";
 import swagger from "@fastify/swagger";
 import swaggerUi from "@fastify/swagger-ui";
 import Fastify from "fastify";
-import mongoose from "mongoose";
 
 import {
 	authRoutes,
@@ -12,22 +11,8 @@ import {
 	usersRoutes,
 } from "@/models/users/routes";
 import {
-	addSchemas,
-} from "@/utilities/add-schemas";
-import {
-	populateData,
-} from "@/utilities/populate-data";
-
-// Connection to database.
-mongoose.connect("mongodb://localhost:27017/issue-tracker")
-	.then(() => {
-		console.info("Connection to database is successful.");
-
-		void populateData();
-	})
-	.catch((error) => {
-		console.error(error);
-	});
+	registerSchemas,
+} from "@/utilities/register-schemas";
 
 // Creation of server.
 /**
@@ -98,14 +83,19 @@ void server.register(
 );
 
 // Schemas.
-addSchemas(server);
+registerSchemas(server);
 
 // Routes.
 void server.register(authRoutes);
 
 void server.register(usersRoutes);
 
+const PORT = 5_000;
+
 // Starting the server.
 void server.listen({
-	port: 5000,
-});
+	port: PORT,
+})
+	.then(() => {
+		console.info(`Dev server: http://localhost:${PORT}`);
+	});

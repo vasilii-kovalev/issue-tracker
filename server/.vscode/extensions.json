@@ -1,0 +1,9 @@
+{
+	"recommendations": [
+		"EditorConfig.EditorConfig",
+		"dbaeumer.vscode-eslint",
+		"DavidAnson.vscode-markdownlint",
+		"Prisma.prisma",
+		"qwtel.sqlite-viewer"
+	]
+}

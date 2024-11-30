@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Permission {
+  id    String @id
+  roles Role[]
+}
+
+model Role {
+  id          String       @id
+  permissions Permission[]
+  users       User[]
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  displayedName String
+  password      String
+  roleRef       Role     @relation(fields: [role], references: [id])
+  role          String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}

@@ -1,34 +1,36 @@
 import {
+	type User as UserFull,
+} from "@prisma/client";
+
+import {
 	type PaginatedPage,
 } from "@/models/pagination/types";
-import {
-	type RoleId,
-} from "@/models/permissions/constants";
 
-type UserId = string;
+type UserId = UserFull["id"];
 
-interface UserFull {
-	displayedName: string;
-	email: string;
-	id: UserId;
-	password: string;
-	roles: Array<RoleId>;
-}
-
-type User = Omit<
+type User = Pick<
 	UserFull,
-	"password"
+	| "displayedName"
+	| "email"
+	| "id"
+	| "role"
 >;
 
-type UserCreate = Omit<
+type UserCreate = Pick<
 	UserFull,
-	"id"
+	| "displayedName"
+	| "email"
+	| "password"
+	| "role"
 >;
 
 type UserUpdate = Partial<
-	Omit<
+	Pick<
 		UserFull,
-		"id"
+		| "displayedName"
+		| "email"
+		| "password"
+		| "role"
 	>
 >;
 

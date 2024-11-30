@@ -1,0 +1,16 @@
+{
+	"[css]": {
+		"editor.defaultFormatter": "stylelint.vscode-stylelint"
+	},
+	"[javascript][javascriptreact][typescript][typescriptreact]": {
+		"editor.defaultFormatter": "dbaeumer.vscode-eslint"
+	},
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": "explicit",
+		"source.fixAll.stylelint": "explicit"
+	},
+	"cssModules.pathAlias": {
+		"@/*": "../src/*"
+	},
+	"typescript.tsdk": "node_modules\\typescript\\lib"
+}

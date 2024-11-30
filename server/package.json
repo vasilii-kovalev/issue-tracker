@@ -5,13 +5,10 @@
 	"type": "module",
 	"main": "./index.ts",
 	"scripts": {
-		"container:stop": "docker stop issue-tracker-container",
-		"container:remove": "docker rm -f issue-tracker-container",
-		"remove-anonymous-volumes": "docker volume prune -f",
-		"start:database": "docker run -d -p 27017:27017 -v issue-tracker-volume:/data/db --name issue-tracker-container mongo:latest",
-		"start:server": "bun --watch ./index.ts",
-		"start": "bun run start:database && bun run start:server",
-		"stop:database": "bun run container:stop && bun run container:remove && bun run remove-anonymous-volumes",
+		"prisma:update": "bunx prisma db push",
+		"prisma:seed": "bunx prisma db seed",
+		"prisma:studio": "bunx prisma studio",
+		"start": "bun --hot ./index.ts",
 		"check:types": "bunx --bun tsc --noEmit",
 		"check:eslint": "bunx --bun eslint . --quiet"
 	},
@@ -20,9 +17,9 @@
 		"@fastify/jwt": "9.0.1",
 		"@fastify/swagger": "9.1.0",
 		"@fastify/swagger-ui": "5.0.1",
+		"@prisma/client": "6.0.0",
 		"fastify": "5.0.0",
-		"fastify-plugin": "5.0.1",
-		"mongoose": "8.7.0"
+		"fastify-plugin": "5.0.1"
 	},
 	"devDependencies": {
 		"@eslint/js": "9.9.1",
@@ -38,5 +35,8 @@
 		"eslint-plugin-simple-import-sort": "12.1.1",
 		"globals": "15.9.0",
 		"typescript-eslint": "8.3.0"
+	},
+	"prisma": {
+		"seed": "bun ./src/db/seed.ts"
 	}
 }

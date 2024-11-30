@@ -10,14 +10,14 @@ import {
 } from "@/models/auth/utilities/get-user-id-from-jwt-cookie";
 
 import {
-	type PermissionId,
+	type Permission,
 } from "../constants";
 import {
 	hasPermissions,
 } from "../utilities/has-permissions";
 
 const checkPermissions = (
-	permissions: Array<PermissionId>,
+	permissions: Array<Permission>,
 ): onRequestAsyncHookHandler => {
 	return async function checkPermissionsHandler(request, response) {
 		const userIdFromJwtCookie = getUserIdFromJwtCookie(
