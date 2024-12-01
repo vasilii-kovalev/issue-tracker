@@ -53,8 +53,7 @@ void server.register(
 	{
 		openapi: {
 			/*
-				Default version (2.0) doesn't support `oneOf`.
-				Version 3.1.0 has the following issues:
+				Can't use version 3.1.0 because of the following issues:
 				* `oneOf` doesn't render the schema names when `buildLocalReference` is defined
 				* Array of schema doesn't render the schema name
 			*/
