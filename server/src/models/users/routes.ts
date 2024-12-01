@@ -28,6 +28,17 @@ import {
 	getUserIdFromJwtCookie,
 } from "@/models/auth/utilities/get-user-id-from-jwt-cookie";
 import {
+	ErrorCode,
+} from "@/models/errors/constants";
+import {
+	ResponseWithStatusBadRequestSchema,
+	ResponseWithStatusConflict,
+	ResponseWithStatusForbidden,
+	ResponseWithStatusInternalServerErrorSchema,
+	ResponseWithStatusNotFound,
+	ResponseWithStatusUnauthorized,
+} from "@/models/errors/schema";
+import {
 	type ErrorResponse,
 } from "@/models/errors/types";
 import {
@@ -81,20 +92,11 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				response: {
 					[ResponseStatus.OK]: {
 						$ref: SchemaId.USERS_PAGINATED_PAGE,
-						description: "Paginated users",
+						description: "Paginated users.",
 					},
-					[ResponseStatus.BAD_REQUEST]: {
-						$ref: SchemaId.ERROR_RESPONSE,
-						description: "Validation errors (schema)",
-					},
-					[ResponseStatus.UNAUTHORIZED]: {
-						$ref: SchemaId.ERROR_RESPONSE,
-						description: "Unauthorized",
-					},
-					[ResponseStatus.INTERNAL_SERVER_ERROR]: {
-						$ref: SchemaId.ERROR_RESPONSE,
-						description: "Internal server error",
-					},
+					[ResponseStatus.BAD_REQUEST]: ResponseWithStatusBadRequestSchema,
+					[ResponseStatus.UNAUTHORIZED]: ResponseWithStatusUnauthorized,
+					[ResponseStatus.INTERNAL_SERVER_ERROR]: ResponseWithStatusInternalServerErrorSchema,
 				},
 				summary: "Get users",
 				tags: [
@@ -111,8 +113,8 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				return await response
 					.status(ResponseStatus.BAD_REQUEST)
 					.send({
+						errorCodes: [],
 						message: validationError.message,
-						validationErrors: [],
 					});
 			}
 
@@ -149,8 +151,8 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				return await response
 					.status(ResponseStatus.INTERNAL_SERVER_ERROR)
 					.send({
+						errorCodes: [],
 						message: typedError.message,
-						validationErrors: [],
 					});
 			}
 		},
@@ -182,22 +184,13 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					[ResponseStatus.OK]: {
 						$ref: SchemaId.USER,
 					},
-					[ResponseStatus.BAD_REQUEST]: {
-						$ref: SchemaId.ERROR_RESPONSE,
-						description: "Invalid user ID",
-					},
-					[ResponseStatus.UNAUTHORIZED]: {
-						$ref: SchemaId.ERROR_RESPONSE,
-						description: "Unauthorized",
-					},
+					[ResponseStatus.BAD_REQUEST]: ResponseWithStatusBadRequestSchema,
+					[ResponseStatus.UNAUTHORIZED]: ResponseWithStatusUnauthorized,
 					[ResponseStatus.NOT_FOUND]: {
-						$ref: SchemaId.ERROR_RESPONSE,
-						description: "User with provided user ID doesn't exist",
+						...ResponseWithStatusNotFound,
+						description: "User with provided user ID doesn't exist.",
 					},
-					[ResponseStatus.INTERNAL_SERVER_ERROR]: {
-						$ref: SchemaId.ERROR_RESPONSE,
-						description: "Internal server error",
-					},
+					[ResponseStatus.INTERNAL_SERVER_ERROR]: ResponseWithStatusInternalServerErrorSchema,
 				},
 				summary: "Get user",
 				tags: [
@@ -214,8 +207,8 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				return await response
 					.status(ResponseStatus.BAD_REQUEST)
 					.send({
+						errorCodes: [],
 						message: validationError.message,
-						validationErrors: [],
 					});
 			}
 
@@ -235,8 +228,9 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					return await response
 						.status(ResponseStatus.NOT_FOUND)
 						.send({
-							message: `User with id "${id}" doesn't exist.`,
-							validationErrors: [],
+							errorCodes: [
+								ErrorCode.USER_NOT_FOUND_BY_ID,
+							],
 						});
 				}
 
@@ -249,8 +243,8 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				return await response
 					.status(ResponseStatus.INTERNAL_SERVER_ERROR)
 					.send({
+						errorCodes: [],
 						message: typedError.message,
-						validationErrors: [],
 					});
 			}
 		},
@@ -276,23 +270,16 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				response: {
 					[ResponseStatus.CREATED]: {
 						$ref: SchemaId.USER,
+						description: "Created user.",
 					},
-					[ResponseStatus.BAD_REQUEST]: {
-						$ref: SchemaId.ERROR_RESPONSE,
-						description: "Validation errors (schema or manual)",
+					[ResponseStatus.BAD_REQUEST]: ResponseWithStatusBadRequestSchema,
+					[ResponseStatus.UNAUTHORIZED]: ResponseWithStatusUnauthorized,
+					[ResponseStatus.FORBIDDEN]: ResponseWithStatusForbidden,
+					[ResponseStatus.CONFLICT]: {
+						...ResponseWithStatusConflict,
+						description: "User with provided email already exists.",
 					},
-					[ResponseStatus.UNAUTHORIZED]: {
-						$ref: SchemaId.ERROR_RESPONSE,
-						description: "Unauthorized",
-					},
-					[ResponseStatus.FORBIDDEN]: {
-						description: "Forbidden by permissions",
-						type: "null",
-					},
-					[ResponseStatus.INTERNAL_SERVER_ERROR]: {
-						$ref: SchemaId.ERROR_RESPONSE,
-						description: "Internal server error",
-					},
+					[ResponseStatus.INTERNAL_SERVER_ERROR]: ResponseWithStatusInternalServerErrorSchema,
 				},
 				summary: "Create user",
 				tags: [
@@ -309,8 +296,8 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				return await response
 					.status(ResponseStatus.BAD_REQUEST)
 					.send({
+						errorCodes: [],
 						message: validationError.message,
-						validationErrors: [],
 					});
 			}
 
@@ -347,14 +334,10 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					&& error.meta?.target.includes("email")
 				) {
 					return await response
-						.status(ResponseStatus.BAD_REQUEST)
+						.status(ResponseStatus.CONFLICT)
 						.send({
-							message: error.message,
-							validationErrors: [
-								{
-									message: `User with email "${email}" already exists.`,
-									path: "body.email",
-								},
+							errorCodes: [
+								ErrorCode.USER_VALIDATION_EMAIL_ALREADY_EXISTS,
 							],
 						});
 				}
@@ -364,8 +347,8 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				return await response
 					.status(ResponseStatus.INTERNAL_SERVER_ERROR)
 					.send({
+						errorCodes: [],
 						message: typedError.message,
-						validationErrors: [],
 					});
 			}
 		},
@@ -389,7 +372,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					$ref: SchemaId.USER_UPDATE,
 				},
 				description: `Updates user by ID.
-				Note: after user data update, a new JWT token with the new data is set to cookies.`,
+				After user data update, a new JWT token with the new data is set to cookies.`,
 				params: {
 					properties: {
 						id: {
@@ -402,23 +385,19 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				response: {
 					[ResponseStatus.OK]: {
 						$ref: SchemaId.USER,
+						description: "Updated user.",
 					},
-					[ResponseStatus.BAD_REQUEST]: {
-						$ref: SchemaId.ERROR_RESPONSE,
-						description: "Validation errors (schema or manual)",
-					},
-					[ResponseStatus.UNAUTHORIZED]: {
-						$ref: SchemaId.ERROR_RESPONSE,
-						description: "Unauthorized",
-					},
+					[ResponseStatus.BAD_REQUEST]: ResponseWithStatusBadRequestSchema,
+					[ResponseStatus.UNAUTHORIZED]: ResponseWithStatusUnauthorized,
 					[ResponseStatus.NOT_FOUND]: {
-						$ref: SchemaId.ERROR_RESPONSE,
-						description: "User with provided user ID doesn't exist",
+						...ResponseWithStatusNotFound,
+						description: "User with provided user ID doesn't exist.",
 					},
-					[ResponseStatus.INTERNAL_SERVER_ERROR]: {
-						$ref: SchemaId.ERROR_RESPONSE,
-						description: "Internal server error",
+					[ResponseStatus.CONFLICT]: {
+						...ResponseWithStatusConflict,
+						description: "User with provided email already exists.",
 					},
+					[ResponseStatus.INTERNAL_SERVER_ERROR]: ResponseWithStatusInternalServerErrorSchema,
 				},
 				summary: "Update user",
 				tags: [
@@ -435,8 +414,8 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				return await response
 					.status(ResponseStatus.BAD_REQUEST)
 					.send({
+						errorCodes: [],
 						message: validationError.message,
-						validationErrors: [],
 					});
 			}
 
@@ -516,8 +495,9 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 						return await response
 							.status(ResponseStatus.NOT_FOUND)
 							.send({
-								message: `User with id "${id}" doesn't exist.`,
-								validationErrors: [],
+								errorCodes: [
+									ErrorCode.USER_NOT_FOUND_BY_ID,
+								],
 							});
 					}
 
@@ -531,14 +511,10 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 						&& error.meta?.target.includes("email")
 					) {
 						return await response
-							.status(ResponseStatus.BAD_REQUEST)
+							.status(ResponseStatus.CONFLICT)
 							.send({
-								message: error.message,
-								validationErrors: [
-									{
-										message: `User with email "${email}" already exists.`,
-										path: "body.email",
-									},
+								errorCodes: [
+									ErrorCode.USER_VALIDATION_EMAIL_ALREADY_EXISTS,
 								],
 							});
 					}
@@ -549,8 +525,8 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				return await response
 					.status(ResponseStatus.INTERNAL_SERVER_ERROR)
 					.send({
+						errorCodes: [],
 						message: typedError.message,
-						validationErrors: [],
 					});
 			}
 		},
@@ -573,7 +549,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 			],
 			schema: {
 				description: `Deletes user by ID.
-				Note: admins can also remove themselves. In this case, they are logged out automatically.`,
+				Admins can also remove themselves. In this case, they are logged out automatically.`,
 				params: {
 					properties: {
 						id: {
@@ -587,26 +563,14 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					[ResponseStatus.OK]: {
 						$ref: SchemaId.USER,
 					},
-					[ResponseStatus.BAD_REQUEST]: {
-						$ref: SchemaId.ERROR_RESPONSE,
-						description: "Invalid user ID",
-					},
-					[ResponseStatus.UNAUTHORIZED]: {
-						$ref: SchemaId.ERROR_RESPONSE,
-						description: "Unauthorized",
-					},
-					[ResponseStatus.FORBIDDEN]: {
-						description: "Forbidden by permissions",
-						type: "null",
-					},
+					[ResponseStatus.BAD_REQUEST]: ResponseWithStatusBadRequestSchema,
+					[ResponseStatus.UNAUTHORIZED]: ResponseWithStatusUnauthorized,
+					[ResponseStatus.FORBIDDEN]: ResponseWithStatusForbidden,
 					[ResponseStatus.NOT_FOUND]: {
-						$ref: SchemaId.ERROR_RESPONSE,
-						description: "User with provided user ID doesn't exist",
+						...ResponseWithStatusNotFound,
+						description: "User with provided user ID doesn't exist.",
 					},
-					[ResponseStatus.INTERNAL_SERVER_ERROR]: {
-						$ref: SchemaId.ERROR_RESPONSE,
-						description: "Internal server error",
-					},
+					[ResponseStatus.INTERNAL_SERVER_ERROR]: ResponseWithStatusInternalServerErrorSchema,
 				},
 				summary: "Delete user",
 				tags: [
@@ -623,8 +587,8 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				return await response
 					.status(ResponseStatus.BAD_REQUEST)
 					.send({
+						errorCodes: [],
 						message: validationError.message,
-						validationErrors: [],
 					});
 			}
 
@@ -667,8 +631,9 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					return await response
 						.status(ResponseStatus.NOT_FOUND)
 						.send({
-							message: `User with id "${id}" doesn't exist.`,
-							validationErrors: [],
+							errorCodes: [
+								ErrorCode.USER_NOT_FOUND_BY_ID,
+							],
 						});
 				}
 
@@ -677,8 +642,8 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				return await response
 					.status(ResponseStatus.INTERNAL_SERVER_ERROR)
 					.send({
+						errorCodes: [],
 						message: typedError.message,
-						validationErrors: [],
 					});
 			}
 		},
