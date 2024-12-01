@@ -55,7 +55,7 @@ void server.register(
 			/*
 				Can't use version 3.1.0 because of the following issues:
 				* `oneOf` doesn't render the schema names when `buildLocalReference` is defined
-				* Array of schema doesn't render the schema name
+				* Array of schema doesn't render the schema name (https://github.com/swagger-api/swagger-ui/issues/9593)
 			*/
 			openapi: "3.0.0",
 		},
