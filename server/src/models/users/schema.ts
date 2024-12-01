@@ -11,8 +11,8 @@ import {
 const UserSchemaCommon = {
 	properties: {
 		displayedName: {
-			maxLength: 1,
-			minLength: 100,
+			maxLength: 100,
+			minLength: 1,
 			type: "string",
 		},
 		email: {
