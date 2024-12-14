@@ -11,10 +11,10 @@ import {
 
 import {
 	type Permission,
-} from "../constants";
+} from "../types";
 import {
-	hasPermissions,
-} from "../utilities/has-permissions";
+	getHasPermissions,
+} from "../utilities/get-has-permissions";
 
 const checkPermissions = (
 	permissions: Array<Permission>,
@@ -25,10 +25,10 @@ const checkPermissions = (
 			request,
 		);
 
-		const hasPermissionsForRequest = await hasPermissions(
-			userIdFromJwtCookie,
+		const hasPermissionsForRequest = await getHasPermissions({
 			permissions,
-		);
+			userId: userIdFromJwtCookie,
+		});
 
 		if (!hasPermissionsForRequest) {
 			return await response

@@ -5,20 +5,26 @@ import {
 	type PaginatedPage,
 } from "@/types/pagination";
 
+type DateString = string;
+
 interface UserFull {
+	createdDate: DateString;
 	displayedName: string;
 	email: string;
 	id: string;
 	password: string;
-	role: Role;
+	roles: Array<Role>;
+	updatedDate: DateString;
 }
 
 type User = Pick<
 	UserFull,
+	| "createdDate"
 	| "displayedName"
 	| "email"
 	| "id"
-	| "role"
+	| "roles"
+	| "updatedDate"
 >;
 
 type PaginatedUsers = PaginatedPage<User>;

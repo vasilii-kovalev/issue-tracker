@@ -30,6 +30,9 @@ import {
 	type UserLogin,
 } from "@/models/users/types";
 import {
+	formatUser,
+} from "@/models/users/utilities/format-user";
+import {
 	verifyUserPassword,
 } from "@/models/users/utilities/user-password";
 import {
@@ -143,7 +146,7 @@ const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 				}
 
 				const token = server.jwt.sign({
-					payload: user,
+					payload: formatUser(user),
 				} satisfies JwtPayload);
 
 				return await response

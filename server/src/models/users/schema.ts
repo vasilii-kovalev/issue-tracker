@@ -23,9 +23,12 @@ const UserSchemaCommon = {
 			format: "email",
 			type: "string",
 		},
-		role: {
-			enum: Object.values(Role),
-			type: "string",
+		roles: {
+			items: {
+				enum: Object.values(Role),
+				type: "string",
+			},
+			type: "array",
 		},
 	},
 	type: "object",
@@ -48,15 +51,25 @@ const UserSchema = {
 	$id: SchemaId.USER,
 	properties: {
 		...UserSchemaCommon.properties,
+		createdDate: {
+			format: "date-time",
+			type: "string",
+		},
 		id: {
+			type: "string",
+		},
+		updatedDate: {
+			format: "date-time",
 			type: "string",
 		},
 	},
 	required: [
+		"createdDate",
 		"displayedName",
 		"email",
 		"id",
-		"role",
+		"roles",
+		"updatedDate",
 	],
 };
 
@@ -67,7 +80,7 @@ const UserCreateSchema = {
 		"displayedName",
 		"email",
 		"password",
-		"role",
+		"roles",
 	],
 };
 

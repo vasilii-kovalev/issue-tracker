@@ -14,8 +14,8 @@ enum SchemaId {
 }
 
 enum SchemaTag {
-	AUTH = "auth",
-	USERS = "users",
+	AUTH = "Auth",
+	USERS = "Users",
 }
 
 export {

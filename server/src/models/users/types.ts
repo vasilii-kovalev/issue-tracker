@@ -1,19 +1,28 @@
 import {
-	type User as UserFull,
+	type User as GeneratedUser,
 } from "@prisma/client";
 
 import {
 	type PaginatedPage,
 } from "@/models/pagination/types";
+import {
+	type Role,
+} from "@/models/permissions/constants";
+
+interface UserFull extends GeneratedUser {
+	roles: Array<Role>;
+}
 
 type UserId = UserFull["id"];
 
 type User = Pick<
 	UserFull,
+	| "createdDate"
 	| "displayedName"
 	| "email"
 	| "id"
-	| "role"
+	| "roles"
+	| "updatedDate"
 >;
 
 type UserCreate = Pick<
@@ -21,7 +30,7 @@ type UserCreate = Pick<
 	| "displayedName"
 	| "email"
 	| "password"
-	| "role"
+	| "roles"
 >;
 
 type UserUpdate = Partial<
@@ -30,7 +39,7 @@ type UserUpdate = Partial<
 		| "displayedName"
 		| "email"
 		| "password"
-		| "role"
+		| "roles"
 	>
 >;
 

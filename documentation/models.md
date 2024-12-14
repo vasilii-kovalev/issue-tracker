@@ -44,10 +44,10 @@ A hashed version of user's password.
 * **Required**: true
 * **Min length**: 3
 
-#### `role`
+#### `roles`
 
-User's role. The roles are described in the ["Roles and permissions" document](./roles-and-permissions.md).
+User's roles. The roles are described in the ["Role-based permission control" document](./role-based-permission-control.md).
 
-* **Type**: `string`
+* **Type**: `Array<string>`
 * **Required**: true
-* **Example**: `ADMIN`
+* **Example**: `USER`

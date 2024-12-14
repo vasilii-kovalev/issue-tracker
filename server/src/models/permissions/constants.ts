@@ -1,13 +1,27 @@
-enum Permission {
-	CAN_MANAGE_USERS = "CAN_MANAGE_USERS",
-}
-
 enum Role {
 	ADMIN = "ADMIN",
 	USER = "USER",
 }
 
+enum Resource {
+	USER = "USER",
+}
+
+enum Action {
+	CREATE = "CREATE",
+	DELETE = "DELETE",
+	READ = "READ",
+	UPDATE = "UPDATE",
+}
+
+enum Scope {
+	ANY = "ANY",
+	OWN = "OWN",
+}
+
 export {
-	Permission,
+	Action,
+	Resource,
 	Role,
+	Scope,
 };

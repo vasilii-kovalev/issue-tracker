@@ -1,15 +1,147 @@
 /* eslint-disable no-console */
 import {
+	type Prisma,
 	PrismaClient,
 } from "@prisma/client";
 
 import {
-	Permission,
+	Action,
+	Resource,
 	Role,
+	Scope,
 } from "@/models/permissions/constants";
+import {
+	type Permission,
+	type PermissionId,
+} from "@/models/permissions/types";
 import {
 	hashUserPassword,
 } from "@/models/users/utilities/user-password";
+
+const getPermissionId = (
+	permission: Permission,
+): PermissionId => {
+	const {
+		action,
+		resource,
+		scope,
+	} = permission;
+
+	return [
+		resource,
+		action,
+		scope,
+	].join(":");
+};
+
+const getPermissionCreateInput = (
+	permission: Permission,
+): Prisma.PermissionCreateManyInput => {
+	const {
+		action,
+		resource,
+		scope,
+	} = permission;
+
+	return {
+		action,
+		id: getPermissionId({
+			action,
+			resource,
+			scope,
+		}),
+		resource,
+		scope,
+	};
+};
+
+const getPermissionCreateInputs = (): Array<Prisma.PermissionCreateManyInput> => {
+	return [
+		getPermissionCreateInput({
+			action: Action.CREATE,
+			resource: Resource.USER,
+			scope: Scope.ANY,
+		}),
+		getPermissionCreateInput({
+			action: Action.DELETE,
+			resource: Resource.USER,
+			scope: Scope.ANY,
+		}),
+		getPermissionCreateInput({
+			action: Action.UPDATE,
+			resource: Resource.USER,
+			scope: Scope.ANY,
+		}),
+		getPermissionCreateInput({
+			action: Action.UPDATE,
+			resource: Resource.USER,
+			scope: Scope.OWN,
+		}),
+	];
+};
+
+const getPermissionConnectInput = ({
+	action,
+	resource,
+	scope,
+}: Permission): Prisma.PermissionWhereUniqueInput => {
+	return {
+		id: getPermissionId({
+			action,
+			resource,
+			scope,
+		}),
+	};
+};
+
+const getUserPermissionConnectInputs = (): Array<Prisma.PermissionWhereUniqueInput> => {
+	return [
+		getPermissionConnectInput({
+			action: Action.UPDATE,
+			resource: Resource.USER,
+			scope: Scope.OWN,
+		}),
+	];
+};
+
+const getAdminPermissionConnectInputs = (): Array<Prisma.PermissionWhereUniqueInput> => {
+	return [
+		getPermissionConnectInput({
+			action: Action.CREATE,
+			resource: Resource.USER,
+			scope: Scope.ANY,
+		}),
+		getPermissionConnectInput({
+			action: Action.DELETE,
+			resource: Resource.USER,
+			scope: Scope.ANY,
+		}),
+		getPermissionConnectInput({
+			action: Action.UPDATE,
+			resource: Resource.USER,
+			scope: Scope.ANY,
+		}),
+	];
+};
+
+const getUserRoleConnectInputs = (): Array<Prisma.RoleWhereUniqueInput> => {
+	return [
+		{
+			id: Role.USER,
+		},
+	];
+};
+
+const getAdminRoleConnectInputs = (): Array<Prisma.RoleWhereUniqueInput> => {
+	return [
+		{
+			id: Role.USER,
+		},
+		{
+			id: Role.ADMIN,
+		},
+	];
+};
 
 const prismaClient = new PrismaClient();
 
@@ -30,30 +162,29 @@ const seed = async (): Promise<void> => {
 
 	console.time("Permissions have been created.");
 
-	const canManageUsersPermission = await prismaClient.permission.create({
-		data: {
-			id: Permission.CAN_MANAGE_USERS,
-		},
+	await prismaClient.permission.createMany({
+		data: getPermissionCreateInputs(),
 	});
 
 	console.timeEnd("Permissions have been created.");
 
 	console.time("Roles have been created.");
 
-	const adminRole = await prismaClient.role.create({
+	await prismaClient.role.create({
 		data: {
-			id: Role.ADMIN,
+			id: Role.USER,
 			permissions: {
-				connect: [
-					canManageUsersPermission,
-				],
+				connect: getUserPermissionConnectInputs(),
 			},
 		},
 	});
 
-	const userRole = await prismaClient.role.create({
+	await prismaClient.role.create({
 		data: {
-			id: Role.USER,
+			id: Role.ADMIN,
+			permissions: {
+				connect: getAdminPermissionConnectInputs(),
+			},
 		},
 	});
 
@@ -63,10 +194,13 @@ const seed = async (): Promise<void> => {
 
 	await prismaClient.user.create({
 		data: {
-			displayedName: "Admin",
-			email: "admin@issue-tracker.com",
-			password: await hashUserPassword("admin-password"),
-			role: adminRole.id,
+			displayedName: "User",
+			email: "user@issue-tracker.com",
+			id: "user",
+			password: await hashUserPassword("user-password"),
+			roles: {
+				connect: getUserRoleConnectInputs(),
+			},
 		},
 		select: {
 			id: true,
@@ -75,10 +209,13 @@ const seed = async (): Promise<void> => {
 
 	await prismaClient.user.create({
 		data: {
-			displayedName: "User",
-			email: "user@issue-tracker.com",
-			password: await hashUserPassword("user-password"),
-			role: userRole.id,
+			displayedName: "Admin",
+			email: "admin@issue-tracker.com",
+			id: "admin",
+			password: await hashUserPassword("admin-password"),
+			roles: {
+				connect: getAdminRoleConnectInputs(),
+			},
 		},
 		select: {
 			id: true,

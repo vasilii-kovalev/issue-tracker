@@ -45,14 +45,19 @@ import {
 	type PaginatedPageQueryParams,
 } from "@/models/pagination/types";
 import {
-	Permission,
+	Action,
+	Resource,
+	Scope,
 } from "@/models/permissions/constants";
 import {
 	checkPermissions,
 } from "@/models/permissions/middleware/check-permissions";
 import {
-	hasPermissions,
-} from "@/models/permissions/utilities/has-permissions";
+	type Permission,
+} from "@/models/permissions/types";
+import {
+	getHasPermissions,
+} from "@/models/permissions/utilities/get-has-permissions";
 import {
 	isNull,
 } from "@/utilities/is-null";
@@ -70,6 +75,9 @@ import {
 	type UsersPaginatedPage,
 	type UserUpdate,
 } from "./types";
+import {
+	formatUser,
+} from "./utilities/format-user";
 import {
 	hashUserPassword,
 } from "./utilities/user-password";
@@ -142,7 +150,9 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				return await response
 					.status(ResponseStatus.OK)
 					.send({
-						data: users,
+						data: users.map<User>((user) => {
+							return formatUser(user);
+						}),
 						pagesTotalCount: Math.ceil(usersTotalCount / count),
 					});
 			} catch (error) {
@@ -236,7 +246,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 
 				return await response
 					.status(ResponseStatus.OK)
-					.send(user);
+					.send(formatUser(user));
 			} catch (error) {
 				const typedError = error as Error;
 
@@ -260,7 +270,11 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 			onRequest: [
 				checkJwt,
 				checkPermissions([
-					Permission.CAN_MANAGE_USERS,
+					{
+						action: Action.CREATE,
+						resource: Resource.USER,
+						scope: Scope.ANY,
+					},
 				]),
 			],
 			schema: {
@@ -305,7 +319,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				displayedName,
 				email,
 				password,
-				role,
+				roles,
 			} = request.body;
 
 			try {
@@ -314,14 +328,20 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 						displayedName,
 						email: email.toLowerCase(),
 						password: await hashUserPassword(password),
-						role,
+						roles: {
+							connect: roles.map((role) => {
+								return {
+									id: role,
+								};
+							}),
+						},
 					},
 					select: USER_SELECTOR,
 				});
 
 				return await response
 					.status(ResponseStatus.CREATED)
-					.send(user);
+					.send(formatUser(user));
 			} catch (error) {
 				if (
 					error instanceof Prisma.PrismaClientKnownRequestError
@@ -427,7 +447,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					displayedName,
 					email,
 					password,
-					role,
+					roles,
 				},
 			} = request;
 
@@ -437,19 +457,33 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					request,
 				);
 
-				if (userIdFromJwtCookie !== id) {
-					const hasPermissionsForRequest = await hasPermissions(
-						userIdFromJwtCookie,
-						[
-							Permission.CAN_MANAGE_USERS,
-						],
-					);
+				const isOwn = userIdFromJwtCookie === id;
 
-					if (!hasPermissionsForRequest) {
-						return await response
-							.status(ResponseStatus.FORBIDDEN)
-							.send();
-					}
+				const requiredPermissions: Array<Permission> = isOwn
+					? [
+						{
+							action: Action.UPDATE,
+							resource: Resource.USER,
+							scope: Scope.OWN,
+						},
+					]
+					: [
+						{
+							action: Action.UPDATE,
+							resource: Resource.USER,
+							scope: Scope.ANY,
+						},
+					];
+
+				const hasPermissionsForRequest = await getHasPermissions({
+					permissions: requiredPermissions,
+					userId: userIdFromJwtCookie,
+				});
+
+				if (!hasPermissionsForRequest) {
+					return await response
+						.status(ResponseStatus.FORBIDDEN)
+						.send();
 				}
 
 				const user = await prismaClient.user.update({
@@ -457,11 +491,19 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 						displayedName,
 						email: !isUndefined(email)
 							? email.toLowerCase()
-							: email,
+							: undefined,
 						password: !isUndefined(password)
 							? await hashUserPassword(password)
-							: password,
-						role,
+							: undefined,
+						roles: !isUndefined(roles)
+							? {
+								connect: roles.map((role) => {
+									return {
+										id: role,
+									};
+								}),
+							}
+							: undefined,
 					},
 					select: USER_SELECTOR,
 					where: {
@@ -469,8 +511,16 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					},
 				});
 
+				const formattedUser = formatUser(user);
+
+				if (!isOwn) {
+					return await response
+						.status(ResponseStatus.OK)
+						.send(formattedUser satisfies User);
+				}
+
 				const token = server.jwt.sign({
-					payload: user,
+					payload: formattedUser,
 				} satisfies JwtPayload);
 
 				return await response
@@ -483,7 +533,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 						},
 					)
 					.status(ResponseStatus.OK)
-					.send(user);
+					.send(formattedUser satisfies User);
 			} catch (error) {
 				if (error instanceof Prisma.PrismaClientKnownRequestError) {
 					if (
@@ -544,7 +594,11 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 			onRequest: [
 				checkJwt,
 				checkPermissions([
-					Permission.CAN_MANAGE_USERS,
+					{
+						action: Action.DELETE,
+						resource: Resource.USER,
+						scope: Scope.ANY,
+					},
 				]),
 			],
 			schema: {
@@ -609,17 +663,21 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					request,
 				);
 
-				if (userIdFromJwtCookie === id) {
+				const formattedUser = formatUser(user);
+
+				const isOwn = userIdFromJwtCookie === id;
+
+				if (!isOwn) {
 					return await response
-						// Like in `/api/auth/logout`.
-						.clearCookie(COOKIE_JWT_TOKEN_NAME)
 						.status(ResponseStatus.OK)
-						.send(user);
+						.send(formattedUser);
 				}
 
 				return await response
+					// Like in `/api/auth/logout`.
+					.clearCookie(COOKIE_JWT_TOKEN_NAME)
 					.status(ResponseStatus.OK)
-					.send(user);
+					.send(formattedUser);
 			} catch (error) {
 				if (
 					error instanceof Prisma.PrismaClientKnownRequestError
