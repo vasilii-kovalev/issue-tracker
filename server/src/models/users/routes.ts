@@ -497,7 +497,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 							: undefined,
 						roles: !isUndefined(roles)
 							? {
-								connect: roles.map((role) => {
+								set: roles.map((role) => {
 									return {
 										id: role,
 									};
