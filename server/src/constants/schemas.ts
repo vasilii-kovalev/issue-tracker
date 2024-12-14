@@ -8,9 +8,6 @@ enum SchemaId {
 
 	// Errors.
 	ERROR_RESPONSE = "ErrorResponse",
-
-	// Pagination.
-	PAGINATION_PAGE_QUERY_PARAMS = "PaginationPageQueryParams",
 }
 
 enum SchemaTag {

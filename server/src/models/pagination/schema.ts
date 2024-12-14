@@ -1,7 +1,3 @@
-import {
-	SchemaId,
-} from "@/constants/schemas";
-
 const PaginatedPage = {
 	properties: {
 		data: {
@@ -18,8 +14,7 @@ const PaginatedPage = {
 	type: "object",
 };
 
-const PaginatedPageQueryParamsSchema = {
-	$id: SchemaId.PAGINATION_PAGE_QUERY_PARAMS,
+const WithPaginatedPageParamsSchema = {
 	properties: {
 		count: {
 			maximum: 100,
@@ -38,7 +33,19 @@ const PaginatedPageQueryParamsSchema = {
 	type: "object",
 };
 
+const WithSortingStringSchema = {
+	properties: {
+		sorting: {
+			maxLength: 100,
+			minLength: 1,
+			type: "string",
+		},
+	},
+	type: "object",
+};
+
 export {
 	PaginatedPage,
-	PaginatedPageQueryParamsSchema,
+	WithPaginatedPageParamsSchema,
+	WithSortingStringSchema,
 };

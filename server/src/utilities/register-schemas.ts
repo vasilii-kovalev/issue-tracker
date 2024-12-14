@@ -6,9 +6,6 @@ import {
 	ErrorResponseSchema,
 } from "@/models/errors/schema";
 import {
-	PaginatedPageQueryParamsSchema,
-} from "@/models/pagination/schema";
-import {
 	UserCreateSchema,
 	UserLoginSchema,
 	UserSchema,
@@ -30,9 +27,6 @@ const registerSchemas = (server: FastifyInstance): void => {
 
 	// Errors.
 	server.addSchema(ErrorResponseSchema);
-
-	// Pagination.
-	server.addSchema(PaginatedPageQueryParamsSchema);
 };
 
 export {

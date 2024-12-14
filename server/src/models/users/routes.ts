@@ -42,9 +42,6 @@ import {
 	type ErrorResponse,
 } from "@/models/errors/types";
 import {
-	type PaginatedPageQueryParams,
-} from "@/models/pagination/types";
-import {
 	Action,
 	Resource,
 	Scope,
@@ -66,6 +63,12 @@ import {
 } from "@/utilities/is-undefined";
 
 import {
+	getSortingParameters,
+} from "../pagination/utilities/get-sorting-parameters";
+import {
+	UsersPaginatedPageQueryParamsSchema,
+} from "./schema";
+import {
 	USER_SELECTOR,
 } from "./selectors";
 import {
@@ -73,6 +76,7 @@ import {
 	type UserCreate,
 	type UserId,
 	type UsersPaginatedPage,
+	type UsersPaginatedPageQueryParams,
 	type UserUpdate,
 } from "./types";
 import {
@@ -84,7 +88,7 @@ import {
 
 const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 	server.get<{
-		Querystring: PaginatedPageQueryParams;
+		Querystring: UsersPaginatedPageQueryParams;
 		Reply: UsersPaginatedPage | ErrorResponse;
 	}>(
 		"/api/users",
@@ -94,9 +98,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				checkJwt,
 			],
 			schema: {
-				querystring: {
-					$ref: SchemaId.PAGINATION_PAGE_QUERY_PARAMS,
-				},
+				querystring: UsersPaginatedPageQueryParamsSchema,
 				response: {
 					[ResponseStatus.OK]: {
 						$ref: SchemaId.USERS_PAGINATED_PAGE,
@@ -129,22 +131,51 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 			const {
 				count,
 				pageNumber,
+				displayedName,
+				sorting,
 			} = request.query;
 
 			try {
+				const sortingParameters = getSortingParameters({
+					allowedFields: [
+						"createdDate",
+						"displayedName",
+						"email",
+						"updatedDate",
+					] satisfies Array<keyof User>,
+					sortingString: sorting,
+				});
+
+				const filterParameters: Prisma.UserWhereInput = {
+					displayedName: {
+						contains: displayedName,
+					},
+				};
+
 				const [
 					users,
 					usersTotalCount,
 				] = await prismaClient.$transaction([
 					prismaClient.user.findMany({
-						orderBy: {
-							displayedName: "asc",
-						},
+						orderBy: [
+							...sortingParameters,
+							/*
+								If there are multiple values with the same key, Prisma uses the first value in the array.
+								That's why the defaults are put at the end - values from the request take precedence,
+								then the defaults fill in the gaps.
+							*/
+							{
+								displayedName: "asc",
+							},
+						],
 						select: USER_SELECTOR,
 						skip: count * (pageNumber - 1),
 						take: count,
+						where: filterParameters,
 					}),
-					prismaClient.user.count(),
+					prismaClient.user.count({
+						where: filterParameters,
+					}),
 				]);
 
 				return await response

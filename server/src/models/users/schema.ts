@@ -3,13 +3,22 @@ import {
 } from "@/constants/schemas";
 import {
 	PaginatedPage,
+	WithPaginatedPageParamsSchema,
+	WithSortingStringSchema,
 } from "@/models/pagination/schema";
 import {
 	Role,
 } from "@/models/permissions/constants";
+import {
+	pickByKeys,
+} from "@/utilities/pick-by-keys";
 
-const UserSchemaCommon = {
+const UserFullSchema = {
 	properties: {
+		createdDate: {
+			format: "date-time",
+			type: "string",
+		},
 		displayedName: {
 			maxLength: 100,
 			minLength: 1,
@@ -23,6 +32,14 @@ const UserSchemaCommon = {
 			format: "email",
 			type: "string",
 		},
+		id: {
+			type: "string",
+		},
+		password: {
+			format: "password",
+			minLength: 3,
+			type: "string",
+		},
 		roles: {
 			items: {
 				enum: Object.values(Role),
@@ -30,39 +47,27 @@ const UserSchemaCommon = {
 			},
 			type: "array",
 		},
-	},
-	type: "object",
-};
-
-const UserSchemaCommonWithPassword = {
-	...UserSchemaCommon,
-	properties: {
-		...UserSchemaCommon.properties,
-		password: {
-			format: "password",
-			minLength: 3,
-			type: "string",
-		},
-	},
-};
-
-const UserSchema = {
-	...UserSchemaCommon,
-	$id: SchemaId.USER,
-	properties: {
-		...UserSchemaCommon.properties,
-		createdDate: {
-			format: "date-time",
-			type: "string",
-		},
-		id: {
-			type: "string",
-		},
 		updatedDate: {
 			format: "date-time",
 			type: "string",
 		},
 	},
+	type: "object",
+};
+
+const UserSchema = {
+	$id: SchemaId.USER,
+	properties: pickByKeys(
+		UserFullSchema.properties,
+		[
+			"createdDate",
+			"displayedName",
+			"email",
+			"id",
+			"roles",
+			"updatedDate",
+		],
+	),
 	required: [
 		"createdDate",
 		"displayedName",
@@ -71,35 +76,80 @@ const UserSchema = {
 		"roles",
 		"updatedDate",
 	],
+	type: "object",
 };
 
 const UserCreateSchema = {
-	...UserSchemaCommonWithPassword,
 	$id: SchemaId.USER_CREATE,
+	properties: pickByKeys(
+		UserFullSchema.properties,
+		[
+			"displayedName",
+			"email",
+			"password",
+			"roles",
+		],
+	),
 	required: [
 		"displayedName",
 		"email",
 		"password",
 		"roles",
 	],
+	type: "object",
 };
 
 const UserUpdateSchema = {
-	...UserSchemaCommonWithPassword,
 	$id: SchemaId.USER_UPDATE,
+	properties: pickByKeys(
+		UserFullSchema.properties,
+		[
+			"displayedName",
+			"email",
+			"password",
+			"roles",
+		],
+	),
+	type: "object",
 };
 
 const UserLoginSchema = {
-	...UserSchemaCommonWithPassword,
 	$id: SchemaId.USER_LOGIN,
-	properties: {
-		email: UserSchemaCommonWithPassword.properties.email,
-		password: UserSchemaCommonWithPassword.properties.password,
-	},
+	properties: pickByKeys(
+		UserFullSchema.properties,
+		[
+			"email",
+			"password",
+		],
+	),
 	required: [
 		"email",
 		"password",
 	],
+	type: "object",
+};
+
+const UserFilterSchema = {
+	properties: {
+		displayedName: {
+			maxLength: 100,
+			minLength: 1,
+			type: "string",
+		},
+	},
+	type: "object",
+};
+
+const UsersPaginatedPageQueryParamsSchema = {
+	properties: {
+		...WithPaginatedPageParamsSchema.properties,
+		...UserFilterSchema.properties,
+		...WithSortingStringSchema.properties,
+	},
+	required: [
+		...WithPaginatedPageParamsSchema.required,
+	],
+	type: "object",
 };
 
 const UsersPaginatedPageSchema = {
@@ -120,6 +170,7 @@ export {
 	UserCreateSchema,
 	UserLoginSchema,
 	UserSchema,
+	UsersPaginatedPageQueryParamsSchema,
 	UsersPaginatedPageSchema,
 	UserUpdateSchema,
 };
