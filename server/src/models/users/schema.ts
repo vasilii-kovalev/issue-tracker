@@ -2,16 +2,29 @@ import {
 	SchemaId,
 } from "@/constants/schemas";
 import {
-	PaginatedPage,
-	WithPaginatedPageParamsSchema,
+	PaginatedPageParamsSchema,
+	PaginatedPageSchema,
 	WithSortingStringSchema,
 } from "@/models/pagination/schema";
+import {
+	type PaginatedPage,
+} from "@/models/pagination/types";
 import {
 	Role,
 } from "@/models/permissions/constants";
 import {
 	pickByKeys,
 } from "@/utilities/pick-by-keys";
+
+import {
+	type User,
+	type UserCreate,
+	type UserFilter,
+	type UserFull,
+	type UserLogin,
+	type UsersPaginatedPageQueryParams,
+	type UserUpdate,
+} from "./types";
 
 const UserFullSchema = {
 	properties: {
@@ -51,7 +64,7 @@ const UserFullSchema = {
 			format: "date-time",
 			type: "string",
 		},
-	},
+	} satisfies Record<keyof UserFull, unknown>,
 	type: "object",
 };
 
@@ -67,7 +80,7 @@ const UserSchema = {
 			"roles",
 			"updatedDate",
 		],
-	),
+	) satisfies Record<keyof User, unknown>,
 	required: [
 		"createdDate",
 		"displayedName",
@@ -75,7 +88,7 @@ const UserSchema = {
 		"id",
 		"roles",
 		"updatedDate",
-	],
+	] satisfies Array<keyof User>,
 	type: "object",
 };
 
@@ -89,13 +102,13 @@ const UserCreateSchema = {
 			"password",
 			"roles",
 		],
-	),
+	) satisfies Record<keyof UserCreate, unknown>,
 	required: [
 		"displayedName",
 		"email",
 		"password",
 		"roles",
-	],
+	] satisfies Array<keyof UserCreate>,
 	type: "object",
 };
 
@@ -109,7 +122,7 @@ const UserUpdateSchema = {
 			"password",
 			"roles",
 		],
-	),
+	) satisfies Record<keyof UserUpdate, unknown>,
 	type: "object",
 };
 
@@ -121,11 +134,11 @@ const UserLoginSchema = {
 			"email",
 			"password",
 		],
-	),
+	) satisfies Record<keyof UserLogin, unknown>,
 	required: [
 		"email",
 		"password",
-	],
+	] satisfies Array<keyof UserLogin>,
 	type: "object",
 };
 
@@ -136,34 +149,34 @@ const UserFilterSchema = {
 			minLength: 1,
 			type: "string",
 		},
-	},
+	} satisfies Record<keyof UserFilter, unknown>,
 	type: "object",
 };
 
 const UsersPaginatedPageQueryParamsSchema = {
 	properties: {
-		...WithPaginatedPageParamsSchema.properties,
+		...PaginatedPageParamsSchema.properties,
 		...UserFilterSchema.properties,
 		...WithSortingStringSchema.properties,
-	},
+	} satisfies Record<keyof UsersPaginatedPageQueryParams, unknown>,
 	required: [
-		...WithPaginatedPageParamsSchema.required,
-	],
+		...PaginatedPageParamsSchema.required,
+	] satisfies Array<keyof UsersPaginatedPageQueryParams>,
 	type: "object",
 };
 
 const UsersPaginatedPageSchema = {
-	...PaginatedPage,
+	...PaginatedPageSchema,
 	$id: SchemaId.USERS_PAGINATED_PAGE,
 	properties: {
-		...PaginatedPage.properties,
+		...PaginatedPageSchema.properties,
 		data: {
-			...PaginatedPage.properties.data,
+			...PaginatedPageSchema.properties.data,
 			items: {
 				$ref: SchemaId.USER,
 			},
 		},
-	},
+	} satisfies Record<keyof PaginatedPage<User>, unknown>,
 };
 
 export {

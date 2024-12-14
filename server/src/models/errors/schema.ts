@@ -5,6 +5,9 @@ import {
 import {
 	ErrorCode,
 } from "./constants";
+import {
+	type ErrorResponse,
+} from "./types";
 
 const ErrorResponseSchema = {
 	$id: SchemaId.ERROR_RESPONSE,
@@ -20,10 +23,10 @@ const ErrorResponseSchema = {
 			description: "Server and database errors. Present for debugging purposes only",
 			type: "string",
 		},
-	},
+	} satisfies Record<keyof ErrorResponse, unknown>,
 	required: [
 		"errorCodes",
-	],
+	] satisfies Array<keyof ErrorResponse>,
 	type: "object",
 };
 

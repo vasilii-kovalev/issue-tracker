@@ -65,6 +65,7 @@ type UsersPaginatedPage = PaginatedPage<User>;
 export type {
 	User,
 	UserCreate,
+	UserFilter,
 	UserFull,
 	UserId,
 	UserLogin,
