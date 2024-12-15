@@ -565,7 +565,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				}
 
 				const token = server.jwt.sign({
-					payload: formattedUser,
+					payload: formattedUser.id,
 				} satisfies JwtPayload);
 
 				return await response

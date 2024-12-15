@@ -3,7 +3,7 @@ import {
 } from "@/models/users/types";
 
 interface JwtPayload {
-	payload: User;
+	payload: User["id"];
 }
 
 export type {

@@ -40,7 +40,7 @@ const getUserIdFromJwtCookie = (
 		return undefined;
 	}
 
-	return decodedToken.payload.id;
+	return decodedToken.payload;
 };
 
 export {

@@ -24,14 +24,8 @@ import {
 	type ErrorResponse,
 } from "@/models/errors/types";
 import {
-	USER_SELECTOR,
-} from "@/models/users/selectors";
-import {
 	type UserLogin,
 } from "@/models/users/types";
-import {
-	formatUser,
-} from "@/models/users/utilities/format-user";
 import {
 	verifyUserPassword,
 } from "@/models/users/utilities/user-password";
@@ -107,7 +101,7 @@ const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 			try {
 				const userWithPassword = await prismaClient.user.findUnique({
 					select: {
-						...USER_SELECTOR,
+						id: true,
 						password: true,
 					},
 					where: {
@@ -126,13 +120,13 @@ const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 				}
 
 				const {
-					password: userPassword,
-					...user
+					id,
+					password: currentPassword,
 				} = userWithPassword;
 
 				const isPasswordCorrect = await verifyUserPassword(
 					password,
-					userPassword,
+					currentPassword,
 				);
 
 				if (!isPasswordCorrect) {
@@ -146,7 +140,7 @@ const authRoutes: FastifyPluginCallback = (server, options, done): void => {
 				}
 
 				const token = server.jwt.sign({
-					payload: formatUser(user),
+					payload: id,
 				} satisfies JwtPayload);
 
 				return await response
