@@ -1,4 +1,8 @@
 import {
+	SchemaId,
+} from "@/constants/schemas";
+
+import {
 	type PaginatedPage,
 	type PaginatedPageQueryParams,
 	type WithSortingString,
@@ -36,6 +40,7 @@ const WithSortingStringSchema = {
 };
 
 const PaginatedPageSchema = {
+	$id: SchemaId.PAGINATED_PAGE,
 	properties: {
 		data: {
 			type: "array",

@@ -67,7 +67,8 @@ import {
 } from "../pagination/utilities/get-sorting-parameters";
 import {
 	UsersPaginatedPageQueryParamsSchema,
-} from "./schema";
+	UsersPaginatedPageSchema,
+} from "./schemas";
 import {
 	USER_SELECTOR,
 } from "./selectors";
@@ -102,7 +103,7 @@ const usersRoutes: FastifyPluginCallback = (
 				querystring: UsersPaginatedPageQueryParamsSchema,
 				response: {
 					[ResponseStatus.OK]: {
-						$ref: SchemaId.USERS_PAGINATED_PAGE,
+						...UsersPaginatedPageSchema,
 						description: "Paginated users.",
 					},
 					[ResponseStatus.BAD_REQUEST]: ResponseWithStatusBadRequestSchema,

@@ -18,6 +18,7 @@ const ErrorResponseSchema = {
 				type: "string",
 			},
 			type: "array",
+			uniqueItems: true,
 		},
 		message: {
 			description: "Server and database errors. Present for debugging purposes only",

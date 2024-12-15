@@ -10,8 +10,12 @@ import {
 import {
 	type RoleId,
 } from "@/models/roles-and-permissions/constants";
+import {
+	type PermissionId,
+} from "@/models/roles-and-permissions/types";
 
 interface UserFull extends GeneratedUser {
+	permissions: Array<PermissionId>;
 	roles: Array<RoleId>;
 }
 

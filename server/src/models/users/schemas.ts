@@ -10,9 +10,6 @@ import {
 	type PaginatedPage,
 } from "@/models/pagination/types";
 import {
-	RoleId,
-} from "@/models/roles-and-permissions/constants";
-import {
 	pickByKeys,
 } from "@/utilities/pick-by-keys";
 
@@ -25,6 +22,11 @@ import {
 	type UsersPaginatedPageQueryParams,
 	type UserUpdate,
 } from "./types";
+
+const UserIdSchema = {
+	$id: SchemaId.USER_ID,
+	type: "string",
+};
 
 const UserFullSchema = {
 	properties: {
@@ -40,9 +42,7 @@ const UserFullSchema = {
 			format: "email",
 			type: "string",
 		},
-		id: {
-			type: "string",
-		},
+		id: UserIdSchema,
 		name: {
 			maxLength: 100,
 			minLength: 1,
@@ -53,18 +53,35 @@ const UserFullSchema = {
 			minLength: 3,
 			type: "string",
 		},
-		roles: {
+		permissions: {
 			items: {
-				enum: Object.values(RoleId),
-				type: "string",
+				$ref: SchemaId.PERMISSION_ID,
 			},
 			type: "array",
+			uniqueItems: true,
+		},
+		roles: {
+			items: {
+				$ref: SchemaId.ROLE_ID,
+			},
+			type: "array",
+			uniqueItems: true,
 		},
 		updatedDate: {
 			format: "date-time",
 			type: "string",
 		},
 	} satisfies Record<keyof UserFull, unknown>,
+	required: [
+		"createdDate",
+		"email",
+		"id",
+		"name",
+		"password",
+		"permissions",
+		"roles",
+		"updatedDate",
+	] satisfies Array<keyof UserFull>,
 	type: "object",
 };
 
@@ -164,8 +181,7 @@ const UsersPaginatedPageQueryParamsSchema = {
 };
 
 const UsersPaginatedPageSchema = {
-	...PaginatedPageSchema,
-	$id: SchemaId.USERS_PAGINATED_PAGE,
+	$ref: SchemaId.PAGINATED_PAGE,
 	properties: {
 		...PaginatedPageSchema.properties,
 		data: {
@@ -179,6 +195,7 @@ const UsersPaginatedPageSchema = {
 
 export {
 	UserCreateSchema,
+	UserFullSchema,
 	UserLoginSchema,
 	UserSchema,
 	UsersPaginatedPageQueryParamsSchema,

@@ -1,13 +1,15 @@
 enum SchemaId {
-	// Users.
-	USER = "User",
-	USER_LOGIN = "UserLogin",
-	USER_CREATE = "UserCreate",
-	USER_UPDATE = "UserUpdate",
-	USERS_PAGINATED_PAGE = "UsersPaginatedPage",
-
-	// Errors.
 	ERROR_RESPONSE = "ErrorResponse",
+	PAGINATED_PAGE = "PaginatedPage",
+	PERMISSION_FULL = "PermissionFull",
+	PERMISSION_ID = "PermissionId",
+	ROLE_FULL = "RoleFull",
+	ROLE_ID = "RoleId",
+	USER = "User",
+	USER_CREATE = "UserCreate",
+	USER_ID = "UserId",
+	USER_LOGIN = "UserLogin",
+	USER_UPDATE = "UserUpdate",
 }
 
 enum SchemaTag {

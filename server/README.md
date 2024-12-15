@@ -67,6 +67,6 @@ After starting the server, visit <http://localhost:5000/swagger>.
     * Utility functions (`utilities/*`)
     * Selectors (`selectors`) - contains objects, that are used in Prisma models to select data (for example, in `select` field). Their usage prevents inconsistency when selecting data for similar cases
     * Routes (`routes.ts`) - route definitions
-    * OpenAPI schema (`schema.ts`) - used in route definitions
+    * OpenAPI schemas (`schemas.ts`) - used in route definitions
     * Middleware (`middleware/*`) - used in route definitions
   * [utilities](./src/utilities) - global utility functions
