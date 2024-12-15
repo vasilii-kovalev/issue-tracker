@@ -1,4 +1,4 @@
-enum Role {
+enum RoleId {
 	ADMIN = "ADMIN",
 	USER = "USER",
 }
@@ -22,6 +22,6 @@ enum Scope {
 export {
 	Action,
 	Resource,
-	Role,
+	RoleId,
 	Scope,
 };

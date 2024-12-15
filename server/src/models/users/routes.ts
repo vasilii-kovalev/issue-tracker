@@ -83,7 +83,11 @@ import {
 	hashUserPassword,
 } from "./utilities/user-password";
 
-const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
+const usersRoutes: FastifyPluginCallback = (
+	server,
+	options,
+	done,
+): void => {
 	server.get<{
 		Querystring: UsersPaginatedPageQueryParams;
 		Reply: UsersPaginatedPage | ErrorResponse;

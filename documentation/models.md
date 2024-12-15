@@ -70,7 +70,7 @@ Role's ID.
 * **Type**: `string`
 * **Required**: Yes
 * **Unique**: Yes
-* **Example**: `cm441ynf30001v2mk6ka140x4`
+* **Example**: `USER`
 
 #### `updatedDate`
 

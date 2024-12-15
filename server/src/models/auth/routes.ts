@@ -43,7 +43,11 @@ import {
 	type JwtPayload,
 } from "./types";
 
-const authRoutes: FastifyPluginCallback = (server, options, done): void => {
+const authRoutes: FastifyPluginCallback = (
+	server,
+	options,
+	done,
+): void => {
 	server.post<{
 		Body: UserLogin;
 		Reply: undefined | ErrorResponse;

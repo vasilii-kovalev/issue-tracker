@@ -10,7 +10,7 @@ import {
 	type PaginatedPage,
 } from "@/models/pagination/types";
 import {
-	Role,
+	RoleId,
 } from "@/models/roles-and-permissions/constants";
 import {
 	pickByKeys,
@@ -55,7 +55,7 @@ const UserFullSchema = {
 		},
 		roles: {
 			items: {
-				enum: Object.values(Role),
+				enum: Object.values(RoleId),
 				type: "string",
 			},
 			type: "array",

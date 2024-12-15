@@ -7,7 +7,7 @@ import {
 import {
 	Action,
 	Resource,
-	Role,
+	RoleId,
 	Scope,
 } from "@/models/roles-and-permissions/constants";
 import {
@@ -127,7 +127,7 @@ const getAdminPermissionConnectInputs = (): Array<Prisma.PermissionWhereUniqueIn
 const getUserRoleConnectInputs = (): Array<Prisma.RoleWhereUniqueInput> => {
 	return [
 		{
-			id: Role.USER,
+			id: RoleId.USER,
 		},
 	];
 };
@@ -135,10 +135,10 @@ const getUserRoleConnectInputs = (): Array<Prisma.RoleWhereUniqueInput> => {
 const getAdminRoleConnectInputs = (): Array<Prisma.RoleWhereUniqueInput> => {
 	return [
 		{
-			id: Role.USER,
+			id: RoleId.USER,
 		},
 		{
-			id: Role.ADMIN,
+			id: RoleId.ADMIN,
 		},
 	];
 };
@@ -172,7 +172,7 @@ const seed = async (): Promise<void> => {
 
 	await prismaClient.role.create({
 		data: {
-			id: Role.USER,
+			id: RoleId.USER,
 			permissions: {
 				connect: getUserPermissionConnectInputs(),
 			},
@@ -181,7 +181,7 @@ const seed = async (): Promise<void> => {
 
 	await prismaClient.role.create({
 		data: {
-			id: Role.ADMIN,
+			id: RoleId.ADMIN,
 			permissions: {
 				connect: getAdminPermissionConnectInputs(),
 			},
