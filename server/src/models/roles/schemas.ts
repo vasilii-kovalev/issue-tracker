@@ -32,7 +32,9 @@ const RoleFullSchema = {
 			minLength: 1,
 			type: "string",
 		},
-		id: RoleIdSchema,
+		id: {
+			$ref: SchemaId.ROLE_ID,
+		},
 		updatedDate: {
 			format: "date-time",
 			type: "string",
@@ -76,5 +78,6 @@ const RoleFilterSchema = {
 
 export {
 	RoleFilterSchema,
+	RoleIdSchema,
 	RoleSchema,
 };
