@@ -10,12 +10,22 @@ User of the system.
 
 ### Properties
 
+#### `createdDate`
+
+Date when the user was created.
+
+* **Type**: `string`
+* **Required**: true
+* **Format**: Timestamp
+* **Example**: `2024-01-01T09:00:00.000Z`
+
 #### `email`
 
 User's email. Used for login and authentication.
 
 * **Type**: `string`
 * **Required**: true
+* **Format**: Email
 * **Example**: `john.doe@issue-tracker.com`
 
 #### `id`
@@ -51,3 +61,12 @@ User's roles. The roles are described in the ["Role-based permission control" do
 * **Type**: `Array<string>`
 * **Required**: true
 * **Example**: `USER`
+
+#### `updatedDate`
+
+Date when the user was last updated.
+
+* **Type**: `string`
+* **Required**: true
+* **Format**: Timestamp
+* **Example**: `2024-01-01T09:00:00.000Z`
