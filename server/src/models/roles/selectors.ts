@@ -3,12 +3,11 @@ import {
 } from "@prisma/client";
 
 import {
+	PERMISSIONS_ORDER_BY_DEFAULT,
+} from "@/models/permissions/constants";
+import {
 	USERS_ORDER_BY_DEFAULT,
 } from "@/models/users/constants";
-
-import {
-	PERMISSIONS_ORDER_BY_DEFAULT,
-} from "./constants";
 
 const ROLE_FULL_SELECTOR = {
 	createdDate: true,

@@ -8,11 +8,11 @@ import {
 	type WithSortingString,
 } from "@/models/pagination/types";
 import {
-	type RoleId,
-} from "@/models/roles-and-permissions/constants";
-import {
 	type PermissionId,
-} from "@/models/roles-and-permissions/types";
+} from "@/models/permissions/types";
+import {
+	type RoleId,
+} from "@/models/roles/constants";
 
 interface UserFull extends GeneratedUser {
 	permissions: Array<PermissionId>;

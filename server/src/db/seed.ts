@@ -7,13 +7,15 @@ import {
 import {
 	Action,
 	Resource,
-	RoleId,
 	Scope,
-} from "@/models/roles-and-permissions/constants";
+} from "@/models/permissions/constants";
 import {
 	type Permission,
 	type PermissionId,
-} from "@/models/roles-and-permissions/types";
+} from "@/models/permissions/types";
+import {
+	RoleId,
+} from "@/models/roles/constants";
 import {
 	hashUserPassword,
 } from "@/models/users/utilities/user-password";

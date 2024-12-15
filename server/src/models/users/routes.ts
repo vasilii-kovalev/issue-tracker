@@ -48,16 +48,16 @@ import {
 	Action,
 	Resource,
 	Scope,
-} from "@/models/roles-and-permissions/constants";
+} from "@/models/permissions/constants";
 import {
 	checkPermissions,
-} from "@/models/roles-and-permissions/middleware/check-permissions";
+} from "@/models/permissions/middleware/check-permissions";
 import {
 	type Permission,
-} from "@/models/roles-and-permissions/types";
+} from "@/models/permissions/types";
 import {
 	getHasPermissions,
-} from "@/models/roles-and-permissions/utilities/get-has-permissions";
+} from "@/models/permissions/utilities/get-has-permissions";
 import {
 	isNull,
 } from "@/utilities/is-null";
@@ -113,7 +113,7 @@ const usersRoutes: FastifyPluginCallback = (
 					[ResponseStatus.UNAUTHORIZED]: ResponseWithStatusUnauthorized,
 					[ResponseStatus.INTERNAL_SERVER_ERROR]: ResponseWithStatusInternalServerErrorSchema,
 				},
-				summary: "Get users",
+				summary: "Get paginated users",
 				tags: [
 					SchemaTag.USERS,
 				],

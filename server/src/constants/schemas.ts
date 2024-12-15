@@ -14,7 +14,7 @@ enum SchemaId {
 
 enum SchemaTag {
 	AUTH = "Auth",
-	ROLES_AND_PERMISSIONS = "Roles and permissions",
+	ROLES = "Roles",
 	USERS = "Users",
 }
 

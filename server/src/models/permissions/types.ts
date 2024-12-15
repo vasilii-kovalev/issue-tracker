@@ -1,13 +1,10 @@
 import {
 	type Permission as GeneratedPermission,
-	type Role as GeneratedRole,
 } from "@prisma/client";
 
 import {
-	type PaginatedPage,
-	type PaginatedPageQueryParams,
-	type WithSortingString,
-} from "@/models/pagination/types";
+	type RoleId,
+} from "@/models/roles/constants";
 import {
 	type UserId,
 } from "@/models/users/types";
@@ -15,7 +12,6 @@ import {
 import {
 	type Action,
 	type Resource,
-	type RoleId,
 	type Scope,
 } from "./constants";
 
@@ -37,29 +33,8 @@ type Permission = Pick<
 	| "scope"
 >;
 
-interface RoleFull extends GeneratedRole {
-	id: RoleId;
-	permissions: Array<PermissionId>;
-	users: Array<UserId>;
-}
-
-interface RoleFilter {
-	id: string;
-}
-
-interface RolesPaginatedPageQueryParams extends
-	PaginatedPageQueryParams,
-	Partial<RoleFilter>,
-	Partial<WithSortingString> {}
-
-type RolesPaginatedPage = PaginatedPage<RoleFull>;
-
 export type {
 	Permission,
 	PermissionFull,
 	PermissionId,
-	RoleFilter,
-	RoleFull,
-	RolesPaginatedPage,
-	RolesPaginatedPageQueryParams,
 };

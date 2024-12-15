@@ -56,7 +56,7 @@ import {
 	getRoleFull,
 } from "./utilities/get-role-full";
 
-const rolesAndPermissionsRoutes: FastifyPluginCallback = (
+const rolesRoutes: FastifyPluginCallback = (
 	server,
 	options,
 	done,
@@ -88,7 +88,7 @@ const rolesAndPermissionsRoutes: FastifyPluginCallback = (
 				},
 				summary: "Get paginated roles with relations",
 				tags: [
-					SchemaTag.ROLES_AND_PERMISSIONS,
+					SchemaTag.ROLES,
 				],
 			},
 		},
@@ -178,5 +178,5 @@ const rolesAndPermissionsRoutes: FastifyPluginCallback = (
 };
 
 export {
-	rolesAndPermissionsRoutes,
+	rolesRoutes,
 };

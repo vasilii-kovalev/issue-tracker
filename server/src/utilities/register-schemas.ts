@@ -10,8 +10,10 @@ import {
 } from "@/models/pagination/schema";
 import {
 	PermissionFillSchema,
+} from "@/models/permissions/schemas";
+import {
 	RoleFullSchema,
-} from "@/models/roles-and-permissions/schemas";
+} from "@/models/roles/schemas";
 import {
 	UserCreateSchema,
 	UserLoginSchema,
