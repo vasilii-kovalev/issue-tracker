@@ -91,7 +91,7 @@ const usersRoutes: FastifyPluginCallback = (
 		Querystring: UsersPaginatedPageQueryParams;
 		Reply: UsersPaginatedPage | ErrorResponse;
 	}>(
-		"/api/users",
+		"/api/users/page",
 		{
 			attachValidation: true,
 			onRequest: [
@@ -102,13 +102,13 @@ const usersRoutes: FastifyPluginCallback = (
 				response: {
 					[ResponseStatus.OK]: {
 						...UsersPaginatedPageSchema,
-						description: "Paginated users list.",
+						description: "Users list with page pagination.",
 					},
 					[ResponseStatus.BAD_REQUEST]: ResponseWithStatusBadRequestSchema,
 					[ResponseStatus.UNAUTHORIZED]: ResponseWithStatusUnauthorized,
 					[ResponseStatus.INTERNAL_SERVER_ERROR]: ResponseWithStatusInternalServerErrorSchema,
 				},
-				summary: "Get users",
+				summary: "Get users with page pagination",
 				tags: [
 					SchemaTag.USERS,
 				],
