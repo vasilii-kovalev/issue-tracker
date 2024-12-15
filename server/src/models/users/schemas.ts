@@ -165,8 +165,8 @@ const UsersPaginatedPageQueryParamsSchema = {
 		sorting: {
 			...WithSortingStringSchema.properties.sorting,
 			description: (
-				`${WithSortingStringSchema.properties.sorting.description}\n\n`
-				+ "Supported fields: `createdDate`, `email`, `name`, `updatedDate`."
+				`${WithSortingStringSchema.properties.sorting.description}
+				Supported fields: \`createdDate\`, \`email\`, \`name\`, \`updatedDate\`.`
 			),
 		},
 	} satisfies Record<keyof UsersPaginatedPageQueryParams, unknown>,
