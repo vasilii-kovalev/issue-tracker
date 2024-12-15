@@ -194,9 +194,9 @@ const seed = async (): Promise<void> => {
 
 	await prismaClient.user.create({
 		data: {
-			displayedName: "User",
 			email: "user@issue-tracker.com",
 			id: "user",
+			name: "User",
 			password: await hashUserPassword("user-password"),
 			roles: {
 				connect: getUserRoleConnectInputs(),
@@ -209,9 +209,9 @@ const seed = async (): Promise<void> => {
 
 	await prismaClient.user.create({
 		data: {
-			displayedName: "Admin",
 			email: "admin@issue-tracker.com",
 			id: "admin",
+			name: "Admin",
 			password: await hashUserPassword("admin-password"),
 			roles: {
 				connect: getAdminRoleConnectInputs(),

@@ -10,16 +10,6 @@ User of the system.
 
 ### Properties
 
-#### `displayedName`
-
-User's name. Displayed in tickets, profile, etc.
-
-* **Type**: `string`
-* **Required**: true
-* **Min length**: 1
-* **Max length**: 100
-* **Example**: `John Doe`
-
 #### `email`
 
 User's email. Used for login and authentication.
@@ -35,6 +25,16 @@ User's ID. Used for any operations on a user, like update, delete, etc.
 * **Type**: `string`
 * **Required**: true
 * **Example**: `cm441ynf30001v2mk6ka140x4`
+
+#### `name`
+
+User's name. Displayed in tickets, profile, etc.
+
+* **Type**: `string`
+* **Required**: true
+* **Min length**: 1
+* **Max length**: 100
+* **Example**: `John Doe`
 
 #### `password`
 

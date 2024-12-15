@@ -8,9 +8,9 @@ import {
 
 const USER_SELECTOR = {
 	createdDate: true,
-	displayedName: true,
 	email: true,
 	id: true,
+	name: true,
 	roles: {
 		select: {
 			id: true,

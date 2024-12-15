@@ -32,11 +32,6 @@ const UserFullSchema = {
 			format: "date-time",
 			type: "string",
 		},
-		displayedName: {
-			maxLength: 100,
-			minLength: 1,
-			type: "string",
-		},
 		email: {
 			/**
 			 * Provided by `ajv-formats`, which is a part of `fastify` package.\
@@ -46,6 +41,11 @@ const UserFullSchema = {
 			type: "string",
 		},
 		id: {
+			type: "string",
+		},
+		name: {
+			maxLength: 100,
+			minLength: 1,
 			type: "string",
 		},
 		password: {
@@ -74,18 +74,18 @@ const UserSchema = {
 		UserFullSchema.properties,
 		[
 			"createdDate",
-			"displayedName",
 			"email",
 			"id",
+			"name",
 			"roles",
 			"updatedDate",
 		],
 	) satisfies Record<keyof User, unknown>,
 	required: [
 		"createdDate",
-		"displayedName",
 		"email",
 		"id",
+		"name",
 		"roles",
 		"updatedDate",
 	] satisfies Array<keyof User>,
@@ -97,15 +97,15 @@ const UserCreateSchema = {
 	properties: pickByKeys(
 		UserFullSchema.properties,
 		[
-			"displayedName",
 			"email",
+			"name",
 			"password",
 			"roles",
 		],
 	) satisfies Record<keyof UserCreate, unknown>,
 	required: [
-		"displayedName",
 		"email",
+		"name",
 		"password",
 		"roles",
 	] satisfies Array<keyof UserCreate>,
@@ -117,8 +117,8 @@ const UserUpdateSchema = {
 	properties: pickByKeys(
 		UserFullSchema.properties,
 		[
-			"displayedName",
 			"email",
+			"name",
 			"password",
 			"roles",
 		],
@@ -144,7 +144,7 @@ const UserLoginSchema = {
 
 const UserFilterSchema = {
 	properties: {
-		displayedName: {
+		name: {
 			maxLength: 100,
 			minLength: 1,
 			type: "string",

@@ -20,17 +20,17 @@ type UserId = UserFull["id"];
 type User = Pick<
 	UserFull,
 	| "createdDate"
-	| "displayedName"
 	| "email"
 	| "id"
+	| "name"
 	| "roles"
 	| "updatedDate"
 >;
 
 type UserCreate = Pick<
 	UserFull,
-	| "displayedName"
 	| "email"
+	| "name"
 	| "password"
 	| "roles"
 >;
@@ -38,8 +38,8 @@ type UserCreate = Pick<
 type UserUpdate = Partial<
 	Pick<
 		UserFull,
-		| "displayedName"
 		| "email"
+		| "name"
 		| "password"
 		| "roles"
 	>
@@ -52,7 +52,7 @@ type UserLogin = Pick<
 >;
 
 interface UserFilter {
-	displayedName: string;
+	name: string;
 }
 
 interface UsersPaginatedPageQueryParams extends

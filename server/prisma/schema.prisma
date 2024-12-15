@@ -8,34 +8,34 @@ datasource db {
 }
 
 model Permission {
+  // Create, read, update, delete.
+  action      String
+  createdDate DateTime @default(now())
   id          String   @id
   // User, project, issue, etc.
   resource    String
-  // Create, read, update, delete.
-  action      String
+  roles       Role[]
   // Own, any.
   scope       String
-  roles       Role[]
-  createdDate DateTime @default(now())
   updatedDate DateTime @updatedAt
 
   @@unique([resource, action, scope])
 }
 
 model Role {
+  createdDate DateTime     @default(now())
   id          String       @id
   permissions Permission[]
-  users       User[]
-  createdDate DateTime     @default(now())
   updatedDate DateTime     @updatedAt
+  users       User[]
 }
 
 model User {
-  id            String   @id @default(cuid())
-  email         String   @unique
-  displayedName String
-  password      String
-  roles         Role[]
-  createdDate   DateTime @default(now())
-  updatedDate   DateTime @updatedAt
+  createdDate DateTime @default(now())
+  email       String   @unique
+  id          String   @id @default(cuid())
+  name        String   @unique
+  password    String
+  roles       Role[]
+  updatedDate DateTime @updatedAt
 }

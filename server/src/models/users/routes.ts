@@ -130,8 +130,8 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 
 			const {
 				count,
+				name,
 				pageNumber,
-				displayedName,
 				sorting,
 			} = request.query;
 
@@ -139,16 +139,16 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				const sortingParameters = getSortingParameters({
 					allowedFields: [
 						"createdDate",
-						"displayedName",
 						"email",
+						"name",
 						"updatedDate",
 					] satisfies Array<keyof User>,
 					sortingString: sorting,
 				});
 
 				const filterParameters: Prisma.UserWhereInput = {
-					displayedName: {
-						contains: displayedName,
+					name: {
+						contains: name,
 					},
 				};
 
@@ -165,7 +165,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 								then the defaults fill in the gaps.
 							*/
 							{
-								displayedName: "asc",
+								name: "asc",
 							},
 						],
 						select: USER_SELECTOR,
@@ -347,8 +347,8 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 			}
 
 			const {
-				displayedName,
 				email,
+				name,
 				password,
 				roles,
 			} = request.body;
@@ -356,8 +356,8 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 			try {
 				const user = await prismaClient.user.create({
 					data: {
-						displayedName,
 						email: email.toLowerCase(),
+						name,
 						password: await hashUserPassword(password),
 						roles: {
 							connect: roles.map((role) => {
@@ -380,17 +380,31 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					 * {@link https://www.prisma.io/docs/orm/reference/error-reference#p2002 | P2002 error code description}
 					 */
 					&& error.code === "P2002"
-					// @ts-expect-error This code is correct.
-					// eslint-disable-next-line no-autofix/@typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-unsafe-call
-					&& error.meta?.target.includes("email")
 				) {
-					return await response
-						.status(ResponseStatus.CONFLICT)
-						.send({
-							errorCodes: [
-								ErrorCode.USER_VALIDATION_EMAIL_ALREADY_EXISTS,
-							],
-						});
+					const fieldWithError = (
+						error.meta?.target as string | undefined
+						?? ""
+					);
+
+					if (fieldWithError.includes("email")) {
+						return await response
+							.status(ResponseStatus.CONFLICT)
+							.send({
+								errorCodes: [
+									ErrorCode.USER_VALIDATION_EMAIL_ALREADY_EXISTS,
+								],
+							});
+					}
+
+					if (fieldWithError.includes("name")) {
+						return await response
+							.status(ResponseStatus.CONFLICT)
+							.send({
+								errorCodes: [
+									ErrorCode.USER_VALIDATION_NAME_ALREADY_EXISTS,
+								],
+							});
+					}
 				}
 
 				const typedError = error as Error;
@@ -475,8 +489,8 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					id,
 				},
 				body: {
-					displayedName,
 					email,
+					name,
 					password,
 					roles,
 				},
@@ -519,10 +533,10 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 
 				const user = await prismaClient.user.update({
 					data: {
-						displayedName,
 						email: !isUndefined(email)
 							? email.toLowerCase()
 							: undefined,
+						name,
 						password: !isUndefined(password)
 							? await hashUserPassword(password)
 							: undefined,
@@ -587,17 +601,31 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 						 * {@link https://www.prisma.io/docs/orm/reference/error-reference#p2002 | P2002 error code description}
 						 */
 						error.code === "P2002"
-						// @ts-expect-error This code is correct.
-						// eslint-disable-next-line no-autofix/@typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-unsafe-call
-						&& error.meta?.target.includes("email")
 					) {
-						return await response
-							.status(ResponseStatus.CONFLICT)
-							.send({
-								errorCodes: [
-									ErrorCode.USER_VALIDATION_EMAIL_ALREADY_EXISTS,
-								],
-							});
+						const fieldWithError = (
+							error.meta?.target as string | undefined
+							?? ""
+						);
+
+						if (fieldWithError.includes("email")) {
+							return await response
+								.status(ResponseStatus.CONFLICT)
+								.send({
+									errorCodes: [
+										ErrorCode.USER_VALIDATION_EMAIL_ALREADY_EXISTS,
+									],
+								});
+						}
+
+						if (fieldWithError.includes("name")) {
+							return await response
+								.status(ResponseStatus.CONFLICT)
+								.send({
+									errorCodes: [
+										ErrorCode.USER_VALIDATION_NAME_ALREADY_EXISTS,
+									],
+								});
+						}
 					}
 				}
 

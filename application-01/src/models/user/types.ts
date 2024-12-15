@@ -9,9 +9,9 @@ type DateString = string;
 
 interface UserFull {
 	createdDate: DateString;
-	displayedName: string;
 	email: string;
 	id: string;
+	name: string;
 	password: string;
 	roles: Array<Role>;
 	updatedDate: DateString;
@@ -20,9 +20,9 @@ interface UserFull {
 type User = Pick<
 	UserFull,
 	| "createdDate"
-	| "displayedName"
 	| "email"
 	| "id"
+	| "name"
 	| "roles"
 	| "updatedDate"
 >;

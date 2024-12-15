@@ -132,7 +132,7 @@ const Application: FC = () => {
 											key={user.id}
 										>
 											<Text>
-												{user.displayedName}
+												{user.name}
 											</Text>
 										</li>
 									);
