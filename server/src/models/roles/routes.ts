@@ -1,7 +1,4 @@
 import {
-	type Prisma,
-} from "@prisma/client";
-import {
 	type FastifyPluginCallback,
 } from "fastify";
 
@@ -9,6 +6,7 @@ import {
 	ResponseStatus,
 } from "@/constants/api";
 import {
+	SchemaId,
 	SchemaTag,
 } from "@/constants/schemas";
 import {
@@ -27,34 +25,19 @@ import {
 	type ErrorResponse,
 } from "@/models/errors/types";
 import {
-	getSortingParameters,
-} from "@/models/pagination/utilities/get-sorting-parameters";
-import {
 	isUndefined,
 } from "@/utilities/is-undefined";
 
 import {
-	RoleId,
-	ROLES_ORDER_BY_DEFAULT,
-} from "./constants";
-import {
-	checkRoles,
-} from "./middleware/check-roles";
-import {
-	RolesPaginatedPageQueryParamsSchema,
-	RolesPaginatedPageSchema,
+	RoleFilterSchema,
 } from "./schemas";
 import {
-	ROLE_FULL_SELECTOR,
-} from "./selectors";
-import {
-	type RoleFull,
-	type RolesPaginatedPage,
-	type RolesPaginatedPageQueryParams,
+	type Role,
+	type RoleFilter,
 } from "./types";
 import {
-	getRoleFull,
-} from "./utilities/get-role-full";
+	formatSelectedRole,
+} from "./utilities/format-selected-role";
 
 const rolesRoutes: FastifyPluginCallback = (
 	server,
@@ -62,31 +45,31 @@ const rolesRoutes: FastifyPluginCallback = (
 	done,
 ): void => {
 	server.get<{
-		Querystring: RolesPaginatedPageQueryParams;
-		Reply: RolesPaginatedPage | ErrorResponse;
+		Querystring: RoleFilter;
+		Reply: Array<Role> | ErrorResponse;
 	}>(
-		"/api/roles/full",
+		"/api/roles",
 		{
 			attachValidation: true,
 			onRequest: [
 				checkJwt,
-				checkRoles([
-					RoleId.ADMIN,
-				]),
 			],
 			schema: {
-				querystring: RolesPaginatedPageQueryParamsSchema,
+				querystring: RoleFilterSchema,
 				response: {
 					[ResponseStatus.OK]: {
-						...RolesPaginatedPageSchema,
-						description: "Paginated roles with relations.",
+						description: "Roles list.",
+						items: {
+							$ref: SchemaId.ROLE,
+						},
+						type: "array",
 					},
 					[ResponseStatus.BAD_REQUEST]: ResponseWithStatusBadRequestSchema,
 					[ResponseStatus.UNAUTHORIZED]: ResponseWithStatusUnauthorized,
 					[ResponseStatus.FORBIDDEN]: ResponseWithStatusForbidden,
 					[ResponseStatus.INTERNAL_SERVER_ERROR]: ResponseWithStatusInternalServerErrorSchema,
 				},
-				summary: "Get paginated roles with relations",
+				summary: "Get roles",
 				tags: [
 					SchemaTag.ROLES,
 				],
@@ -107,60 +90,32 @@ const rolesRoutes: FastifyPluginCallback = (
 			}
 
 			const {
-				count,
-				id,
-				pageNumber,
-				sorting,
+				description,
 			} = request.query;
 
 			try {
-				const sortingParameters = getSortingParameters({
-					allowedFields: [
-						"createdDate",
-						"id",
-						"updatedDate",
-					] satisfies Array<keyof RoleFull>,
-					sortingString: sorting,
+				const roles = await prismaClient.role.findMany({
+					orderBy: {
+						description: "asc",
+					},
+					select: {
+						description: true,
+						id: true,
+					},
+					where: {
+						description: {
+							contains: description,
+						},
+					},
 				});
 
-				const filterParameters: Prisma.RoleWhereInput = {
-					id: {
-						contains: id,
-					},
-				};
-
-				const [
-					roles,
-					rolesTotalCount,
-				] = await prismaClient.$transaction([
-					prismaClient.role.findMany({
-						orderBy: [
-							...sortingParameters,
-							/*
-								If there are multiple values with the same key, Prisma uses the first value in the array.
-								That's why the defaults are put at the end - values from the request take precedence,
-								then the defaults fill in the gaps.
-							*/
-							...ROLES_ORDER_BY_DEFAULT,
-						],
-						select: ROLE_FULL_SELECTOR,
-						skip: count * (pageNumber - 1),
-						take: count,
-						where: filterParameters,
-					}),
-					prismaClient.role.count({
-						where: filterParameters,
-					}),
-				]);
+				const formattedRoles = roles.map<Role>((role) => {
+					return formatSelectedRole(role);
+				});
 
 				return await response
 					.status(ResponseStatus.OK)
-					.send({
-						data: roles.map<RoleFull>((role) => {
-							return getRoleFull(role);
-						}),
-						pagesTotalCount: Math.ceil(rolesTotalCount / count),
-					});
+					.send(formattedRoles);
 			} catch (error) {
 				const typedError = error as Error;
 

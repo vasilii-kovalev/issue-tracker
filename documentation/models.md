@@ -63,6 +63,17 @@ Role's creation date.
 * **Format**: Timestamp
 * **Example**: `2024-01-01T09:00:00.000Z`
 
+#### `description`
+
+Role's human-friendly description.
+
+* **Type**: `string`
+* **Required**: Yes
+* **Unique**: No
+* **Min length**: 1
+* **Max length**: 100
+* **Example**: `User`
+
 #### `id`
 
 Role's ID.

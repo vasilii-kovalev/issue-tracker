@@ -9,11 +9,11 @@ import {
 } from "@/utilities/is-null";
 
 import {
-	type Permission,
-} from "../types";
+	type PermissionId,
+} from "../constants";
 
 interface GetHasPermissionsParams {
-	permissions: Array<Permission>;
+	permissions: Array<PermissionId>;
 	userId: UserId | undefined;
 }
 
@@ -29,8 +29,7 @@ const getHasPermissions = async ({
 						id: true,
 					},
 					where: {
-						action: permission.action,
-						resource: permission.resource,
+						id: permission,
 						roles: {
 							some: {
 								users: {
@@ -40,7 +39,6 @@ const getHasPermissions = async ({
 								},
 							},
 						},
-						scope: permission.scope,
 					},
 				});
 			}),

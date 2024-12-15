@@ -2,19 +2,16 @@ import {
 	SchemaId,
 } from "@/constants/schemas";
 import {
-	PaginatedPageParamsSchema,
-	PaginatedPageSchema,
-	WithSortingStringSchema,
-} from "@/models/pagination/schema";
+	pickByKeys,
+} from "@/utilities/pick-by-keys";
 
 import {
 	RoleId,
 } from "./constants";
 import {
+	type Role,
 	type RoleFilter,
 	type RoleFull,
-	type RolesPaginatedPage,
-	type RolesPaginatedPageQueryParams,
 } from "./types";
 
 const RoleIdSchema = {
@@ -24,45 +21,51 @@ const RoleIdSchema = {
 };
 
 const RoleFullSchema = {
-	$id: SchemaId.ROLE_FULL,
+	$id: SchemaId.ROLE,
 	properties: {
 		createdDate: {
 			format: "date-time",
 			type: "string",
 		},
-		id: RoleIdSchema,
-		permissions: {
-			items: {
-				$ref: SchemaId.PERMISSION_ID,
-			},
-			type: "array",
-			uniqueItems: true,
+		description: {
+			maxLength: 100,
+			minLength: 1,
+			type: "string",
 		},
+		id: RoleIdSchema,
 		updatedDate: {
 			format: "date-time",
 			type: "string",
 		},
-		users: {
-			items: {
-				$ref: SchemaId.USER_ID,
-			},
-			type: "array",
-			uniqueItems: true,
-		},
 	} satisfies Record<keyof RoleFull, unknown>,
 	required: [
 		"createdDate",
+		"description",
 		"id",
-		"permissions",
 		"updatedDate",
-		"users",
 	] satisfies Array<keyof RoleFull>,
+	type: "object",
+};
+
+const RoleSchema = {
+	$id: SchemaId.ROLE,
+	properties: pickByKeys(
+		RoleFullSchema.properties,
+		[
+			"description",
+			"id",
+		],
+	) satisfies Record<keyof Role, unknown>,
+	required: [
+		"description",
+		"id",
+	] satisfies Array<keyof Role>,
 	type: "object",
 };
 
 const RoleFilterSchema = {
 	properties: {
-		id: {
+		description: {
 			maxLength: 100,
 			minLength: 1,
 			type: "string",
@@ -71,33 +74,7 @@ const RoleFilterSchema = {
 	type: "object",
 };
 
-const RolesPaginatedPageQueryParamsSchema = {
-	properties: {
-		...PaginatedPageParamsSchema.properties,
-		...RoleFilterSchema.properties,
-		...WithSortingStringSchema.properties,
-	} satisfies Record<keyof RolesPaginatedPageQueryParams, unknown>,
-	required: [
-		...PaginatedPageParamsSchema.required,
-	] satisfies Array<keyof RolesPaginatedPageQueryParams>,
-	type: "object",
-};
-
-const RolesPaginatedPageSchema = {
-	$ref: SchemaId.PAGINATED_PAGE,
-	properties: {
-		...PaginatedPageSchema.properties,
-		data: {
-			...PaginatedPageSchema.properties.data,
-			items: {
-				$ref: SchemaId.ROLE_FULL,
-			},
-		},
-	} satisfies Record<keyof RolesPaginatedPage, unknown>,
-};
-
 export {
-	RoleFullSchema,
-	RolesPaginatedPageQueryParamsSchema,
-	RolesPaginatedPageSchema,
+	RoleFilterSchema,
+	RoleSchema,
 };

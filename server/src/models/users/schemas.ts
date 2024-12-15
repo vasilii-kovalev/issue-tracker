@@ -7,9 +7,6 @@ import {
 	WithSortingStringSchema,
 } from "@/models/pagination/schema";
 import {
-	type PaginatedPage,
-} from "@/models/pagination/types";
-import {
 	pickByKeys,
 } from "@/utilities/pick-by-keys";
 
@@ -19,14 +16,10 @@ import {
 	type UserFilter,
 	type UserFull,
 	type UserLogin,
+	type UsersPaginatedPage,
 	type UsersPaginatedPageQueryParams,
 	type UserUpdate,
 } from "./types";
-
-const UserIdSchema = {
-	$id: SchemaId.USER_ID,
-	type: "string",
-};
 
 const UserFullSchema = {
 	properties: {
@@ -42,7 +35,9 @@ const UserFullSchema = {
 			format: "email",
 			type: "string",
 		},
-		id: UserIdSchema,
+		id: {
+			type: "string",
+		},
 		name: {
 			maxLength: 100,
 			minLength: 1,
@@ -52,13 +47,6 @@ const UserFullSchema = {
 			format: "password",
 			minLength: 3,
 			type: "string",
-		},
-		permissions: {
-			items: {
-				$ref: SchemaId.PERMISSION_ID,
-			},
-			type: "array",
-			uniqueItems: true,
 		},
 		roles: {
 			items: {
@@ -78,7 +66,6 @@ const UserFullSchema = {
 		"id",
 		"name",
 		"password",
-		"permissions",
 		"roles",
 		"updatedDate",
 	] satisfies Array<keyof UserFull>,
@@ -94,6 +81,7 @@ const UserSchema = {
 			"email",
 			"id",
 			"name",
+			"roles",
 			"updatedDate",
 		],
 	) satisfies Record<keyof User, unknown>,
@@ -102,6 +90,7 @@ const UserSchema = {
 		"email",
 		"id",
 		"name",
+		"roles",
 		"updatedDate",
 	] satisfies Array<keyof User>,
 	type: "object",
@@ -190,7 +179,7 @@ const UsersPaginatedPageSchema = {
 				$ref: SchemaId.USER,
 			},
 		},
-	} satisfies Record<keyof PaginatedPage<User>, unknown>,
+	} satisfies Record<keyof UsersPaginatedPage, unknown>,
 };
 
 export {

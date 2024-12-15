@@ -9,10 +9,7 @@ import {
 	PaginatedPageSchema,
 } from "@/models/pagination/schema";
 import {
-	PermissionFillSchema,
-} from "@/models/permissions/schemas";
-import {
-	RoleFullSchema,
+	RoleSchema,
 } from "@/models/roles/schemas";
 import {
 	UserCreateSchema,
@@ -26,9 +23,7 @@ const registerSchemas = (server: FastifyInstance): void => {
 
 	server.addSchema(PaginatedPageSchema);
 
-	server.addSchema(PermissionFillSchema);
-
-	server.addSchema(RoleFullSchema);
+	server.addSchema(RoleSchema);
 
 	server.addSchema(UserSchema);
 

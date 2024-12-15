@@ -8,14 +8,10 @@ import {
 	type WithSortingString,
 } from "@/models/pagination/types";
 import {
-	type PermissionId,
-} from "@/models/permissions/types";
-import {
 	type RoleId,
 } from "@/models/roles/constants";
 
 interface UserFull extends GeneratedUser {
-	permissions: Array<PermissionId>;
 	roles: Array<RoleId>;
 }
 
@@ -27,6 +23,7 @@ type User = Pick<
 	| "email"
 	| "id"
 	| "name"
+	| "roles"
 	| "updatedDate"
 >;
 

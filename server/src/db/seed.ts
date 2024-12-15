@@ -5,14 +5,8 @@ import {
 } from "@prisma/client";
 
 import {
-	Action,
-	Resource,
-	Scope,
+	PermissionId,
 } from "@/models/permissions/constants";
-import {
-	type Permission,
-	type PermissionId,
-} from "@/models/permissions/types";
 import {
 	RoleId,
 } from "@/models/roles/constants";
@@ -20,130 +14,20 @@ import {
 	hashUserPassword,
 } from "@/models/users/utilities/user-password";
 
-const getPermissionId = (
-	permission: Permission,
-): PermissionId => {
-	const {
-		action,
-		resource,
-		scope,
-	} = permission;
+const USER_ROLE_CONNECT_INPUTS: Array<Prisma.RoleWhereUniqueInput> = [
+	{
+		id: RoleId.USER,
+	},
+];
 
-	return [
-		resource,
-		action,
-		scope,
-	].join(":");
-};
-
-const getPermissionCreateInput = (
-	permission: Permission,
-): Prisma.PermissionCreateManyInput => {
-	const {
-		action,
-		resource,
-		scope,
-	} = permission;
-
-	return {
-		action,
-		id: getPermissionId({
-			action,
-			resource,
-			scope,
-		}),
-		resource,
-		scope,
-	};
-};
-
-const getPermissionCreateInputs = (): Array<Prisma.PermissionCreateManyInput> => {
-	return [
-		getPermissionCreateInput({
-			action: Action.CREATE,
-			resource: Resource.USER,
-			scope: Scope.ANY,
-		}),
-		getPermissionCreateInput({
-			action: Action.DELETE,
-			resource: Resource.USER,
-			scope: Scope.ANY,
-		}),
-		getPermissionCreateInput({
-			action: Action.UPDATE,
-			resource: Resource.USER,
-			scope: Scope.ANY,
-		}),
-		getPermissionCreateInput({
-			action: Action.UPDATE,
-			resource: Resource.USER,
-			scope: Scope.OWN,
-		}),
-	];
-};
-
-const getPermissionConnectInput = ({
-	action,
-	resource,
-	scope,
-}: Permission): Prisma.PermissionWhereUniqueInput => {
-	return {
-		id: getPermissionId({
-			action,
-			resource,
-			scope,
-		}),
-	};
-};
-
-const getUserPermissionConnectInputs = (): Array<Prisma.PermissionWhereUniqueInput> => {
-	return [
-		getPermissionConnectInput({
-			action: Action.UPDATE,
-			resource: Resource.USER,
-			scope: Scope.OWN,
-		}),
-	];
-};
-
-const getAdminPermissionConnectInputs = (): Array<Prisma.PermissionWhereUniqueInput> => {
-	return [
-		getPermissionConnectInput({
-			action: Action.CREATE,
-			resource: Resource.USER,
-			scope: Scope.ANY,
-		}),
-		getPermissionConnectInput({
-			action: Action.DELETE,
-			resource: Resource.USER,
-			scope: Scope.ANY,
-		}),
-		getPermissionConnectInput({
-			action: Action.UPDATE,
-			resource: Resource.USER,
-			scope: Scope.ANY,
-		}),
-	];
-};
-
-const getUserRoleConnectInputs = (): Array<Prisma.RoleWhereUniqueInput> => {
-	return [
-		{
-			id: RoleId.USER,
-		},
-	];
-};
-
-const getAdminRoleConnectInputs = (): Array<Prisma.RoleWhereUniqueInput> => {
-	return [
-		{
-			id: RoleId.USER,
-		},
-		{
-			id: RoleId.ADMIN,
-		},
-	];
-};
+const ADMIN_ROLE_CONNECT_INPUTS: Array<Prisma.RoleWhereUniqueInput> = [
+	{
+		id: RoleId.USER,
+	},
+	{
+		id: RoleId.ADMIN,
+	},
+];
 
 const prismaClient = new PrismaClient();
 
@@ -165,7 +49,20 @@ const seed = async (): Promise<void> => {
 	console.time("Permissions have been created.");
 
 	await prismaClient.permission.createMany({
-		data: getPermissionCreateInputs(),
+		data: [
+			{
+				id: PermissionId.USER_CREATE_ANY,
+			},
+			{
+				id: PermissionId.USER_DELETE_ANY,
+			},
+			{
+				id: PermissionId.USER_UPDATE_ANY,
+			},
+			{
+				id: PermissionId.USER_UPDATE_OWN,
+			},
+		],
 	});
 
 	console.timeEnd("Permissions have been created.");
@@ -174,18 +71,32 @@ const seed = async (): Promise<void> => {
 
 	await prismaClient.role.create({
 		data: {
+			description: "User",
 			id: RoleId.USER,
 			permissions: {
-				connect: getUserPermissionConnectInputs(),
+				connect: {
+					id: PermissionId.USER_UPDATE_OWN,
+				},
 			},
 		},
 	});
 
 	await prismaClient.role.create({
 		data: {
+			description: "Admin",
 			id: RoleId.ADMIN,
 			permissions: {
-				connect: getAdminPermissionConnectInputs(),
+				connect: [
+					{
+						id: PermissionId.USER_CREATE_ANY,
+					},
+					{
+						id: PermissionId.USER_DELETE_ANY,
+					},
+					{
+						id: PermissionId.USER_UPDATE_ANY,
+					},
+				],
 			},
 		},
 	});
@@ -201,7 +112,7 @@ const seed = async (): Promise<void> => {
 			name: "User",
 			password: await hashUserPassword("user-password"),
 			roles: {
-				connect: getUserRoleConnectInputs(),
+				connect: USER_ROLE_CONNECT_INPUTS,
 			},
 		},
 		select: {
@@ -216,7 +127,7 @@ const seed = async (): Promise<void> => {
 			name: "Admin",
 			password: await hashUserPassword("admin-password"),
 			roles: {
-				connect: getAdminRoleConnectInputs(),
+				connect: ADMIN_ROLE_CONNECT_INPUTS,
 			},
 		},
 		select: {

@@ -45,16 +45,11 @@ import {
 	getSortingParameters,
 } from "@/models/pagination/utilities/get-sorting-parameters";
 import {
-	Action,
-	Resource,
-	Scope,
+	PermissionId,
 } from "@/models/permissions/constants";
 import {
 	checkPermissions,
 } from "@/models/permissions/middleware/check-permissions";
-import {
-	type Permission,
-} from "@/models/permissions/types";
 import {
 	getHasPermissions,
 } from "@/models/permissions/utilities/get-has-permissions";
@@ -65,9 +60,6 @@ import {
 	isUndefined,
 } from "@/utilities/is-undefined";
 
-import {
-	USERS_ORDER_BY_DEFAULT,
-} from "./constants";
 import {
 	UsersPaginatedPageQueryParamsSchema,
 	UsersPaginatedPageSchema,
@@ -83,6 +75,9 @@ import {
 	type UsersPaginatedPageQueryParams,
 	type UserUpdate,
 } from "./types";
+import {
+	formatSelectedUser,
+} from "./utilities/format-selected-user";
 import {
 	hashUserPassword,
 } from "./utilities/user-password";
@@ -107,13 +102,13 @@ const usersRoutes: FastifyPluginCallback = (
 				response: {
 					[ResponseStatus.OK]: {
 						...UsersPaginatedPageSchema,
-						description: "Paginated users.",
+						description: "Paginated users list.",
 					},
 					[ResponseStatus.BAD_REQUEST]: ResponseWithStatusBadRequestSchema,
 					[ResponseStatus.UNAUTHORIZED]: ResponseWithStatusUnauthorized,
 					[ResponseStatus.INTERNAL_SERVER_ERROR]: ResponseWithStatusInternalServerErrorSchema,
 				},
-				summary: "Get paginated users",
+				summary: "Get users",
 				tags: [
 					SchemaTag.USERS,
 				],
@@ -169,7 +164,9 @@ const usersRoutes: FastifyPluginCallback = (
 								That's why the defaults are put at the end - values from the request take precedence,
 								then the defaults fill in the gaps.
 							*/
-							...USERS_ORDER_BY_DEFAULT,
+							{
+								name: "asc",
+							},
 						],
 						select: USER_SELECTOR,
 						skip: count * (pageNumber - 1),
@@ -184,7 +181,9 @@ const usersRoutes: FastifyPluginCallback = (
 				return await response
 					.status(ResponseStatus.OK)
 					.send({
-						data: users,
+						data: users.map<User>((user) => {
+							return formatSelectedUser(user);
+						}),
 						pagesTotalCount: Math.ceil(usersTotalCount / count),
 					});
 			} catch (error) {
@@ -278,7 +277,7 @@ const usersRoutes: FastifyPluginCallback = (
 
 				return await response
 					.status(ResponseStatus.OK)
-					.send(user);
+					.send(formatSelectedUser(user));
 			} catch (error) {
 				const typedError = error as Error;
 
@@ -302,11 +301,7 @@ const usersRoutes: FastifyPluginCallback = (
 			onRequest: [
 				checkJwt,
 				checkPermissions([
-					{
-						action: Action.CREATE,
-						resource: Resource.USER,
-						scope: Scope.ANY,
-					},
+					PermissionId.USER_CREATE_ANY,
 				]),
 			],
 			schema: {
@@ -373,7 +368,7 @@ const usersRoutes: FastifyPluginCallback = (
 
 				return await response
 					.status(ResponseStatus.CREATED)
-					.send(user);
+					.send(formatSelectedUser(user));
 			} catch (error) {
 				if (
 					error instanceof Prisma.PrismaClientKnownRequestError
@@ -505,20 +500,15 @@ const usersRoutes: FastifyPluginCallback = (
 
 				const isOwn = userIdFromJwtCookie === id;
 
-				const requiredPermissions: Array<Permission> = isOwn
+				const requiredPermissions: Array<PermissionId> = (
+					isOwn
+					&& isUndefined(roles)
+				)
 					? [
-						{
-							action: Action.UPDATE,
-							resource: Resource.USER,
-							scope: Scope.OWN,
-						},
+						PermissionId.USER_UPDATE_OWN,
 					]
 					: [
-						{
-							action: Action.UPDATE,
-							resource: Resource.USER,
-							scope: Scope.ANY,
-						},
+						PermissionId.USER_UPDATE_ANY,
 					];
 
 				const hasPermissionsForRequest = await getHasPermissions({
@@ -557,10 +547,12 @@ const usersRoutes: FastifyPluginCallback = (
 					},
 				});
 
+				const formattedUser = formatSelectedUser(user);
+
 				if (!isOwn) {
 					return await response
 						.status(ResponseStatus.OK)
-						.send(user satisfies User);
+						.send(formattedUser satisfies User);
 				}
 
 				const token = server.jwt.sign({
@@ -577,7 +569,7 @@ const usersRoutes: FastifyPluginCallback = (
 						},
 					)
 					.status(ResponseStatus.OK)
-					.send(user satisfies User);
+					.send(formattedUser satisfies User);
 			} catch (error) {
 				if (error instanceof Prisma.PrismaClientKnownRequestError) {
 					if (
@@ -652,11 +644,7 @@ const usersRoutes: FastifyPluginCallback = (
 			onRequest: [
 				checkJwt,
 				checkPermissions([
-					{
-						action: Action.DELETE,
-						resource: Resource.USER,
-						scope: Scope.ANY,
-					},
+					PermissionId.USER_DELETE_ANY,
 				]),
 			],
 			schema: {
@@ -722,18 +710,19 @@ const usersRoutes: FastifyPluginCallback = (
 				);
 
 				const isOwn = userIdFromJwtCookie === id;
+				const formattedUser = formatSelectedUser(user);
 
 				if (!isOwn) {
 					return await response
 						.status(ResponseStatus.OK)
-						.send(user);
+						.send(formattedUser);
 				}
 
 				return await response
 					// Like in `/api/auth/logout`.
 					.clearCookie(COOKIE_JWT_TOKEN_NAME)
 					.status(ResponseStatus.OK)
-					.send(user);
+					.send(formattedUser);
 			} catch (error) {
 				if (
 					error instanceof Prisma.PrismaClientKnownRequestError
