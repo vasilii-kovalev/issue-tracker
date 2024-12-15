@@ -11,7 +11,7 @@ import {
 } from "@/models/pagination/types";
 import {
 	Role,
-} from "@/models/permissions/constants";
+} from "@/models/roles-and-permissions/constants";
 import {
 	pickByKeys,
 } from "@/utilities/pick-by-keys";

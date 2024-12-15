@@ -45,16 +45,16 @@ import {
 	Action,
 	Resource,
 	Scope,
-} from "@/models/permissions/constants";
+} from "@/models/roles-and-permissions/constants";
 import {
 	checkPermissions,
-} from "@/models/permissions/middleware/check-permissions";
+} from "@/models/roles-and-permissions/middleware/check-permissions";
 import {
 	type Permission,
-} from "@/models/permissions/types";
+} from "@/models/roles-and-permissions/types";
 import {
 	getHasPermissions,
-} from "@/models/permissions/utilities/get-has-permissions";
+} from "@/models/roles-and-permissions/utilities/get-has-permissions";
 import {
 	isNull,
 } from "@/utilities/is-null";

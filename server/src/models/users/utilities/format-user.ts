@@ -1,6 +1,6 @@
 import {
 	type Role,
-} from "@/models/permissions/constants";
+} from "@/models/roles-and-permissions/constants";
 
 import {
 	type User,

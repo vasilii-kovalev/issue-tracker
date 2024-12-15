@@ -9,11 +9,11 @@ import {
 	Resource,
 	Role,
 	Scope,
-} from "@/models/permissions/constants";
+} from "@/models/roles-and-permissions/constants";
 import {
 	type Permission,
 	type PermissionId,
-} from "@/models/permissions/types";
+} from "@/models/roles-and-permissions/types";
 import {
 	hashUserPassword,
 } from "@/models/users/utilities/user-password";
