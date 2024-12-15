@@ -11,11 +11,6 @@ const USER_SELECTOR = {
 	email: true,
 	id: true,
 	name: true,
-	roles: {
-		select: {
-			id: true,
-		},
-	},
 	updatedDate: true,
 } satisfies Required<
 	Pick<

@@ -23,7 +23,6 @@ type User = Pick<
 	| "email"
 	| "id"
 	| "name"
-	| "roles"
 	| "updatedDate"
 >;
 

@@ -80,9 +80,6 @@ import {
 	type UserUpdate,
 } from "./types";
 import {
-	formatUser,
-} from "./utilities/format-user";
-import {
 	hashUserPassword,
 } from "./utilities/user-password";
 
@@ -181,9 +178,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 				return await response
 					.status(ResponseStatus.OK)
 					.send({
-						data: users.map<User>((user) => {
-							return formatUser(user);
-						}),
+						data: users,
 						pagesTotalCount: Math.ceil(usersTotalCount / count),
 					});
 			} catch (error) {
@@ -277,7 +272,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 
 				return await response
 					.status(ResponseStatus.OK)
-					.send(formatUser(user));
+					.send(user);
 			} catch (error) {
 				const typedError = error as Error;
 
@@ -372,7 +367,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 
 				return await response
 					.status(ResponseStatus.CREATED)
-					.send(formatUser(user));
+					.send(user);
 			} catch (error) {
 				if (
 					error instanceof Prisma.PrismaClientKnownRequestError
@@ -556,16 +551,14 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					},
 				});
 
-				const formattedUser = formatUser(user);
-
 				if (!isOwn) {
 					return await response
 						.status(ResponseStatus.OK)
-						.send(formattedUser satisfies User);
+						.send(user satisfies User);
 				}
 
 				const token = server.jwt.sign({
-					payload: formattedUser.id,
+					payload: user.id,
 				} satisfies JwtPayload);
 
 				return await response
@@ -578,7 +571,7 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 						},
 					)
 					.status(ResponseStatus.OK)
-					.send(formattedUser satisfies User);
+					.send(user satisfies User);
 			} catch (error) {
 				if (error instanceof Prisma.PrismaClientKnownRequestError) {
 					if (
@@ -722,21 +715,19 @@ const usersRoutes: FastifyPluginCallback = (server, options, done): void => {
 					request,
 				);
 
-				const formattedUser = formatUser(user);
-
 				const isOwn = userIdFromJwtCookie === id;
 
 				if (!isOwn) {
 					return await response
 						.status(ResponseStatus.OK)
-						.send(formattedUser);
+						.send(user);
 				}
 
 				return await response
 					// Like in `/api/auth/logout`.
 					.clearCookie(COOKIE_JWT_TOKEN_NAME)
 					.status(ResponseStatus.OK)
-					.send(formattedUser);
+					.send(user);
 			} catch (error) {
 				if (
 					error instanceof Prisma.PrismaClientKnownRequestError

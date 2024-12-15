@@ -1,7 +1,4 @@
 import {
-	type Role,
-} from "@/models/permissions/constants";
-import {
 	type PaginatedPage,
 } from "@/types/pagination";
 
@@ -13,7 +10,6 @@ interface UserFull {
 	id: string;
 	name: string;
 	password: string;
-	roles: Array<Role>;
 	updatedDate: DateString;
 }
 
@@ -23,7 +19,6 @@ type User = Pick<
 	| "email"
 	| "id"
 	| "name"
-	| "roles"
 	| "updatedDate"
 >;
 
