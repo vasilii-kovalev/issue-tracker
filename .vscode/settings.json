@@ -19,7 +19,10 @@
 			"allowed_elements": [
 				"kbd"
 			]
-		}
+		},
+		"MD024": {
+			"siblings_only": true
+		},
 	},
 	"workbench.editorAssociations": {
 		"*.db": "sqlite-viewer.view"

@@ -4,7 +4,7 @@ This document contains information about control over user's actions using permi
 
 ## Resources
 
-"Resource" is an entity regulated by the user's permissions.
+Resource is an entity regulated by the user's permissions.
 
 ### Available resources
 
@@ -12,9 +12,11 @@ This document contains information about control over user's actions using permi
 
 ## Permissions
 
-"Permission" is a string representing a user's available actions.
+Permission is a string representing a user's available actions.
 
-Format of permissions: `resource:action:scope`, where
+### Permission format
+
+Format of permissions is `resource:action:scope`, where
 
 * `resource` - the resource from the [available resources list](#available-resources)
 * `action` - a CRUD (create, read, update, delete) operation a user can perform on the resource
@@ -33,7 +35,7 @@ Other permissions are assumed/granted by default, like reading resources, so we 
 
 ## Roles
 
-"Role" is combination of several permissions.
+Role is combination of several permissions.
 
 ### Available roles
 
