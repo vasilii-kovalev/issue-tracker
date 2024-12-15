@@ -3,7 +3,7 @@ interface PaginatedPageQueryParams {
 	pageNumber: number;
 }
 
-/** Format: `<field1>:<order>;<field2>:<order>` */
+/** Format: `field1:asc|desc;field2:asc|desc;...`. */
 type SortingString = string;
 
 interface WithSortingString {

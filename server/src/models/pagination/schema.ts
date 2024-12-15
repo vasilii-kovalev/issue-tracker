@@ -26,6 +26,7 @@ const PaginatedPageParamsSchema = {
 const WithSortingStringSchema = {
 	properties: {
 		sorting: {
+			description: "Format: `field1:asc|desc;field2:asc|desc;...`.",
 			maxLength: 100,
 			minLength: 1,
 			type: "string",
