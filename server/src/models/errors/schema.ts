@@ -37,12 +37,12 @@ const ResponseWithStatusBadRequestSchema = {
 };
 
 const ResponseWithStatusUnauthorized = {
-	description: "Unauthorized.",
+	description: "Unauthorized access.",
 	type: "null",
 };
 
 const ResponseWithStatusForbidden = {
-	description: "Forbidden by permissions.",
+	description: "Forbidden access.",
 	type: "null",
 };
 

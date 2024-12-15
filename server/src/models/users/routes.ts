@@ -42,6 +42,9 @@ import {
 	type ErrorResponse,
 } from "@/models/errors/types";
 import {
+	getSortingParameters,
+} from "@/models/pagination/utilities/get-sorting-parameters";
+import {
 	Action,
 	Resource,
 	Scope,
@@ -63,8 +66,8 @@ import {
 } from "@/utilities/is-undefined";
 
 import {
-	getSortingParameters,
-} from "../pagination/utilities/get-sorting-parameters";
+	USERS_ORDER_BY_DEFAULT,
+} from "./constants";
 import {
 	UsersPaginatedPageQueryParamsSchema,
 	UsersPaginatedPageSchema,
@@ -166,9 +169,7 @@ const usersRoutes: FastifyPluginCallback = (
 								That's why the defaults are put at the end - values from the request take precedence,
 								then the defaults fill in the gaps.
 							*/
-							{
-								name: "asc",
-							},
+							...USERS_ORDER_BY_DEFAULT,
 						],
 						select: USER_SELECTOR,
 						skip: count * (pageNumber - 1),
@@ -360,9 +361,9 @@ const usersRoutes: FastifyPluginCallback = (
 						name,
 						password: await hashUserPassword(password),
 						roles: {
-							connect: roles.map((role) => {
+							connect: roles.map((roleId) => {
 								return {
-									id: role,
+									id: roleId,
 								};
 							}),
 						},
@@ -542,9 +543,9 @@ const usersRoutes: FastifyPluginCallback = (
 							: undefined,
 						roles: !isUndefined(roles)
 							? {
-								set: roles.map((role) => {
+								set: roles.map((roleId) => {
 									return {
-										id: role,
+										id: roleId,
 									};
 								}),
 							}

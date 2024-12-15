@@ -1,6 +1,11 @@
 import {
 	SchemaId,
 } from "@/constants/schemas";
+import {
+	PaginatedPageParamsSchema,
+	PaginatedPageSchema,
+	WithSortingStringSchema,
+} from "@/models/pagination/schema";
 
 import {
 	Action,
@@ -10,7 +15,10 @@ import {
 } from "./constants";
 import {
 	type PermissionFull,
+	type RoleFilter,
 	type RoleFull,
+	type RolesPaginatedPage,
+	type RolesPaginatedPageQueryParams,
 } from "./types";
 
 const PermissionIdSchema = {
@@ -42,7 +50,9 @@ const PermissionFillSchema = {
 			type: "string",
 		},
 		roles: {
-			items: RoleIdSchema,
+			items: {
+				$ref: SchemaId.ROLE_ID,
+			},
 			type: "array",
 			uniqueItems: true,
 		},
@@ -84,7 +94,9 @@ const RoleFullSchema = {
 		},
 		id: RoleIdSchema,
 		permissions: {
-			items: PermissionIdSchema,
+			items: {
+				$ref: SchemaId.PERMISSION_ID,
+			},
 			type: "array",
 			uniqueItems: true,
 		},
@@ -110,7 +122,45 @@ const RoleFullSchema = {
 	type: "object",
 };
 
+const RoleFilterSchema = {
+	properties: {
+		id: {
+			maxLength: 100,
+			minLength: 1,
+			type: "string",
+		},
+	} satisfies Record<keyof RoleFilter, unknown>,
+	type: "object",
+};
+
+const RolesPaginatedPageQueryParamsSchema = {
+	properties: {
+		...PaginatedPageParamsSchema.properties,
+		...RoleFilterSchema.properties,
+		...WithSortingStringSchema.properties,
+	} satisfies Record<keyof RolesPaginatedPageQueryParams, unknown>,
+	required: [
+		...PaginatedPageParamsSchema.required,
+	] satisfies Array<keyof RolesPaginatedPageQueryParams>,
+	type: "object",
+};
+
+const RolesPaginatedPageSchema = {
+	$ref: SchemaId.PAGINATED_PAGE,
+	properties: {
+		...PaginatedPageSchema.properties,
+		data: {
+			...PaginatedPageSchema.properties.data,
+			items: {
+				$ref: SchemaId.ROLE_FULL,
+			},
+		},
+	} satisfies Record<keyof RolesPaginatedPage, unknown>,
+};
+
 export {
 	PermissionFillSchema,
 	RoleFullSchema,
+	RolesPaginatedPageQueryParamsSchema,
+	RolesPaginatedPageSchema,
 };

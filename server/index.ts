@@ -8,6 +8,9 @@ import {
 	authRoutes,
 } from "@/models/auth/routes";
 import {
+	rolesAndPermissionsRoutes,
+} from "@/models/roles-and-permissions/routes";
+import {
 	usersRoutes,
 } from "@/models/users/routes";
 import {
@@ -86,6 +89,8 @@ registerSchemas(server);
 
 // Routes.
 void server.register(authRoutes);
+
+void server.register(rolesAndPermissionsRoutes);
 
 void server.register(usersRoutes);
 
