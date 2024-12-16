@@ -152,7 +152,10 @@ const authRoutes: FastifyPluginCallback = (
 						COOKIE_JWT_TOKEN_NAME,
 						token,
 						{
+							httpOnly: true,
 							path: "/",
+							sameSite: true,
+							signed: true,
 						},
 					)
 					.status(ResponseStatus.OK)
