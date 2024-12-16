@@ -1,5 +1,5 @@
 import {
-	type Prisma,
+	Prisma,
 } from "@prisma/client";
 
 import {
@@ -15,9 +15,7 @@ interface GetSortingParametersParams<Key> {
 	allowedFields: Array<Key>;
 }
 
-type SortingParameter<Key extends PropertyKey> = Partial<
-	Record<Key, Prisma.SortOrder>
->;
+type SortingParameter<Key extends PropertyKey> = Partial<Record<Key, Prisma.SortOrder>>;
 
 const getSortingParameters = <Key extends PropertyKey>({
 	allowedFields,
@@ -27,7 +25,10 @@ const getSortingParameters = <Key extends PropertyKey>({
 		const keyOrderPairs = sortingString.split(";");
 
 		return keyOrderPairs.reduce<Array<SortingParameter<Key>>>(
-			(sortingParametersCurrent, keyOrderPair) => {
+			(
+				sortingParametersCurrent,
+				keyOrderPair,
+			) => {
 				const [
 					key,
 					order,
@@ -38,8 +39,8 @@ const getSortingParameters = <Key extends PropertyKey>({
 				if (
 					allowedFields.includes(typedKey)
 					&& (
-						order === "asc"
-						|| order === "desc"
+						order === Prisma.SortOrder.asc
+						|| order === Prisma.SortOrder.desc
 					)
 				) {
 					const existingSortingParameter = sortingParametersCurrent.find((sortingParameter) => {

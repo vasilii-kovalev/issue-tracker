@@ -19,11 +19,15 @@ import {
 const checkPermissions = (
 	permissions: Array<PermissionId>,
 ): onRequestAsyncHookHandler => {
-	return async function checkPermissionsHandler(request, response) {
-		const userIdFromJwtCookie = getUserIdFromJwtCookie(
-			this,
+	// We need to use a regular function here for `this` to work correctly.
+	return async function checkPermissionsHandler(
+		request,
+		response,
+	) {
+		const userIdFromJwtCookie = getUserIdFromJwtCookie({
 			request,
-		);
+			server: this,
+		});
 
 		const hasPermissionsForRequest = await getHasPermissions({
 			permissions,

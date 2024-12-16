@@ -23,13 +23,13 @@ const getHasPermissions = async ({
 }: GetHasPermissionsParams): Promise<boolean> => {
 	try {
 		const foundPermissions = await Promise.all(
-			permissions.map(async (permission) => {
+			permissions.map(async (permissionId) => {
 				return await prismaClient.permission.findFirst({
 					select: {
 						id: true,
 					},
 					where: {
-						id: permission,
+						id: permissionId,
 						roles: {
 							some: {
 								users: {

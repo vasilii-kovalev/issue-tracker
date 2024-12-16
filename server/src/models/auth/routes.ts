@@ -83,7 +83,10 @@ const authRoutes: FastifyPluginCallback = (
 				],
 			},
 		},
-		async (request, response) => {
+		async (
+			request,
+			response,
+		) => {
 			const {
 				validationError,
 			} = request;
@@ -128,10 +131,10 @@ const authRoutes: FastifyPluginCallback = (
 					password: currentPassword,
 				} = userWithPassword;
 
-				const isPasswordCorrect = await verifyUserPassword(
-					password,
+				const isPasswordCorrect = await verifyUserPassword({
 					currentPassword,
-				);
+					passwordToVerify: password,
+				});
 
 				if (!isPasswordCorrect) {
 					return await response
@@ -192,7 +195,10 @@ const authRoutes: FastifyPluginCallback = (
 				],
 			},
 		},
-		async (request, response) => {
+		async (
+			request,
+			response,
+		) => {
 			try {
 				return await response
 					.clearCookie(COOKIE_JWT_TOKEN_NAME)

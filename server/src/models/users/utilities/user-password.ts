@@ -8,13 +8,18 @@ const hashUserPassword = async (
 	return await Bun.password.hash(password);
 };
 
-const verifyUserPassword = async (
-	password: string,
-	hashedPassword: UserFull["password"],
-): Promise<boolean> => {
+interface VerifyUserPasswordParams {
+	currentPassword: UserFull["password"];
+	passwordToVerify: string;
+}
+
+const verifyUserPassword = async ({
+	currentPassword,
+	passwordToVerify,
+}: VerifyUserPasswordParams): Promise<boolean> => {
 	return await Bun.password.verify(
-		password,
-		hashedPassword,
+		passwordToVerify,
+		currentPassword,
 	);
 };
 

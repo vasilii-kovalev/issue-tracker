@@ -1,4 +1,6 @@
-const isUndefined = (value: unknown): value is undefined => {
+const isUndefined = (
+	value: unknown,
+): value is undefined => {
 	return value === undefined;
 };
 

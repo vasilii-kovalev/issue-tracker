@@ -6,7 +6,10 @@ import {
 	ResponseStatus,
 } from "@/constants/api";
 
-const checkJwt: onRequestAsyncHookHandler = async (request, response) => {
+const checkJwt: onRequestAsyncHookHandler = async (
+	request,
+	response,
+) => {
 	try {
 		await request.jwtVerify();
 	} catch {

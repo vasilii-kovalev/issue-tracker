@@ -20,10 +20,15 @@ import {
 	type JwtPayload,
 } from "../types";
 
-const getUserIdFromJwtCookie = (
-	server: FastifyInstance,
-	request: FastifyRequest,
-): UserId | undefined => {
+interface GetUserIdFromJwtCookieParams {
+	request: FastifyRequest;
+	server: FastifyInstance;
+}
+
+const getUserIdFromJwtCookie = ({
+	request,
+	server,
+}: GetUserIdFromJwtCookieParams): UserId | undefined => {
 	const {
 		cookie,
 	} = request.headers;

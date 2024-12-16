@@ -75,7 +75,10 @@ const rolesRoutes: FastifyPluginCallback = (
 				],
 			},
 		},
-		async (request, response) => {
+		async (
+			request,
+			response,
+		) => {
 			const {
 				validationError,
 			} = request;
@@ -94,6 +97,7 @@ const rolesRoutes: FastifyPluginCallback = (
 			} = request.query;
 
 			try {
+				// It is expected, that amount of roles is little enough to not implement pagination.
 				const roles = await prismaClient.role.findMany({
 					orderBy: {
 						description: "asc",

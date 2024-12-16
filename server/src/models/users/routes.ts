@@ -111,7 +111,10 @@ const usersRoutes: FastifyPluginCallback = (
 				],
 			},
 		},
-		async (request, response) => {
+		async (
+			request,
+			response,
+		) => {
 			const {
 				validationError,
 			} = request;
@@ -236,7 +239,10 @@ const usersRoutes: FastifyPluginCallback = (
 				],
 			},
 		},
-		async (request, response) => {
+		async (
+			request,
+			response,
+		) => {
 			const {
 				validationError,
 			} = request;
@@ -325,7 +331,10 @@ const usersRoutes: FastifyPluginCallback = (
 				],
 			},
 		},
-		async (request, response) => {
+		async (
+			request,
+			response,
+		) => {
 			const {
 				validationError,
 			} = request;
@@ -461,7 +470,10 @@ const usersRoutes: FastifyPluginCallback = (
 				],
 			},
 		},
-		async (request, response) => {
+		async (
+			request,
+			response,
+		) => {
 			const {
 				validationError,
 			} = request;
@@ -488,10 +500,10 @@ const usersRoutes: FastifyPluginCallback = (
 			} = request;
 
 			try {
-				const userIdFromJwtCookie = getUserIdFromJwtCookie(
-					server,
+				const userIdFromJwtCookie = getUserIdFromJwtCookie({
 					request,
-				);
+					server,
+				});
 
 				const isOwn = userIdFromJwtCookie === id;
 
@@ -644,6 +656,7 @@ const usersRoutes: FastifyPluginCallback = (
 				response: {
 					[ResponseStatus.OK]: {
 						$ref: SchemaId.USER,
+						description: "Deleted user.",
 					},
 					[ResponseStatus.BAD_REQUEST]: ResponseWithStatusBadRequestSchema,
 					[ResponseStatus.UNAUTHORIZED]: ResponseWithStatusUnauthorized,
@@ -660,7 +673,10 @@ const usersRoutes: FastifyPluginCallback = (
 				],
 			},
 		},
-		async (request, response) => {
+		async (
+			request,
+			response,
+		) => {
 			const {
 				validationError,
 			} = request;
@@ -686,10 +702,10 @@ const usersRoutes: FastifyPluginCallback = (
 					},
 				});
 
-				const userIdFromJwtCookie = getUserIdFromJwtCookie(
-					server,
+				const userIdFromJwtCookie = getUserIdFromJwtCookie({
 					request,
-				);
+					server,
+				});
 
 				const isOwn = userIdFromJwtCookie === id;
 				const formattedUser = formatSelectedUser(user);
