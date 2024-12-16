@@ -37,7 +37,7 @@ void server.register(
 	{
 		cookie: {
 			cookieName: "token",
-			signed: true,
+			signed: false,
 		},
 		secret: "jwt-signing-secret",
 	},
@@ -46,12 +46,7 @@ void server.register(
 /**
  * {@link https://github.com/fastify/fastify-cookie?tab=readme-ov-file#example | Documentation}
  */
-void server.register(
-	cookie,
-	{
-		secret: "cookie-signing-secret",
-	},
-);
+void server.register(cookie);
 
 /**
  * {@link https://github.com/fastify/fastify-swagger?tab=readme-ov-file#usage | Documentation}
