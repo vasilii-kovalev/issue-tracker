@@ -535,6 +535,13 @@ const usersRoutes: FastifyPluginCallback = (
 								}),
 							}
 							: undefined,
+						/**
+						 * Parent entity's `updatedDate` doesn't update when only relations are changed.\
+						 * {@link https://github.com/prisma/prisma/discussions/10420#discussioncomment-11577848 | More information}
+						 */
+						updatedDate: !isUndefined(roles)
+							? new Date()
+							: undefined,
 					},
 					select: USER_SELECTOR,
 					where: {
