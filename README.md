@@ -29,10 +29,9 @@ I use it to learn and experiment with different technologies, which I think shin
   * Latest Firefox version
 * Tests included
 * Responsiveness included
-* Accessibility (a11y) included
-* Light/dark theme included
-* Internationalization **possibly** included
-* Right-to-left (RTL) **possibly** included
+* Accessibility (a11y) included (WCAG 2.2 level AA)
+* Internationalization included (English and Russian languages)
+* Light/dark theme **possibly** included
 * Minimum to no animations
 
 ## Documentation
