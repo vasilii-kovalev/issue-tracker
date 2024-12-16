@@ -22,9 +22,6 @@ import {
 	checkJwt,
 } from "@/models/auth/middleware/check-jwt";
 import {
-	type JwtPayload,
-} from "@/models/auth/types";
-import {
 	getUserIdFromJwtCookie,
 } from "@/models/auth/utilities/get-user-id-from-jwt-cookie";
 import {
@@ -432,8 +429,6 @@ const usersRoutes: FastifyPluginCallback = (
 				body: {
 					$ref: SchemaId.USER_UPDATE,
 				},
-				description: `Updates user by ID.
-				After user data update, a new JWT token with the new data is set to cookies.`,
 				params: {
 					properties: {
 						id: {
@@ -547,29 +542,9 @@ const usersRoutes: FastifyPluginCallback = (
 					},
 				});
 
-				const formattedUser = formatSelectedUser(user);
-
-				if (!isOwn) {
-					return await response
-						.status(ResponseStatus.OK)
-						.send(formattedUser satisfies User);
-				}
-
-				const token = server.jwt.sign({
-					payload: user.id,
-				} satisfies JwtPayload);
-
 				return await response
-					// Like in `/api/auth/login`.
-					.setCookie(
-						COOKIE_JWT_TOKEN_NAME,
-						token,
-						{
-							path: "/",
-						},
-					)
 					.status(ResponseStatus.OK)
-					.send(formattedUser satisfies User);
+					.send(formatSelectedUser(user));
 			} catch (error) {
 				if (error instanceof Prisma.PrismaClientKnownRequestError) {
 					if (
