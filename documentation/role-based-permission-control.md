@@ -10,6 +10,8 @@ Resource is an entity regulated by the user's permissions.
 
 * `USER`
 
+This list is constant and is not supposed to be change via UI or endpoints.
+
 ## Permissions
 
 Permission is a string representing a user's available actions.
@@ -31,6 +33,8 @@ Format of permissions is `resource:action:scope`, where
 * `USER:UPDATE:ANY`
 * `USER:UPDATE:OWN`
 
+This list is constant and is not supposed to be change via UI or endpoints.
+
 Other permissions are assumed/granted by default, like reading resources, so we don't need records in the database for them. When accessing resources with such default permissions, only the user's authorization is checked.
 
 ## Roles
@@ -42,11 +46,26 @@ Role is combination of several permissions.
 * `USER`
 * `ADMIN`
 
-### Permission-to-role mapping table
+## Permission-to-role mapping table
 
 | Permission/Role   | `USER` | `ADMIN` |
-| ----------------- | :----: | :-----: |
+| :---------------- | :----: | :-----: |
 | `USER:CREATE:ANY` |        | ✓       |
 | `USER:DELETE:ANY` |        | ✓       |
 | `USER:UPDATE:ANY` |        | ✓       |
 | `USER:UPDATE:OWN` | ✓      | ✓       |
+
+This mapping is constant and is not supposed to be change via UI or endpoints.
+
+## User actions-to-permission mapping table
+
+| User action                                   | Permissions       |
+| :-------------------------------------------- | :---------------- |
+| View own profile (including roles)            |                   |
+| View someone's else profile (including roles) |                   |
+| Update own profile                            | `USER:UPDATE:OWN` |
+| Update someone's else profile                 | `USER:UPDATE:ANY` |
+| Create a profile                              | `USER:CREATE:ANY` |
+| Delete a profile (including own)              | `USER:DELETE:ANY` |
+
+This mapping is constant and is not supposed to be change via UI or endpoints.
