@@ -158,6 +158,7 @@ const authRoutes: FastifyPluginCallback = (
 							httpOnly: true,
 							path: "/",
 							sameSite: true,
+							signed: true,
 						},
 					)
 					.status(ResponseStatus.OK)

@@ -29,16 +29,20 @@ const getUserIdFromJwtCookie = ({
 	request,
 	server,
 }: GetUserIdFromJwtCookieParams): UserId | undefined => {
-	const {
-		cookie,
-	} = request.headers;
+	const signedCookieToken = request.cookies[COOKIE_JWT_TOKEN_NAME];
 
-	if (isUndefined(cookie)) {
+	if (isUndefined(signedCookieToken)) {
 		return undefined;
 	}
 
-	const parsedCookie = server.parseCookie(cookie);
-	const token = parsedCookie[COOKIE_JWT_TOKEN_NAME];
+	const {
+		value: token,
+	} = request.unsignCookie(signedCookieToken);
+
+	if (isNull(token)) {
+		return undefined;
+	}
+
 	const decodedToken = server.jwt.decode<JwtPayload>(token);
 
 	if (isNull(decodedToken)) {
