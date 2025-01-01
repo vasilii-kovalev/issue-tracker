@@ -24,15 +24,6 @@ I use it to learn and experiment with different technologies, which I think shin
   * I tried to use IndexedDB (using [Dexie](https://dexie.org)) to avoid relying on a dedicated server and serve the preview of the applications via GitHub Pages, but realized that too much code will be shipped alongside the "front-end" part, slowing it down and making the code harder to maintain
 * Markdown support in text fields (issue description, comments, etc.)
 * No query language support (like [JQL](https://www.atlassian.com/blog/jira/jql-the-most-flexible-way-to-search-jira-14)). A visual filter is provided instead
-* Supported browsers:
-  * Latest Google Chrome version
-  * Latest Firefox version
-* Tests included
-* Responsiveness included
-* Accessibility (a11y) included (WCAG 2.2 level AA)
-* Internationalization included (English and Russian languages)
-* Light/dark theme **possibly** included
-* Minimum to no animations
 
 ## Documentation
 
