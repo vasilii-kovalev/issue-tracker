@@ -61,8 +61,8 @@ This mapping is constant and is not supposed to be change via UI or endpoints.
 
 | User action                                   | Permissions       |
 | :-------------------------------------------- | :---------------- |
-| View own profile (including roles)            |                   |
-| View someone's else profile (including roles) |                   |
+| View own profile (including roles)            | Any               |
+| View someone's else profile (including roles) | Any               |
 | Update own profile                            | `USER:UPDATE:OWN` |
 | Update someone's else profile                 | `USER:UPDATE:ANY` |
 | Create a profile                              | `USER:CREATE:ANY` |
