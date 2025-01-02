@@ -1037,6 +1037,8 @@ const eslintConfig = config(
 			"@stylistic/comma-style": ERROR,
 			// https://eslint.style/rules/default/computed-property-spacing
 			"@stylistic/computed-property-spacing": ERROR,
+			// https://eslint.style/rules/default/curly-newline
+			"@stylistic/curly-newline": ERROR,
 			// https://eslint.style/rules/default/dot-location
 			"@stylistic/dot-location": [
 				ERROR,
@@ -1731,22 +1733,7 @@ const eslintConfig = config(
 			// The "import-x/no-commonjs" rule takes care of it.
 			"@typescript-eslint/no-require-imports": DISABLED,
 			// https://typescript-eslint.io/rules/no-restricted-imports
-			"@typescript-eslint/no-restricted-imports": [
-				ERROR,
-				{
-					paths: [
-						{
-							name: "@epam/loveship",
-							importNames: [
-								"DropdownMenuBody",
-								"Text",
-							],
-							message: "Please use components from `src/components/uui` instead.",
-							allowTypeImports: true,
-						},
-					],
-				},
-			],
+			"@typescript-eslint/no-restricted-imports": ERROR,
 			// https://typescript-eslint.io/rules/no-restricted-types
 			"@typescript-eslint/no-restricted-types": ERROR,
 			// https://typescript-eslint.io/rules/no-shadow
@@ -1801,6 +1788,9 @@ const eslintConfig = config(
 			"@typescript-eslint/no-unsafe-member-access": ERROR,
 			// https://typescript-eslint.io/rules/no-unsafe-return
 			"@typescript-eslint/no-unsafe-return": ERROR,
+			// https://typescript-eslint.io/rules/no-unsafe-type-assertion
+			// This rule is disabled because if there is a type assertion, it was added on purpose.
+			"@typescript-eslint/no-unsafe-type-assertion": DISABLED,
 			// https://typescript-eslint.io/rules/no-unsafe-unary-minus
 			"@typescript-eslint/no-unsafe-unary-minus": ERROR,
 			// https://typescript-eslint.io/rules/no-unused-expressions
@@ -1943,10 +1933,10 @@ const eslintConfig = config(
 		],
 		extends: [
 			react.configs.all,
+			reactRefresh.configs.vite,
 		],
 		plugins: {
 			"react-hooks": reactHooks,
-			"react-refresh": reactRefresh,
 		},
 		rules: {
 			/*
@@ -1957,16 +1947,6 @@ const eslintConfig = config(
 
 			// Core rules.
 
-			// https://eslint-react.xyz/docs/rules/avoid-shorthand-boolean
-			/*
-				Always defining the boolean value solves the following problems:
-				1. Keeps the code consistent (since non-boolean props require the value to be explicitly passed)
-				2. Allows us to change the value without adding/removing the second part all the time
-			*/
-			"@eslint-react/avoid-shorthand-boolean": ERROR,
-			// https://eslint-react.xyz/docs/rules/avoid-shorthand-fragment
-			// The "@eslint-react/prefer-shorthand-boolean" rule takes care of it.
-			"@eslint-react/avoid-shorthand-fragment": DISABLED,
 			// https://eslint-react.xyz/docs/rules/ensure-forward-ref-using-ref
 			"@eslint-react/ensure-forward-ref-using-ref": ERROR,
 			// https://eslint-react.xyz/docs/rules/no-access-state-in-setstate
@@ -1999,14 +1979,20 @@ const eslintConfig = config(
 			"@eslint-react/no-component-will-receive-props": ERROR,
 			// https://eslint-react.xyz/docs/rules/no-component-will-update
 			"@eslint-react/no-component-will-update": ERROR,
+			// https://eslint-react.xyz/docs/rules/no-context-provider
+			"@eslint-react/no-context-provider": ERROR,
 			// https://eslint-react.xyz/docs/rules/no-create-ref
 			"@eslint-react/no-create-ref": ERROR,
 			// https://eslint-react.xyz/docs/rules/no-default-props
 			"@eslint-react/no-default-props": ERROR,
 			// https://eslint-react.xyz/docs/rules/no-direct-mutation-state
 			"@eslint-react/no-direct-mutation-state": ERROR,
+			// https://eslint-react.xyz/docs/rules/no-duplicate-jsx-props
+			"@eslint-react/no-duplicate-jsx-props": ERROR,
 			// https://eslint-react.xyz/docs/rules/no-duplicate-key
 			"@eslint-react/no-duplicate-key": ERROR,
+			// https://eslint-react.xyz/docs/rules/no-forward-ref
+			"@eslint-react/no-forward-ref": ERROR,
 			// https://eslint-react.xyz/docs/rules/no-implicit-key
 			"@eslint-react/no-implicit-key": ERROR,
 			// https://eslint-react.xyz/docs/rules/no-leaked-conditional-rendering
@@ -2047,19 +2033,22 @@ const eslintConfig = config(
 			"@eslint-react/no-useless-fragment": ERROR,
 			// https://eslint-react.xyz/docs/rules/prefer-destructuring-assignment
 			"@eslint-react/prefer-destructuring-assignment": ERROR,
+			// https://eslint-react.xyz/docs/rules/prefer-react-namespace-import
+			"@eslint-react/prefer-react-namespace-import": ERROR,
 			// https://eslint-react.xyz/docs/rules/prefer-read-only-props
 			// This rule is disabled because the implementation is too naive and hinders more than helps.
 			"@eslint-react/prefer-read-only-props": DISABLED,
 			// https://eslint-react.xyz/docs/rules/prefer-shorthand-boolean
-			// The "@eslint-react/avoid-shorthand-boolean" rule takes care of it.
-			"@eslint-react/prefer-shorthand-boolean": DISABLED,
+			"@eslint-react/prefer-shorthand-boolean": ERROR,
 			// https://eslint-react.xyz/docs/rules/prefer-shorthand-fragment
 			"@eslint-react/prefer-shorthand-fragment": ERROR,
+			// https://eslint-react.xyz/docs/rules/use-jsx-vars
+			"@eslint-react/use-jsx-vars": ERROR,
 
 			// DOM rules.
 
-			// https://eslint-react.xyz/docs/rules/dom-no-children-in-void-dom-elements
-			"@eslint-react/dom/no-children-in-void-dom-elements": ERROR,
+			// https://eslint-react.xyz/docs/rules/dom-no-void-elements-with-children
+			"@eslint-react/dom/no-void-elements-with-children": ERROR,
 			// https://eslint-react.xyz/docs/rules/dom-no-dangerously-set-innerhtml
 			"@eslint-react/dom/no-dangerously-set-innerhtml": ERROR,
 			// https://eslint-react.xyz/docs/rules/dom-no-dangerously-set-innerhtml-with-children
@@ -2076,6 +2065,13 @@ const eslintConfig = config(
 			"@eslint-react/dom/no-render-return-value": ERROR,
 			// https://eslint-react.xyz/docs/rules/dom-no-script-url
 			"@eslint-react/dom/no-script-url": ERROR,
+			// https://eslint-react.xyz/docs/rules/dom-no-unknown-property
+			"@eslint-react/dom/no-unknown-property": [
+				ERROR,
+				{
+					requireDataLowercase: true,
+				},
+			],
 			// https://eslint-react.xyz/docs/rules/dom-no-unsafe-iframe-sandbox
 			"@eslint-react/dom/no-unsafe-iframe-sandbox": ERROR,
 			// https://eslint-react.xyz/docs/rules/dom-no-unsafe-target-blank
@@ -2083,23 +2079,27 @@ const eslintConfig = config(
 
 			// Web API rules.
 
-			// https://eslint-react.xyz/docs/rules/web-api-no-leaked-timeout
-			"@eslint-react/web-api/no-leaked-timeout": ERROR,
-			// https://eslint-react.xyz/docs/rules/web-api-no-leaked-interval
-			"@eslint-react/web-api/no-leaked-interval": ERROR,
 			// https://eslint-react.xyz/docs/rules/web-api-no-leaked-event-listener
 			"@eslint-react/web-api/no-leaked-event-listener": ERROR,
+			// https://eslint-react.xyz/docs/rules/web-api-no-leaked-interval
+			"@eslint-react/web-api/no-leaked-interval": ERROR,
+			// https://eslint-react.xyz/docs/rules/web-api-no-leaked-resize-observer
+			"@eslint-react/web-api/no-leaked-resize-observer": ERROR,
+			// https://eslint-react.xyz/docs/rules/web-api-no-leaked-timeout
+			"@eslint-react/web-api/no-leaked-timeout": ERROR,
 
 			// Hooks extra rules.
 
-			// https://eslint-react.xyz/docs/rules/hooks-extra-ensure-custom-hooks-using-other-hooks
-			"@eslint-react/hooks-extra/ensure-custom-hooks-using-other-hooks": ERROR,
-			// https://eslint-react.xyz/docs/rules/hooks-extra-ensure-use-callback-has-non-empty-deps
-			"@eslint-react/hooks-extra/ensure-use-callback-has-non-empty-deps": ERROR,
-			// https://eslint-react.xyz/docs/rules/hooks-extra-ensure-use-memo-has-non-empty-deps
-			"@eslint-react/hooks-extra/ensure-use-memo-has-non-empty-deps": ERROR,
 			// https://eslint-react.xyz/docs/rules/hooks-extra-no-direct-set-state-in-use-effect
 			"@eslint-react/hooks-extra/no-direct-set-state-in-use-effect": WARNING,
+			// https://eslint-react.xyz/docs/rules/hooks-extra-no-direct-set-state-in-use-layout-effect
+			"@eslint-react/hooks-extra/no-direct-set-state-in-use-layout-effect": WARNING,
+			// https://eslint-react.xyz/docs/rules/hooks-extra-no-unnecessary-use-callback
+			"@eslint-react/hooks-extra/no-unnecessary-use-callback": ERROR,
+			// https://eslint-react.xyz/docs/rules/hooks-extra-no-unnecessary-use-memo
+			"@eslint-react/hooks-extra/no-unnecessary-use-memo": ERROR,
+			// https://eslint-react.xyz/docs/rules/hooks-extra-no-useless-custom-hooks
+			"@eslint-react/hooks-extra/no-useless-custom-hooks": ERROR,
 			// https://eslint-react.xyz/docs/rules/hooks-extra-prefer-use-state-lazy-initialization
 			"@eslint-react/hooks-extra/prefer-use-state-lazy-initialization": ERROR,
 
@@ -2259,6 +2259,7 @@ const eslintConfig = config(
 		rules: {
 			"no-autofix/capitalized-comments": DISABLED,
 			"sort-keys": DISABLED,
+			"import-x/no-named-as-default-member": DISABLED,
 		},
 	},
 );

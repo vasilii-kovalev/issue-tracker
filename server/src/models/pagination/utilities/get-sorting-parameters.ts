@@ -52,6 +52,7 @@ const getSortingParameters = <Key extends PropertyKey>({
 					} else {
 						sortingParametersCurrent.push({
 							[typedKey]: order,
+						// `satisfies` doesn't work here.
 						} as SortingParameter<Key>);
 					}
 				}

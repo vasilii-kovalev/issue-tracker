@@ -18,45 +18,34 @@
 		"last 1 firefox version"
 	],
 	"dependencies": {
-		"@epam/loveship": "5.9.1",
-		"@epam/uui": "5.9.1",
-		"@epam/uui-components": "5.9.1",
-		"@epam/uui-core": "5.9.1",
 		"classnames": "2.5.1",
-		"react": "18.3.1",
-		"react-dom": "18.3.1",
-		"react-router-dom": "5.3.4"
+		"react": "19.0.0",
+		"react-dom": "19.0.0",
+		"react-router": "7.1.1"
 	},
 	"devDependencies": {
-		"@eslint-react/eslint-plugin": "1.12.4",
-		"@eslint/js": "9.9.1",
-		"@stylistic/eslint-plugin": "2.7.2",
-		"@stylistic/stylelint-plugin": "3.0.1",
-		"@types/react": "18.3.5",
-		"@types/react-dom": "18.3.0",
-		"@types/react-router-dom": "5.3.3",
-		"@typescript-eslint/parser": "8.3.0",
-		"@vitejs/plugin-react": "4.3.1",
-		"eslint": "9.9.1",
-		"eslint-import-resolver-typescript": "3.6.3",
+		"@eslint-react/eslint-plugin": "1.23.0",
+		"@eslint/js": "9.17.0",
+		"@stylistic/eslint-plugin": "2.12.1",
+		"@stylistic/stylelint-plugin": "3.1.1",
+		"@types/react": "19.0.2",
+		"@types/react-dom": "19.0.2",
+		"@typescript-eslint/parser": "8.19.0",
+		"@vitejs/plugin-react": "4.3.4",
+		"eslint": "9.17.0",
+		"eslint-import-resolver-typescript": "3.7.0",
 		"eslint-plugin-import-export-newline": "1.0.0",
-		"eslint-plugin-import-x": "4.1.1",
-		"eslint-plugin-no-autofix": "2.0.0",
-		"eslint-plugin-react-hooks": "4.6.2",
-		"eslint-plugin-react-refresh": "0.4.11",
+		"eslint-plugin-import-x": "4.6.1",
+		"eslint-plugin-no-autofix": "2.1.0",
+		"eslint-plugin-react-hooks": "5.1.0",
+		"eslint-plugin-react-refresh": "0.4.16",
 		"eslint-plugin-simple-import-sort": "12.1.1",
-		"globals": "15.9.0",
-		"msw": "2.4.1",
-		"stylelint": "16.9.0",
+		"globals": "15.14.0",
+		"stylelint": "16.12.0",
 		"stylelint-order": "6.0.4",
-		"typescript": "5.5.4",
-		"typescript-eslint": "8.3.0",
-		"vite": "5.4.1",
-		"vite-tsconfig-paths": "5.0.1"
-	},
-	"msw": {
-		"workerDirectory": [
-			"public"
-		]
+		"typescript": "5.7.2",
+		"typescript-eslint": "8.19.0",
+		"vite": "6.0.6",
+		"vite-tsconfig-paths": "5.1.4"
 	}
 }

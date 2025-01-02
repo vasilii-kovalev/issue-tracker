@@ -19,7 +19,7 @@ const getUsers = async ({
 	pageNumber,
 }: GetUsersParams): Promise<PaginatedUsers> => {
 	const url = getEndpointUrl(
-		"/api/users",
+		"/api/users/page",
 		{
 			count,
 			pageNumber,

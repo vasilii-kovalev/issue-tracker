@@ -1,20 +1,10 @@
-import {
-	Button,
-	FlexRow,
-	NotificationCard,
-} from "@epam/loveship";
-import {
-	useUuiContext,
-} from "@epam/uui-core";
+import classNames from "classnames";
 import {
 	type FC,
 	useState,
 } from "react";
 
 import reactLogo from "@/assets/react.svg";
-import {
-	Text,
-} from "@/components/uui/text";
 import {
 	type ErrorResponse,
 } from "@/models/errors/types";
@@ -34,10 +24,6 @@ import {
 import styles from "./application.module.css";
 
 const Application: FC = () => {
-	const {
-		uuiNotifications,
-	} = useUuiContext();
-
 	const [
 		users,
 		setUsers,
@@ -54,18 +40,7 @@ const Application: FC = () => {
 
 			setUsers(paginatedUsers);
 
-			void uuiNotifications.show((notificationProps) => {
-				return (
-					<NotificationCard
-						{...notificationProps}
-						color="info"
-					>
-						<Text>
-							Users are fetched successfully.
-						</Text>
-					</NotificationCard>
-				);
-			});
+			console.info("Users are fetched successfully.");
 		} catch (error) {
 			logError(error);
 
@@ -81,45 +56,37 @@ const Application: FC = () => {
 					]
 			);
 
-			notifications.forEach((notificationTex) => {
-				void uuiNotifications.show((notificationProps) => {
-					return (
-						<NotificationCard
-							{...notificationProps}
-							color="error"
-						>
-							<Text>
-								{notificationTex}
-							</Text>
-						</NotificationCard>
-					);
-				});
+			notifications.forEach((notificationText) => {
+				console.error(notificationText);
 			});
 		}
 	};
 
 	return (
 		<>
-			<FlexRow
-				spacing={null}
-			>
+			<div>
 				<img
 					alt="React logo"
-					className={`${styles.logo} ${styles.react}`}
+					className={
+						classNames(
+							styles.logo,
+							styles.react,
+						)
+					}
 					src={reactLogo}
 				/>
-			</FlexRow>
+			</div>
 
-			<FlexRow
-				spacing={null}
-			>
-				<Button
-					caption="Click me"
+			<div>
+				<button
 					onClick={() => {
 						void fetchUsers();
 					}}
-				/>
-			</FlexRow>
+					type="button"
+				>
+					Click me
+				</button>
+			</div>
 
 			{
 				!isEmpty(users)
@@ -131,9 +98,7 @@ const Application: FC = () => {
 										<li
 											key={user.id}
 										>
-											<Text>
-												{user.name}
-											</Text>
+											{user.name}
 										</li>
 									);
 								})

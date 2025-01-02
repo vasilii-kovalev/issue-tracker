@@ -4,7 +4,6 @@ import importExportNewline from "eslint-plugin-import-export-newline";
 import importPlugin from "eslint-plugin-import-x";
 import noAutofix from "eslint-plugin-no-autofix";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
-import globals from "globals";
 import {
 	config,
 	configs,
@@ -71,7 +70,6 @@ const eslintConfig = config(
 			},
 		},
 		languageOptions: {
-			globals: globals.browser,
 			parserOptions: {
 				sourceType: "module",
 				ecmaVersion: "latest",
@@ -1018,6 +1016,8 @@ const eslintConfig = config(
 			"@stylistic/comma-style": ERROR,
 			// https://eslint.style/rules/default/computed-property-spacing
 			"@stylistic/computed-property-spacing": ERROR,
+			// https://eslint.style/rules/default/curly-newline
+			"@stylistic/curly-newline": ERROR,
 			// https://eslint.style/rules/default/dot-location
 			"@stylistic/dot-location": [
 				ERROR,
@@ -1770,6 +1770,9 @@ const eslintConfig = config(
 			"@typescript-eslint/no-unsafe-member-access": ERROR,
 			// https://typescript-eslint.io/rules/no-unsafe-return
 			"@typescript-eslint/no-unsafe-return": ERROR,
+			// https://typescript-eslint.io/rules/no-unsafe-type-assertion
+			// This rule is disabled because if there is a type assertion, it was added on purpose.
+			"@typescript-eslint/no-unsafe-type-assertion": DISABLED,
 			// https://typescript-eslint.io/rules/no-unsafe-unary-minus
 			"@typescript-eslint/no-unsafe-unary-minus": ERROR,
 			// https://typescript-eslint.io/rules/no-unused-expressions
@@ -1913,6 +1916,7 @@ const eslintConfig = config(
 		rules: {
 			"no-autofix/capitalized-comments": DISABLED,
 			"sort-keys": DISABLED,
+			"import-x/no-named-as-default-member": DISABLED,
 		},
 	},
 );
