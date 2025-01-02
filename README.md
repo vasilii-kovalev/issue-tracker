@@ -20,8 +20,8 @@ I use it to learn and experiment with different technologies, which I think shin
 * Each implementation is called "application"
 * Focus on frontend technologies mostly
 * Minimalistic server with Prisma as ORM and SQLite as database
-* No deployed preview. Since there will be no focus on the server, its optimization and security, the server will not be deployed anywhere, which means the applications can only be observed locally - run the [server](#server) and the application you need
-  * I tried to use IndexedDB (with [Dexie](https://dexie.org)) to avoid relying on a dedicated server and serve the preview of the applications via GitHub Pages, but realized that too much code will be shipped alongside the "frontend" part, slowing it down and making the code harder to maintain
+* No deployed preview. Since there will be no focus on the server, its optimization and security, the server will not be deployed anywhere and can only be observed locally. Instructions for it are provided in each application's `README.md` file
+  * I tried to use IndexedDB with [Dexie](https://dexie.org) to avoid relying on a dedicated server and serve the preview of the applications via GitHub Pages, but realized that too much code will be shipped alongside the "frontend" part, slowing it down and making the code harder to maintain
 * Markdown support in text fields (issue description, comments, etc.)
 * No query language support (like [JQL](https://www.atlassian.com/blog/jira/jql-the-most-flexible-way-to-search-jira-14)). A visual filter is provided instead
 
