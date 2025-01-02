@@ -48,7 +48,7 @@ const Application: FC = () => {
 
 			const notifications: Array<string> = (
 				"errorCodes" in typedError
-					? typedError.errorCodes.map((validationError) => {
+					? typedError.errorCodes.map<string>((validationError) => {
 						return validationError;
 					})
 					: [
