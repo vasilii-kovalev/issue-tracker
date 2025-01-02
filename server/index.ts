@@ -69,7 +69,12 @@ void server.register(
 		},
 		refResolver: {
 			// eslint-disable-next-line @typescript-eslint/max-params
-			buildLocalReference: (json, baseUri, fragment, index) => {
+			buildLocalReference: (
+				json,
+				baseUri,
+				fragment,
+				index,
+			) => {
 				return (
 					json.$id
 					?? `Unknown schema ${index}`
