@@ -1,5 +1,5 @@
-interface PaginatedPage<Entity> {
-	data: Array<Entity>;
+interface PaginatedPage<Type> {
+	data: Array<Type>;
 	pagesTotalCount: number;
 }
 

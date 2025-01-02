@@ -9,7 +9,7 @@ import {
 	type ErrorResponse,
 } from "@/models/errors/types";
 import {
-	getUsers,
+	getUsersPaginatedPage,
 } from "@/models/user/endpoints";
 import {
 	type User,
@@ -33,7 +33,7 @@ const Application: FC = () => {
 		try {
 			const {
 				data: paginatedUsers,
-			} = await getUsers({
+			} = await getUsersPaginatedPage({
 				count: 1,
 				pageNumber: 1,
 			});
@@ -47,9 +47,9 @@ const Application: FC = () => {
 			const typedError = error as ErrorResponse | Error;
 
 			const notifications: Array<string> = (
-				"validationErrors" in typedError
-					? typedError.validationErrors.map((validationError) => {
-						return validationError.message;
+				"errorCodes" in typedError
+					? typedError.errorCodes.map((validationError) => {
+						return validationError;
 					})
 					: [
 						typedError.message,

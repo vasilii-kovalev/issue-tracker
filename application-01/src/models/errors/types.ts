@@ -1,19 +1,10 @@
-interface ValidationError {
-	message: string;
-	path: string;
-}
+import {
+	type ErrorCode,
+} from "./constants";
 
-interface ErrorResponseWithMessage {
-	message?: string;
+interface ErrorResponse {
+	errorCodes: Array<ErrorCode>;
 }
-
-interface ErrorResponseWithValidationErrors extends ErrorResponseWithMessage {
-	validationErrors: Array<ValidationError>;
-}
-
-type ErrorResponse =
-	| ErrorResponseWithValidationErrors
-	| Required<ErrorResponseWithMessage>;
 
 export type {
 	ErrorResponse,

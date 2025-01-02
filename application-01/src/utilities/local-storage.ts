@@ -47,7 +47,9 @@ const setDataToLocalStorage = ({
 	}
 };
 
-const deleteDataFromLocalStorage = (key: string): void => {
+const deleteDataFromLocalStorage = (
+	key: string,
+): void => {
 	try {
 		window.localStorage.removeItem(key);
 	} catch (error) {

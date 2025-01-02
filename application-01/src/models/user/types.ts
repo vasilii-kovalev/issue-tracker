@@ -1,14 +1,19 @@
 import {
+	type DateString,
+} from "@/models/dates-and-time/types";
+import {
 	type PaginatedPage,
-} from "@/types/pagination";
-
-type DateString = string;
+} from "@/models/pagination/types";
+import {
+	type RoleId,
+} from "@/models/roles/constants";
 
 interface UserFull {
 	createdDate: DateString;
 	email: string;
 	id: string;
 	name: string;
+	roles: Array<RoleId>;
 	password: string;
 	updatedDate: DateString;
 }
@@ -19,12 +24,13 @@ type User = Pick<
 	| "email"
 	| "id"
 	| "name"
+	| "roles"
 	| "updatedDate"
 >;
 
-type PaginatedUsers = PaginatedPage<User>;
+type UsersPaginatedPage = PaginatedPage<User>;
 
 export type {
-	PaginatedUsers,
 	User,
+	UsersPaginatedPage,
 };

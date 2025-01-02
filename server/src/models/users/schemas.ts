@@ -30,7 +30,7 @@ const UserFullSchema = {
 		email: {
 			/**
 			 * Provided by `ajv-formats`, which is a part of `fastify` package.\
-			 * {@link https://www.npmjs.com/package/ajv-formats#formats | Formats list}
+			 * {@link https://www.npmjs.com/package/ajv-formats#formats Formats list}
 			 */
 			format: "email",
 			type: "string",

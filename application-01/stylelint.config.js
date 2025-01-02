@@ -2,7 +2,9 @@
  * @param {unknown} value
  * @returns {value is string}
  */
-const isString = (value) => {
+const isString = (
+	value,
+) => {
 	return typeof value === "string";
 };
 

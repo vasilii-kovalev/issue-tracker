@@ -19,7 +19,9 @@ import {
 	UserUpdateSchema,
 } from "@/models/users/schemas";
 
-const registerSchemas = (server: FastifyInstance): void => {
+const registerSchemas = (
+	server: FastifyInstance,
+): void => {
 	server.addSchema(ErrorResponseSchema);
 
 	server.addSchema(PaginatedPageSchema);

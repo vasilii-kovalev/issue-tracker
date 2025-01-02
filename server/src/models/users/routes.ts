@@ -379,7 +379,7 @@ const usersRoutes: FastifyPluginCallback = (
 				if (
 					error instanceof Prisma.PrismaClientKnownRequestError
 					/**
-					 * {@link https://www.prisma.io/docs/orm/reference/error-reference#p2002 | P2002 error code description}
+					 * {@link https://www.prisma.io/docs/orm/reference/error-reference#p2002 P2002 error code description}
 					 */
 					&& error.code === "P2002"
 				) {
@@ -549,7 +549,7 @@ const usersRoutes: FastifyPluginCallback = (
 							: undefined,
 						/**
 						 * Parent entity's `updatedDate` doesn't update when only relations are changed.\
-						 * {@link https://github.com/prisma/prisma/discussions/10420#discussioncomment-11577848 | More information}
+						 * {@link https://github.com/prisma/prisma/discussions/10420#discussioncomment-11577848 More information}
 						 */
 						updatedDate: !isUndefined(roles)
 							? new Date()
@@ -568,7 +568,7 @@ const usersRoutes: FastifyPluginCallback = (
 				if (error instanceof Prisma.PrismaClientKnownRequestError) {
 					if (
 						/**
-						 * {@link https://www.prisma.io/docs/orm/reference/error-reference#p2025 | P2025 error code description}
+						 * {@link https://www.prisma.io/docs/orm/reference/error-reference#p2025 P2025 error code description}
 						 */
 						error.code === "P2025"
 					) {
@@ -583,7 +583,7 @@ const usersRoutes: FastifyPluginCallback = (
 
 					if (
 						/**
-						 * {@link https://www.prisma.io/docs/orm/reference/error-reference#p2002 | P2002 error code description}
+						 * {@link https://www.prisma.io/docs/orm/reference/error-reference#p2002 P2002 error code description}
 						 */
 						error.code === "P2002"
 					) {
@@ -725,7 +725,7 @@ const usersRoutes: FastifyPluginCallback = (
 				if (
 					error instanceof Prisma.PrismaClientKnownRequestError
 					/**
-					 * {@link https://www.prisma.io/docs/orm/reference/error-reference#p2025 | P2025 error code description}
+					 * {@link https://www.prisma.io/docs/orm/reference/error-reference#p2025 P2025 error code description}
 					 */
 					&& error.code === "P2025"
 				) {

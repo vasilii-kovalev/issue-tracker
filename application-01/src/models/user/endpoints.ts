@@ -6,7 +6,7 @@ import {
 } from "@/utilities/api";
 
 import {
-	type PaginatedUsers,
+	type UsersPaginatedPage,
 } from "./types";
 
 interface GetUsersParams {
@@ -14,10 +14,10 @@ interface GetUsersParams {
 	pageNumber: number;
 }
 
-const getUsers = async ({
+const getUsersPaginatedPage = async ({
 	count,
 	pageNumber,
-}: GetUsersParams): Promise<PaginatedUsers> => {
+}: GetUsersParams): Promise<UsersPaginatedPage> => {
 	const url = getEndpointUrl(
 		"/api/users/page",
 		{
@@ -31,7 +31,7 @@ const getUsers = async ({
 	);
 
 	if (response.ok) {
-		return await response.json() as PaginatedUsers;
+		return await response.json() as UsersPaginatedPage;
 	}
 
 	const errorResponse = await response.json() as ErrorResponse;
@@ -41,5 +41,5 @@ const getUsers = async ({
 };
 
 export {
-	getUsers,
+	getUsersPaginatedPage,
 };
