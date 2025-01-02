@@ -70,3 +70,4 @@ After starting the server, visit <http://localhost:5000/swagger>.
     * OpenAPI schemas (`schemas.ts`) - used in route definitions
     * Middleware (`middleware/*`) - used in route definitions
   * [utilities](./src/utilities) - global utility functions
+* [documentation](./documentation) folder - the application-specific documentation
