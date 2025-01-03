@@ -2,13 +2,13 @@
 
 Status: in progress.
 
-Technologies:
+## Technologies
 
-* [TypeScript](https://www.typescriptlang.org)
+* [Bun](https://bun.sh)
 * [Fastify](https://fastify.dev)
 * [Prisma](https://www.prisma.io)
 * [SQLite](https://www.sqlite.org)
-* [Bun](https://bun.sh)
+* [TypeScript](https://www.typescriptlang.org)
 
 ## Scripts overview
 

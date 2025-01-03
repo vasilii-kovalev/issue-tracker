@@ -37,13 +37,13 @@ Status: in progress.
 
 [Link to source code](./server)
 
-Technologies:
+#### Technologies
 
-* [TypeScript](https://www.typescriptlang.org)
+* [Bun](https://bun.sh)
 * [Fastify](https://fastify.dev)
 * [Prisma](https://www.prisma.io)
 * [SQLite](https://www.sqlite.org)
-* [Bun](https://bun.sh)
+* [TypeScript](https://www.typescriptlang.org)
 
 ### Application 01
 
@@ -51,10 +51,12 @@ Status: in progress.
 
 [Link to source code](./application-01)
 
-Technologies:
+#### Technologies
 
-* [TypeScript](https://www.typescriptlang.org)
-* [React](https://react.dev)
-* [React Router DOM](https://v5.reactrouter.com/web)
-* [CSS Modules](https://github.com/css-modules/css-modules)
 * [Bun](https://bun.sh)
+* [CSS Modules](https://github.com/css-modules/css-modules)
+* [React Router](https://reactrouter.com)
+* [React](https://react.dev)
+* [Redux Toolkit](https://redux-toolkit.js.org)
+* [RTK Query](https://redux-toolkit.js.org/rtk-query/overview)
+* [TypeScript](https://www.typescriptlang.org)

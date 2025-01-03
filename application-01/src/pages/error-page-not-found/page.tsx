@@ -2,7 +2,7 @@ import {
 	type FC,
 } from "react";
 
-const ErrorPageNotFound: FC = () => {
+const ErrorPageNotFoundPage: FC = () => {
 	return (
 		<>
 			Error page: not found.
@@ -11,5 +11,5 @@ const ErrorPageNotFound: FC = () => {
 };
 
 export {
-	ErrorPageNotFound,
+	ErrorPageNotFoundPage,
 };

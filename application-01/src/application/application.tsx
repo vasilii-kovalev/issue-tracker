@@ -9,30 +9,32 @@ import {
 } from "react-router";
 
 import {
-	ErrorPageNotFound,
-} from "@/pages/error-page-not-found/error-page-not-found";
+	ErrorPageNotFoundPage,
+} from "@/pages/error-page-not-found/page";
 
 const UserDashboard = lazy(async () => {
-	return await import("@/pages/user-dashboard/user-dashboard");
+	return await import("@/pages/user-dashboard/page");
 });
 
 const Application: FC = () => {
 	return (
-		<Suspense
-			fallback={null}
-		>
-			<Routes>
-				<Route
-					element={<UserDashboard/>}
-					path="/users/:userId/dashboard"
-				/>
+		<main>
+			<Suspense
+				fallback={null}
+			>
+				<Routes>
+					<Route
+						element={<UserDashboard/>}
+						path="/users/:userId/dashboard"
+					/>
 
-				<Route
-					element={<ErrorPageNotFound/>}
-					path="*"
-				/>
-			</Routes>
-		</Suspense>
+					<Route
+						element={<ErrorPageNotFoundPage/>}
+						path="*"
+					/>
+				</Routes>
+			</Suspense>
+		</main>
 	);
 };
 

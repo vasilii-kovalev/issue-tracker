@@ -2,13 +2,15 @@
 
 Status: in progress.
 
-Technologies:
+## Technologies
 
-* [TypeScript](https://www.typescriptlang.org)
-* [React](https://react.dev)
-* [React Router DOM](https://v5.reactrouter.com/web)
-* [CSS Modules](https://github.com/css-modules/css-modules)
 * [Bun](https://bun.sh)
+* [CSS Modules](https://github.com/css-modules/css-modules)
+* [React Router](https://reactrouter.com)
+* [React](https://react.dev)
+* [Redux Toolkit](https://redux-toolkit.js.org)
+* [RTK Query](https://redux-toolkit.js.org/rtk-query/overview)
+* [TypeScript](https://www.typescriptlang.org)
 
 ## Preparation
 

@@ -2,7 +2,7 @@ import {
 	type FC,
 } from "react";
 
-const UserDashboard: FC = () => {
+const UserDashboardPage: FC = () => {
 	return (
 		<>
 			User dashboard
@@ -10,4 +10,4 @@ const UserDashboard: FC = () => {
 	);
 };
 
-export default UserDashboard;
+export default UserDashboardPage;

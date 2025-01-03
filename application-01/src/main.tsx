@@ -8,12 +8,18 @@ import {
 	createRoot,
 } from "react-dom/client";
 import {
+	Provider,
+} from "react-redux";
+import {
 	BrowserRouter,
 } from "react-router";
 
 import {
 	Application,
 } from "@/application/application";
+import {
+	store,
+} from "@/store";
 
 const rootElement = document.getElementById("root");
 
@@ -23,7 +29,11 @@ if (rootElement !== null) {
 	root.render(
 		<StrictMode>
 			<BrowserRouter>
-				<Application/>
+				<Provider
+					store={store}
+				>
+					<Application/>
+				</Provider>
 			</BrowserRouter>
 		</StrictMode>,
 	);
