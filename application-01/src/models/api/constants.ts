@@ -1,3 +1,16 @@
+// Inspired by: https://github.com/axios/axios/blob/v1.x/lib/helpers/HttpStatusCode.js
+enum ResponseStatus {
+	// Client error responses.
+	BAD_REQUEST = 400,
+	UNAUTHORIZED = 401,
+	FORBIDDEN = 403,
+	NOT_FOUND = 404,
+	CONFLICT = 409,
+
+	// Server error responses.
+	INTERNAL_SERVER_ERROR = 500,
+}
+
 enum ErrorCode {
 	// Users.
 	USER_ACCESS_FORBIDDEN = "user.access.forbidden",
@@ -10,4 +23,5 @@ enum ErrorCode {
 
 export {
 	ErrorCode,
+	ResponseStatus,
 };

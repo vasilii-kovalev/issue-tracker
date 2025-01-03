@@ -19,7 +19,7 @@ import {
 } from "@/application/application";
 import {
 	store,
-} from "@/store";
+} from "@/store/store";
 
 const rootElement = document.getElementById("root");
 

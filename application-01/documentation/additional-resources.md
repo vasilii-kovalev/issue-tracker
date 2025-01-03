@@ -5,3 +5,7 @@ This document contains information about resources, that helped (provided inform
 ## Bundling
 
 * [Vite custom chunks](https://github.com/vitejs/vite/discussions/14721)
+
+## Router
+
+* [React Router 6: Private Routes (alias Protected Routes)](https://www.robinwieruch.de/react-router-private-routes)

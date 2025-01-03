@@ -200,6 +200,90 @@ const usersRoutes: FastifyPluginCallback = (
 	);
 
 	server.get<{
+		Reply: User | ErrorResponse;
+	}>(
+		"/api/users/current",
+		{
+			attachValidation: true,
+			onRequest: [
+				checkJwt,
+			],
+			schema: {
+				response: {
+					[ResponseStatus.OK]: {
+						$ref: SchemaId.USER,
+					},
+					[ResponseStatus.BAD_REQUEST]: ResponseWithStatusBadRequestSchema,
+					[ResponseStatus.UNAUTHORIZED]: ResponseWithStatusUnauthorized,
+					[ResponseStatus.NOT_FOUND]: {
+						...ResponseWithStatusNotFound,
+						description: "User with provided user ID doesn't exist.",
+					},
+					[ResponseStatus.INTERNAL_SERVER_ERROR]: ResponseWithStatusInternalServerErrorSchema,
+				},
+				summary: "Get current user",
+				tags: [
+					SchemaTag.USERS,
+				],
+			},
+		},
+		async (
+			request,
+			response,
+		) => {
+			const {
+				validationError,
+			} = request;
+
+			if (!isUndefined(validationError)) {
+				return await response
+					.status(ResponseStatus.BAD_REQUEST)
+					.send({
+						errorCodes: [],
+						message: validationError.message,
+					});
+			}
+
+			const userIdFromJwtCookie = getUserIdFromJwtCookie({
+				request,
+				server,
+			});
+
+			try {
+				const user = await prismaClient.user.findUnique({
+					select: USER_SELECTOR,
+					where: {
+						id: userIdFromJwtCookie,
+					},
+				});
+
+				if (isNull(user)) {
+					return await response
+						.status(ResponseStatus.NOT_FOUND)
+						.send({
+							errorCodes: [
+								ErrorCode.USER_NOT_FOUND_BY_ID,
+							],
+						});
+				}
+
+				return await response
+					.status(ResponseStatus.OK)
+					.send(formatSelectedUser(user));
+			} catch (error) {
+				const typedError = error as Error;
+
+				return await response
+					.status(ResponseStatus.INTERNAL_SERVER_ERROR)
+					.send({
+						errorCodes: [],
+						message: typedError.message,
+					});
+			}
+		},
+	);
+
+	server.get<{
 		Params: {
 			id: UserId;
 		};
@@ -233,7 +317,7 @@ const usersRoutes: FastifyPluginCallback = (
 					},
 					[ResponseStatus.INTERNAL_SERVER_ERROR]: ResponseWithStatusInternalServerErrorSchema,
 				},
-				summary: "Get user",
+				summary: "Get user by ID",
 				tags: [
 					SchemaTag.USERS,
 				],
