@@ -1,13 +1,16 @@
 import {
 	isEmpty,
 } from "./is-empty";
+import {
+	isString,
+} from "./is-string";
 
 const isError = (
 	error: unknown,
 ): boolean => {
 	return (
 		error instanceof Error
-		&& typeof error.message === "string"
+		&& isString(error.message)
 		&& !isEmpty(error.message)
 	);
 };

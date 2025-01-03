@@ -34,7 +34,7 @@ import {
 	ResponseWithStatusInternalServerErrorSchema,
 	ResponseWithStatusNotFound,
 	ResponseWithStatusUnauthorized,
-} from "@/models/errors/schema";
+} from "@/models/errors/schemas";
 import {
 	type ErrorResponse,
 } from "@/models/errors/types";

@@ -5,6 +5,9 @@ import {
 	isNull,
 } from "@/utilities/is-null";
 import {
+	isString,
+} from "@/utilities/is-string";
+import {
 	isUndefined,
 } from "@/utilities/is-undefined";
 
@@ -47,7 +50,7 @@ const getEndpointUrl = (
 			if (Array.isArray(refinedValue)) {
 				refinedValue = refinedValue.filter((item) => {
 					const isEmptyString = (
-						typeof item === "string"
+						isString(item)
 						&& isEmpty(item)
 					);
 

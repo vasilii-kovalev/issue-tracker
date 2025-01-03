@@ -28,9 +28,22 @@ type User = Pick<
 	| "updatedDate"
 >;
 
+type UserLogin = Pick<
+	UserFull,
+	| "email"
+	| "password"
+>;
+
+type UserLoginResponse = Pick<
+	UserFull,
+	| "id"
+>;
+
 type UsersPaginatedPage = PaginatedPage<User>;
 
 export type {
 	User,
+	UserLogin,
+	UserLoginResponse,
 	UsersPaginatedPage,
 };

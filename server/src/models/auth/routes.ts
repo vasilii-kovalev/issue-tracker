@@ -19,12 +19,16 @@ import {
 	ResponseWithStatusBadRequestSchema,
 	ResponseWithStatusInternalServerErrorSchema,
 	ResponseWithStatusNotFound,
-} from "@/models/errors/schema";
+} from "@/models/errors/schemas";
 import {
 	type ErrorResponse,
 } from "@/models/errors/types";
 import {
+	UserLoginResponseSchema,
+} from "@/models/users/schemas";
+import {
 	type UserLogin,
+	type UserLoginResponse,
 } from "@/models/users/types";
 import {
 	verifyUserPassword,
@@ -50,7 +54,7 @@ const authRoutes: FastifyPluginCallback = (
 ): void => {
 	server.post<{
 		Body: UserLogin;
-		Reply: undefined | ErrorResponse;
+		Reply: UserLoginResponse | ErrorResponse;
 	}>(
 		"/api/auth/login",
 		{
@@ -62,8 +66,8 @@ const authRoutes: FastifyPluginCallback = (
 				description: `Sets "${COOKIE_JWT_TOKEN_NAME}" JWT cookie in headers.`,
 				response: {
 					[ResponseStatus.OK]: {
-						description: "Empty response.",
-						type: "null",
+						...UserLoginResponseSchema,
+						description: "Object with user ID.",
 					},
 					[ResponseStatus.BAD_REQUEST]: {
 						...ResponseWithStatusBadRequestSchema,
@@ -162,7 +166,9 @@ const authRoutes: FastifyPluginCallback = (
 						},
 					)
 					.status(ResponseStatus.OK)
-					.send();
+					.send({
+						id,
+					});
 			} catch (error) {
 				const typedError = error as Error;
 

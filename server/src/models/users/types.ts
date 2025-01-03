@@ -51,6 +51,11 @@ type UserLogin = Pick<
 	| "password"
 >;
 
+type UserLoginResponse = Pick<
+	UserFull,
+	| "id"
+>;
+
 interface UserFilter {
 	name: string;
 }
@@ -69,6 +74,7 @@ export type {
 	UserFull,
 	UserId,
 	UserLogin,
+	UserLoginResponse,
 	UsersPaginatedPage,
 	UsersPaginatedPageQueryParams,
 	UserUpdate,

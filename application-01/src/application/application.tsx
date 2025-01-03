@@ -4,6 +4,7 @@ import {
 	Suspense,
 } from "react";
 import {
+	Navigate,
 	Outlet,
 	Route,
 	Routes,
@@ -23,18 +24,31 @@ const UserDashboard = lazy(async () => {
 	return await import("@/pages/user-dashboard/page");
 });
 
+const LoginPage = lazy(async () => {
+	return await import("@/pages/login/page");
+});
+
 const ProtectedRoute: FC = () => {
 	const {
 		data,
-		error,
+		isError,
+		isFetching,
 	} = userApi.endpoints.getCurrentUser.useQueryState(undefined);
 
-	if (!isUndefined(error)) {
+	if (isFetching) {
 		return null;
 	}
 
-	if (isUndefined(data)) {
-		return null;
+	if (
+		isError
+		|| isUndefined(data)
+	) {
+		return (
+			<Navigate
+				replace={true}
+				to="/login"
+			/>
+		);
 	}
 
 	return <Outlet/>;
@@ -57,6 +71,11 @@ const Application: FC = () => {
 							path="/users/:userId/dashboard"
 						/>
 					</Route>
+
+					<Route
+						element={<LoginPage/>}
+						path="/login"
+					/>
 
 					<Route
 						element={<ErrorPageNotFoundPage/>}

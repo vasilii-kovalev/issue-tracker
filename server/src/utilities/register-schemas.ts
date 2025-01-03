@@ -4,10 +4,10 @@ import {
 
 import {
 	ErrorResponseSchema,
-} from "@/models/errors/schema";
+} from "@/models/errors/schemas";
 import {
 	PaginatedPageSchema,
-} from "@/models/pagination/schema";
+} from "@/models/pagination/schemas";
 import {
 	RoleIdSchema,
 	RoleSchema,

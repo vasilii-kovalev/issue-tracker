@@ -5,7 +5,7 @@ import {
 	PaginatedPageParamsSchema,
 	PaginatedPageSchema,
 	WithSortingStringSchema,
-} from "@/models/pagination/schema";
+} from "@/models/pagination/schemas";
 import {
 	pickByKeys,
 } from "@/utilities/pick-by-keys";
@@ -16,6 +16,7 @@ import {
 	type UserFilter,
 	type UserFull,
 	type UserLogin,
+	type UserLoginResponse,
 	type UsersPaginatedPage,
 	type UsersPaginatedPageQueryParams,
 	type UserUpdate,
@@ -146,6 +147,19 @@ const UserLoginSchema = {
 	type: "object",
 };
 
+const UserLoginResponseSchema = {
+	properties: pickByKeys(
+		UserFullSchema.properties,
+		[
+			"id",
+		],
+	) satisfies Record<keyof UserLoginResponse, unknown>,
+	required: [
+		"id",
+	] satisfies Array<keyof UserLoginResponse>,
+	type: "object",
+};
+
 const UserFilterSchema = {
 	properties: {
 		name: {
@@ -192,6 +206,7 @@ const UsersPaginatedPageSchema = {
 export {
 	UserCreateSchema,
 	UserFullSchema,
+	UserLoginResponseSchema,
 	UserLoginSchema,
 	UserSchema,
 	UsersPaginatedPageQueryParamsSchema,
