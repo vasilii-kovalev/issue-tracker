@@ -5,18 +5,15 @@
 		"allowJs": true,
 		"isolatedModules": true,
 		"lib": [
-			"ES2023"
+			"ESNext"
 		],
 		"module": "ESNext",
 		"moduleDetection": "force",
 		"moduleResolution": "bundler",
 		"noEmit": true,
-		"noFallthroughCasesInSwitch": true,
-		"noUnusedLocals": true,
-		"noUnusedParameters": true,
 		"skipLibCheck": true,
 		"strict": true,
-		"target": "ES2022"
+		"target": "ESNext"
 	},
 	"include": [
 		"vite.config.ts",

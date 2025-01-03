@@ -1947,6 +1947,16 @@ const eslintConfig = config(
 
 			// Core rules.
 
+			// https://eslint-react.xyz/docs/rules/avoid-shorthand-boolean
+			/*
+				Always defining the boolean value solves the following problems:
+				1. Keeps the code consistent (since non-boolean props require the value to be explicitly passed)
+				2. Allows us to change the value without adding/removing the second part all the time
+			*/
+			"@eslint-react/avoid-shorthand-boolean": ERROR,
+			// https://eslint-react.xyz/docs/rules/avoid-shorthand-fragment
+			// The "@eslint-react/prefer-shorthand-fragment" rule takes care of it.
+			"@eslint-react/avoid-shorthand-fragment": DISABLED,
 			// https://eslint-react.xyz/docs/rules/ensure-forward-ref-using-ref
 			"@eslint-react/ensure-forward-ref-using-ref": ERROR,
 			// https://eslint-react.xyz/docs/rules/no-access-state-in-setstate
@@ -2039,7 +2049,8 @@ const eslintConfig = config(
 			// This rule is disabled because the implementation is too naive and hinders more than helps.
 			"@eslint-react/prefer-read-only-props": DISABLED,
 			// https://eslint-react.xyz/docs/rules/prefer-shorthand-boolean
-			"@eslint-react/prefer-shorthand-boolean": ERROR,
+			// The "@eslint-react/avoid-shorthand-boolean" rule takes care of it.
+			"@eslint-react/prefer-shorthand-boolean": DISABLED,
 			// https://eslint-react.xyz/docs/rules/prefer-shorthand-fragment
 			"@eslint-react/prefer-shorthand-fragment": ERROR,
 			// https://eslint-react.xyz/docs/rules/use-jsx-vars
