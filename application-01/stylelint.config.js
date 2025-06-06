@@ -81,6 +81,23 @@ const stylelintConfig = {
 
 		// Avoid errors.
 
+		// Deprecated.
+
+		// https://stylelint.io/user-guide/rules/at-rule-no-deprecated
+		"at-rule-no-deprecated": [
+			true,
+			{
+				severity: ERROR,
+			},
+		],
+		// https://stylelint.io/user-guide/rules/declaration-property-value-keyword-no-deprecated
+		"declaration-property-value-keyword-no-deprecated": [
+			true,
+			{
+				severity: ERROR,
+			},
+		],
+
 		// Descending.
 
 		// https://stylelint.io/user-guide/rules/no-descending-specificity
@@ -162,6 +179,13 @@ const stylelintConfig = {
 
 		// Invalid.
 
+		// https://stylelint.io/user-guide/rules/at-rule-prelude-no-invalid
+		"at-rule-prelude-no-invalid": [
+			true,
+			{
+				severity: ERROR,
+			},
+		],
 		// https://stylelint.io/user-guide/rules/color-no-invalid-hex
 		"color-no-invalid-hex": [
 			true,
@@ -213,6 +237,13 @@ const stylelintConfig = {
 		],
 		// https://stylelint.io/user-guide/rules/string-no-newline
 		"string-no-newline": [
+			true,
+			{
+				severity: ERROR,
+			},
+		],
+		// https://stylelint.io/user-guide/rules/syntax-string-no-invalid
+		"syntax-string-no-invalid": [
 			true,
 			{
 				severity: ERROR,
@@ -280,6 +311,20 @@ const stylelintConfig = {
 
 		// https://stylelint.io/user-guide/rules/annotation-no-unknown
 		"annotation-no-unknown": [
+			true,
+			{
+				severity: ERROR,
+			},
+		],
+		// https://stylelint.io/user-guide/rules/at-rule-descriptor-no-unknown
+		"at-rule-descriptor-no-unknown": [
+			true,
+			{
+				severity: ERROR,
+			},
+		],
+		// https://stylelint.io/user-guide/rules/at-rule-descriptor-value-no-unknown
+		"at-rule-descriptor-value-no-unknown": [
 			true,
 			{
 				severity: ERROR,
@@ -800,6 +845,13 @@ const stylelintConfig = {
 				severity: ERROR,
 			},
 		],
+		// https://stylelint.io/user-guide/rules/color-function-alias-notation
+		"color-function-alias-notation": [
+			"without-alpha",
+			{
+				severity: ERROR,
+			},
+		],
 		// https://stylelint.io/user-guide/rules/color-function-notation
 		"color-function-notation": [
 			"modern",
@@ -876,6 +928,17 @@ const stylelintConfig = {
 		// https://stylelint.io/user-guide/rules/comment-pattern
 		// This rule is disabled because there is no need to set any pattern.
 		"comment-pattern": DISABLED,
+		// https://stylelint.io/user-guide/rules/container-name-pattern
+		"container-name-pattern": [
+			`^${KEBAB_CASE_REGEXP_STRING}$`,
+			{
+				severity: ERROR,
+				/** @type {RuleMessage} */
+				message: (name) => {
+					return `Expected container name "${name}" to be kebab-case`;
+				},
+			},
+		],
 		// https://stylelint.io/user-guide/rules/custom-media-pattern
 		"custom-media-pattern": [
 			`^${KEBAB_CASE_REGEXP_STRING}$`,
@@ -906,6 +969,16 @@ const stylelintConfig = {
 				/** @type {RuleMessage} */
 				message: (name) => {
 					return `Expected keyframe name "${name}" to be kebab-case`;
+				},
+			},
+		],
+		"layer-name-pattern": [
+			`^${KEBAB_CASE_REGEXP_STRING}$`,
+			{
+				severity: ERROR,
+				/** @type {RuleMessage} */
+				message: (name) => {
+					return `Expected layer name "${name}" to be kebab-case`;
 				},
 			},
 		],

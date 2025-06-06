@@ -1,16 +1,21 @@
 import js from "@eslint/js";
 import react from "@eslint-react/eslint-plugin";
 import stylistic from "@stylistic/eslint-plugin";
+// eslint-disable-next-line import-x/no-namespace
+import * as tsResolver from "eslint-import-resolver-typescript";
 import importExportNewline from "eslint-plugin-import-export-newline";
-import importPlugin from "eslint-plugin-import-x";
-import noAutofix from "eslint-plugin-no-autofix";
-import reactHooks from "eslint-plugin-react-hooks";
+import {
+	flatConfigs as importConfigs,
+} from "eslint-plugin-import-x";
+import {
+	configs as reactHooksConfigs,
+} from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
 import globals from "globals";
 import {
 	config,
-	configs,
+	configs as typeScriptConfigs,
 } from "typescript-eslint";
 
 /**
@@ -66,19 +71,16 @@ const eslintConfig = config(
 			"stylelint.config.js",
 		],
 		extends: [
-			js.configs.recommended,
-			importPlugin.flatConfigs.react,
-			importPlugin.flatConfigs.typescript,
-			stylistic.configs["all-flat"],
+			js.configs.all,
+			importConfigs.react,
+			importConfigs.typescript,
+			stylistic.configs.all,
+			typeScriptConfigs.recommendedTypeChecked,
 		],
 		settings: {
 			"import-x/resolver": {
-				typescript: {
-					project: [
-						"tsconfig.app.json",
-						"tsconfig.node.json",
-					],
-				},
+				name: "tsResolver",
+				resolver: tsResolver,
 			},
 		},
 		languageOptions: {
@@ -86,18 +88,13 @@ const eslintConfig = config(
 			parserOptions: {
 				sourceType: "module",
 				ecmaVersion: "latest",
-				project: [
-					"tsconfig.app.json",
-					"tsconfig.node.json",
-				],
+				projectService: true,
 				tsconfigRootDir: import.meta.dirname,
 			},
 		},
 		plugins: {
-			// @ts-expect-error No types provided.
-			"no-autofix": noAutofix,
-			"import-x": importPlugin,
 			"simple-import-sort": simpleImportSort,
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 			"import-export-newline": importExportNewline,
 		},
 		rules: {
@@ -282,16 +279,12 @@ const eslintConfig = config(
 			*/
 			camelcase: ERROR,
 			// https://eslint.org/docs/latest/rules/capitalized-comments
-			// The "no-autofix/capitalized-comments" rule takes care of it.
-			"capitalized-comments": DISABLED,
 			/*
 				Having this rule is useful for several reasons:
 				1. Enforces comments consistency
 				2. Highlights commented out code, which needs to be reviewed
-
-				Auto-fix is disabled to avoid changing the case of temporary commented code and breaking it.
 			*/
-			"no-autofix/capitalized-comments": [
+			"capitalized-comments": [
 				WARNING,
 				"always",
 				{
@@ -1356,8 +1349,7 @@ const eslintConfig = config(
 			"**/*.{ts,tsx}",
 		],
 		extends: [
-			...configs.all,
-			...configs.strictTypeChecked,
+			typeScriptConfigs.all,
 		],
 		rules: {
 			/*
@@ -1713,6 +1705,8 @@ const eslintConfig = config(
 			"@typescript-eslint/no-misused-new": ERROR,
 			// https://typescript-eslint.io/rules/no-misused-promises
 			"@typescript-eslint/no-misused-promises": ERROR,
+			// https://typescript-eslint.io/rules/no-misused-spread
+			"@typescript-eslint/no-misused-spread": ERROR,
 			// https://typescript-eslint.io/rules/no-mixed-enums
 			"@typescript-eslint/no-mixed-enums": ERROR,
 			// https://typescript-eslint.io/rules/no-namespace
@@ -1754,10 +1748,7 @@ const eslintConfig = config(
 			// https://typescript-eslint.io/rules/no-unnecessary-boolean-literal-compare
 			"@typescript-eslint/no-unnecessary-boolean-literal-compare": ERROR,
 			// https://typescript-eslint.io/rules/no-unnecessary-condition
-			// The "no-autofix/@typescript-eslint/no-unnecessary-condition" rule takes care of it.
-			"@typescript-eslint/no-unnecessary-condition": DISABLED,
-			// Auto-fix is disabled to avoid breaking the code by removing the optional chaining operator.
-			"no-autofix/@typescript-eslint/no-unnecessary-condition": ERROR,
+			"@typescript-eslint/no-unnecessary-condition": ERROR,
 			// https://typescript-eslint.io/rules/no-unnecessary-parameter-property-assignment
 			"@typescript-eslint/no-unnecessary-parameter-property-assignment": ERROR,
 			// https://typescript-eslint.io/rules/no-unnecessary-qualifier
@@ -1770,6 +1761,8 @@ const eslintConfig = config(
 			"@typescript-eslint/no-unnecessary-type-assertion": ERROR,
 			// https://typescript-eslint.io/rules/no-unnecessary-type-constraint
 			"@typescript-eslint/no-unnecessary-type-constraint": ERROR,
+			// https://typescript-eslint.io/rules/no-unnecessary-type-conversion
+			"@typescript-eslint/no-unnecessary-type-conversion": ERROR,
 			// https://typescript-eslint.io/rules/no-unnecessary-type-parameters
 			"@typescript-eslint/no-unnecessary-type-parameters": ERROR,
 			// https://typescript-eslint.io/rules/no-unsafe-argument
@@ -1900,10 +1893,7 @@ const eslintConfig = config(
 				"always",
 			],
 			// https://typescript-eslint.io/rules/strict-boolean-expressions
-			// The "no-autofix/@typescript-eslint/strict-boolean-expressions" rule takes care of it.
-			"@typescript-eslint/strict-boolean-expressions": DISABLED,
-			// Auto-fix is disabled to avoid breaking the code by adding the nullish check.
-			"no-autofix/@typescript-eslint/strict-boolean-expressions": [
+			"@typescript-eslint/strict-boolean-expressions": [
 				ERROR,
 				{
 					allowString: false,
@@ -1933,11 +1923,10 @@ const eslintConfig = config(
 		],
 		extends: [
 			react.configs.all,
+			react.configs["disable-debug"],
+			reactHooksConfigs["recommended-latest"],
 			reactRefresh.configs.vite,
 		],
-		plugins: {
-			"react-hooks": reactHooks,
-		},
 		rules: {
 			/*
 				==================================================
@@ -1956,9 +1945,15 @@ const eslintConfig = config(
 			"@eslint-react/avoid-shorthand-boolean": ERROR,
 			// https://eslint-react.xyz/docs/rules/avoid-shorthand-fragment
 			// The "@eslint-react/prefer-shorthand-fragment" rule takes care of it.
-			"@eslint-react/avoid-shorthand-fragment": DISABLED,
-			// https://eslint-react.xyz/docs/rules/ensure-forward-ref-using-ref
-			"@eslint-react/ensure-forward-ref-using-ref": ERROR,
+			"@eslint-react/avoid-shorthand-fragment": ERROR,
+			// https://eslint-react.xyz/docs/rules/jsx-key-before-spread
+			"@eslint-react/jsx-key-before-spread": ERROR,
+			// https://eslint-react.xyz/docs/rules/jsx-no-iife
+			"@eslint-react/jsx-no-iife": ERROR,
+			// https://eslint-react.xyz/docs/rules/jsx-no-undef
+			"@eslint-react/jsx-no-undef": ERROR,
+			// https://eslint-react.xyz/docs/rules/jsx-uses-react
+			"@eslint-react/jsx-uses-react": ERROR,
 			// https://eslint-react.xyz/docs/rules/no-access-state-in-setstate
 			"@eslint-react/no-access-state-in-setstate": ERROR,
 			// https://eslint-react.xyz/docs/rules/no-array-index-key
@@ -1984,11 +1979,14 @@ const eslintConfig = config(
 			// https://eslint-react.xyz/docs/rules/no-complex-conditional-rendering
 			"@eslint-react/no-complex-conditional-rendering": ERROR,
 			// https://eslint-react.xyz/docs/rules/no-component-will-mount
-			"@eslint-react/no-component-will-mount": ERROR,
+			// The "@eslint-react/no-class-component" rule disallows class components.
+			"@eslint-react/no-component-will-mount": DISABLED,
 			// https://eslint-react.xyz/docs/rules/no-component-will-receive-props
-			"@eslint-react/no-component-will-receive-props": ERROR,
+			// The "@eslint-react/no-class-component" rule disallows class components.
+			"@eslint-react/no-component-will-receive-props": DISABLED,
 			// https://eslint-react.xyz/docs/rules/no-component-will-update
-			"@eslint-react/no-component-will-update": ERROR,
+			// The "@eslint-react/no-class-component" rule disallows class components.
+			"@eslint-react/no-component-will-update": DISABLED,
 			// https://eslint-react.xyz/docs/rules/no-context-provider
 			"@eslint-react/no-context-provider": ERROR,
 			// https://eslint-react.xyz/docs/rules/no-create-ref
@@ -2009,36 +2007,55 @@ const eslintConfig = config(
 			"@eslint-react/no-leaked-conditional-rendering": ERROR,
 			// https://eslint-react.xyz/docs/rules/no-missing-component-display-name
 			"@eslint-react/no-missing-component-display-name": ERROR,
+			// https://eslint-react.xyz/docs/rules/no-missing-context-display-name
+			"@eslint-react/no-missing-context-display-name": ERROR,
 			// https://eslint-react.xyz/docs/rules/no-missing-key
 			"@eslint-react/no-missing-key": ERROR,
-			// https://eslint-react.xyz/docs/rules/no-nested-components
-			"@eslint-react/no-nested-components": ERROR,
+			// This rule is disabled because the functionality is not going to be used.
+			// https://eslint-react.xyz/docs/rules/no-misused-capture-owner-stack
+			"@eslint-react/no-misused-capture-owner-stack": DISABLED,
+			// https://eslint-react.xyz/docs/rules/no-nested-component-definitions
+			"@eslint-react/no-nested-component-definitions": ERROR,
+			// https://eslint-react.xyz/docs/rules/no-nested-lazy-component-declarations
+			"@eslint-react/no-nested-lazy-component-declarations": ERROR,
 			// https://eslint-react.xyz/docs/rules/no-prop-types
 			"@eslint-react/no-prop-types": ERROR,
 			// https://eslint-react.xyz/docs/rules/no-redundant-should-component-update
-			"@eslint-react/no-redundant-should-component-update": ERROR,
+			// The "@eslint-react/no-class-component" rule disallows class components.
+			"@eslint-react/no-redundant-should-component-update": DISABLED,
 			// https://eslint-react.xyz/docs/rules/no-set-state-in-component-did-mount
-			"@eslint-react/no-set-state-in-component-did-mount": ERROR,
+			// The "@eslint-react/no-class-component" rule disallows class components.
+			"@eslint-react/no-set-state-in-component-did-mount": DISABLED,
 			// https://eslint-react.xyz/docs/rules/no-set-state-in-component-did-update
-			"@eslint-react/no-set-state-in-component-did-update": ERROR,
+			// The "@eslint-react/no-class-component" rule disallows class components.
+			"@eslint-react/no-set-state-in-component-did-update": DISABLED,
 			// https://eslint-react.xyz/docs/rules/no-set-state-in-component-will-update
-			"@eslint-react/no-set-state-in-component-will-update": ERROR,
+			// The "@eslint-react/no-class-component" rule disallows class components.
+			"@eslint-react/no-set-state-in-component-will-update": DISABLED,
 			// https://eslint-react.xyz/docs/rules/no-string-refs
 			"@eslint-react/no-string-refs": ERROR,
 			// https://eslint-react.xyz/docs/rules/no-unsafe-component-will-mount
-			"@eslint-react/no-unsafe-component-will-mount": ERROR,
+			// The "@eslint-react/no-class-component" rule disallows class components.
+			"@eslint-react/no-unsafe-component-will-mount": DISABLED,
 			// https://eslint-react.xyz/docs/rules/no-unsafe-component-will-receive-props
-			"@eslint-react/no-unsafe-component-will-receive-props": ERROR,
+			// The "@eslint-react/no-class-component" rule disallows class components.
+			"@eslint-react/no-unsafe-component-will-receive-props": DISABLED,
 			// https://eslint-react.xyz/docs/rules/no-unsafe-component-will-update
-			"@eslint-react/no-unsafe-component-will-update": ERROR,
+			// The "@eslint-react/no-class-component" rule disallows class components.
+			"@eslint-react/no-unsafe-component-will-update": DISABLED,
 			// https://eslint-react.xyz/docs/rules/no-unstable-context-value
 			"@eslint-react/no-unstable-context-value": ERROR,
 			// https://eslint-react.xyz/docs/rules/no-unstable-default-props
 			"@eslint-react/no-unstable-default-props": ERROR,
 			// https://eslint-react.xyz/docs/rules/no-unused-class-component-members
-			"@eslint-react/no-unused-class-component-members": ERROR,
+			// The "@eslint-react/no-class-component" rule disallows class components.
+			"@eslint-react/no-unused-class-component-members": DISABLED,
 			// https://eslint-react.xyz/docs/rules/no-unused-state
 			"@eslint-react/no-unused-state": ERROR,
+			// https://eslint-react.xyz/docs/rules/no-use-context
+			"@eslint-react/no-use-context": ERROR,
+			// https://eslint-react.xyz/docs/rules/no-useless-forward-ref
+			"@eslint-react/no-useless-forward-ref": ERROR,
 			// https://eslint-react.xyz/docs/rules/no-useless-fragment
 			"@eslint-react/no-useless-fragment": ERROR,
 			// https://eslint-react.xyz/docs/rules/prefer-destructuring-assignment
@@ -2052,26 +2069,31 @@ const eslintConfig = config(
 			// The "@eslint-react/avoid-shorthand-boolean" rule takes care of it.
 			"@eslint-react/prefer-shorthand-boolean": DISABLED,
 			// https://eslint-react.xyz/docs/rules/prefer-shorthand-fragment
-			"@eslint-react/prefer-shorthand-fragment": ERROR,
+			// The "@eslint-react/avoid-shorthand-fragment" rule takes care of it.
+			"@eslint-react/prefer-shorthand-fragment": DISABLED,
 			// https://eslint-react.xyz/docs/rules/use-jsx-vars
 			"@eslint-react/use-jsx-vars": ERROR,
 
 			// DOM rules.
 
-			// https://eslint-react.xyz/docs/rules/dom-no-void-elements-with-children
-			"@eslint-react/dom/no-void-elements-with-children": ERROR,
 			// https://eslint-react.xyz/docs/rules/dom-no-dangerously-set-innerhtml
 			"@eslint-react/dom/no-dangerously-set-innerhtml": ERROR,
 			// https://eslint-react.xyz/docs/rules/dom-no-dangerously-set-innerhtml-with-children
 			"@eslint-react/dom/no-dangerously-set-innerhtml-with-children": ERROR,
 			// https://eslint-react.xyz/docs/rules/dom-no-find-dom-node
 			"@eslint-react/dom/no-find-dom-node": ERROR,
+			// https://eslint-react.xyz/docs/rules/dom-no-flush-sync
+			"@eslint-react/dom/no-flush-sync": ERROR,
+			// https://eslint-react.xyz/docs/rules/dom-no-hydrate
+			"@eslint-react/dom/no-hydrate": ERROR,
 			// https://eslint-react.xyz/docs/rules/dom-no-missing-button-type
 			"@eslint-react/dom/no-missing-button-type": ERROR,
 			// https://eslint-react.xyz/docs/rules/dom-no-missing-iframe-sandbox
 			"@eslint-react/dom/no-missing-iframe-sandbox": ERROR,
 			// https://eslint-react.xyz/docs/rules/dom-no-namespace
 			"@eslint-react/dom/no-namespace": ERROR,
+			// https://eslint-react.xyz/docs/rules/dom-no-render
+			"@eslint-react/dom/no-render": ERROR,
 			// https://eslint-react.xyz/docs/rules/dom-no-render-return-value
 			"@eslint-react/dom/no-render-return-value": ERROR,
 			// https://eslint-react.xyz/docs/rules/dom-no-script-url
@@ -2087,6 +2109,10 @@ const eslintConfig = config(
 			"@eslint-react/dom/no-unsafe-iframe-sandbox": ERROR,
 			// https://eslint-react.xyz/docs/rules/dom-no-unsafe-target-blank
 			"@eslint-react/dom/no-unsafe-target-blank": ERROR,
+			// https://eslint-react.xyz/docs/rules/dom-no-use-form-state
+			"@eslint-react/dom/no-use-form-state": ERROR,
+			// https://eslint-react.xyz/docs/rules/dom-no-void-elements-with-children
+			"@eslint-react/dom/no-void-elements-with-children": ERROR,
 
 			// Web API rules.
 
@@ -2109,8 +2135,8 @@ const eslintConfig = config(
 			"@eslint-react/hooks-extra/no-unnecessary-use-callback": ERROR,
 			// https://eslint-react.xyz/docs/rules/hooks-extra-no-unnecessary-use-memo
 			"@eslint-react/hooks-extra/no-unnecessary-use-memo": ERROR,
-			// https://eslint-react.xyz/docs/rules/hooks-extra-no-useless-custom-hooks
-			"@eslint-react/hooks-extra/no-useless-custom-hooks": ERROR,
+			// https://eslint-react.xyz/docs/rules/hooks-extra-no-unnecessary-use-prefix
+			"@eslint-react/hooks-extra/no-unnecessary-use-prefix": ERROR,
 			// https://eslint-react.xyz/docs/rules/hooks-extra-prefer-use-state-lazy-initialization
 			"@eslint-react/hooks-extra/prefer-use-state-lazy-initialization": ERROR,
 
@@ -2118,6 +2144,8 @@ const eslintConfig = config(
 
 			// https://eslint-react.xyz/docs/rules/naming-convention-component-name
 			"@eslint-react/naming-convention/component-name": ERROR,
+			// https://eslint-react.xyz/docs/rules/naming-convention-context-name
+			"@eslint-react/naming-convention/context-name": ERROR,
 			// https://eslint-react.xyz/docs/rules/naming-convention-filename
 			"@eslint-react/naming-convention/filename": [
 				ERROR,
@@ -2146,12 +2174,7 @@ const eslintConfig = config(
 			*/
 
 			// https://github.com/ArnaudBarre/eslint-plugin-react-refresh?tab=readme-ov-file#usage
-			"react-refresh/only-export-components": [
-				ERROR,
-				{
-					allowConstantExport: true,
-				},
-			],
+			"react-refresh/only-export-components": ERROR,
 
 			/*
 				==================================================
@@ -2193,14 +2216,6 @@ const eslintConfig = config(
 			"@stylistic/jsx-function-call-newline": [
 				ERROR,
 				"always",
-			],
-			// https://eslint.style/rules/default/jsx-indent
-			"@stylistic/jsx-indent": [
-				ERROR,
-				"tab",
-				{
-					indentLogicalExpressions: true,
-				},
 			],
 			// https://eslint.style/rules/default/jsx-indent-props
 			"@stylistic/jsx-indent-props": [
@@ -2268,9 +2283,8 @@ const eslintConfig = config(
 			"stylelint.config.js",
 		],
 		rules: {
-			"no-autofix/capitalized-comments": DISABLED,
+			"capitalized-comments": DISABLED,
 			"sort-keys": DISABLED,
-			"import-x/no-named-as-default-member": DISABLED,
 		},
 	},
 );
