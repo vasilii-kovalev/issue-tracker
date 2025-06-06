@@ -1,7 +1,6 @@
 import {
 	type User as GeneratedUser,
-} from "@prisma/client";
-
+} from "@/db/prisma/client";
 import {
 	type PaginatedPage,
 	type PaginatedPageQueryParams,

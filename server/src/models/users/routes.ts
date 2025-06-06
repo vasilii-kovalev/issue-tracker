@@ -1,7 +1,4 @@
 import {
-	Prisma,
-} from "@prisma/client";
-import {
 	type FastifyPluginCallback,
 } from "fastify";
 
@@ -15,6 +12,12 @@ import {
 import {
 	prismaClient,
 } from "@/db/client";
+import {
+	PrismaClientKnownRequestError,
+} from "@/db/prisma/internal/prismaNamespace";
+import {
+	type UserWhereInput,
+} from "@/db/prisma/models";
 import {
 	COOKIE_JWT_TOKEN_NAME,
 } from "@/models/auth/constants";
@@ -146,7 +149,7 @@ const usersRoutes: FastifyPluginCallback = (
 					sortingString: sorting,
 				});
 
-				const filterParameters: Prisma.UserWhereInput = {
+				const filterParameters: UserWhereInput = {
 					name: {
 						contains: name,
 					},
@@ -461,7 +464,7 @@ const usersRoutes: FastifyPluginCallback = (
 					.send(formatSelectedUser(user));
 			} catch (error) {
 				if (
-					error instanceof Prisma.PrismaClientKnownRequestError
+					error instanceof PrismaClientKnownRequestError
 					/**
 					 * {@link https://www.prisma.io/docs/orm/reference/error-reference#p2002 P2002 error code description}
 					 */
@@ -649,7 +652,7 @@ const usersRoutes: FastifyPluginCallback = (
 					.status(ResponseStatus.OK)
 					.send(formatSelectedUser(user));
 			} catch (error) {
-				if (error instanceof Prisma.PrismaClientKnownRequestError) {
+				if (error instanceof PrismaClientKnownRequestError) {
 					if (
 						/**
 						 * {@link https://www.prisma.io/docs/orm/reference/error-reference#p2025 P2025 error code description}
@@ -807,7 +810,7 @@ const usersRoutes: FastifyPluginCallback = (
 					.send(formattedUser);
 			} catch (error) {
 				if (
-					error instanceof Prisma.PrismaClientKnownRequestError
+					error instanceof PrismaClientKnownRequestError
 					/**
 					 * {@link https://www.prisma.io/docs/orm/reference/error-reference#p2025 P2025 error code description}
 					 */

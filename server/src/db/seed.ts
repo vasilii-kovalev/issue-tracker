@@ -1,10 +1,5 @@
 /* eslint-disable no-console */
 import {
-	type Prisma,
-	PrismaClient,
-} from "@prisma/client";
-
-import {
 	PermissionId,
 } from "@/models/permissions/constants";
 import {
@@ -14,13 +9,20 @@ import {
 	hashUserPassword,
 } from "@/models/users/utilities/user-password";
 
-const USER_ROLE_CONNECT_INPUTS: Array<Prisma.RoleWhereUniqueInput> = [
+import {
+	PrismaClient,
+} from "./prisma/client";
+import {
+	type RoleWhereUniqueInput,
+} from "./prisma/models";
+
+const USER_ROLE_CONNECT_INPUTS: Array<RoleWhereUniqueInput> = [
 	{
 		id: RoleId.USER,
 	},
 ];
 
-const ADMIN_ROLE_CONNECT_INPUTS: Array<Prisma.RoleWhereUniqueInput> = [
+const ADMIN_ROLE_CONNECT_INPUTS: Array<RoleWhereUniqueInput> = [
 	{
 		id: RoleId.USER,
 	},

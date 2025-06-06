@@ -1,6 +1,6 @@
 import {
 	type Role as GeneratedRole,
-} from "@prisma/client";
+} from "@/db/prisma/client";
 
 import {
 	type RoleId,

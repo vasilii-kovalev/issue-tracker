@@ -1,7 +1,6 @@
 import {
-	Prisma,
-} from "@prisma/client";
-
+	SortOrder,
+} from "@/db/prisma/internal/prismaNamespace";
 import {
 	isUndefined,
 } from "@/utilities/is-undefined";
@@ -15,7 +14,7 @@ interface GetSortingParametersParams<Key> {
 	allowedFields: Array<Key>;
 }
 
-type SortingParameter<Key extends PropertyKey> = Partial<Record<Key, Prisma.SortOrder>>;
+type SortingParameter<Key extends PropertyKey> = Partial<Record<Key, SortOrder>>;
 
 const getSortingParameters = <Key extends PropertyKey>({
 	allowedFields,
@@ -39,8 +38,8 @@ const getSortingParameters = <Key extends PropertyKey>({
 				if (
 					allowedFields.includes(typedKey)
 					&& (
-						order === Prisma.SortOrder.asc
-						|| order === Prisma.SortOrder.desc
+						order === SortOrder.asc
+						|| order === SortOrder.desc
 					)
 				) {
 					const existingSortingParameter = sortingParametersCurrent.find((sortingParameter) => {

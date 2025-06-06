@@ -1,6 +1,6 @@
 import {
-	type Prisma,
-} from "@prisma/client";
+	type UserSelect,
+} from "@/db/prisma/models";
 
 import {
 	type User,
@@ -19,7 +19,7 @@ const USER_SELECTOR = {
 	updatedDate: true,
 } satisfies Required<
 	Pick<
-		Prisma.UserSelect,
+		UserSelect,
 		keyof User
 	>
 >;

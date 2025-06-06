@@ -1,12 +1,15 @@
 import js from "@eslint/js";
 import stylistic from "@stylistic/eslint-plugin";
+// eslint-disable-next-line import-x/no-namespace
+import * as tsResolver from "eslint-import-resolver-typescript";
 import importExportNewline from "eslint-plugin-import-export-newline";
-import importPlugin from "eslint-plugin-import-x";
-import noAutofix from "eslint-plugin-no-autofix";
+import {
+	flatConfigs as importConfigs,
+} from "eslint-plugin-import-x";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
 import {
 	config,
-	configs,
+	configs as typeScriptConfigs,
 } from "typescript-eslint";
 
 /**
@@ -51,39 +54,41 @@ const DISABLED = "off";
 
 const eslintConfig = config(
 	{
+		ignores: [
+			"src/db/prisma",
+		],
+	},
+	{
 		files: [
 			"**/*.{ts,tsx}",
 			"eslint.config.js",
 		],
 		extends: [
-			js.configs.recommended,
-			importPlugin.flatConfigs.typescript,
-			stylistic.configs["all-flat"],
+			// Unclear why it throws an error.
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+			js.configs.all,
+			importConfigs.typescript,
+			stylistic.configs.all,
+			typeScriptConfigs.recommendedTypeChecked,
 		],
 		settings: {
 			"import-x/resolver": {
-				typescript: {
-					project: [
-						"tsconfig.json",
-					],
-				},
+				name: "tsResolver",
+				resolver: tsResolver,
 			},
 		},
 		languageOptions: {
 			parserOptions: {
 				sourceType: "module",
 				ecmaVersion: "latest",
-				project: [
-					"tsconfig.json",
-				],
+				projectService: true,
 				tsconfigRootDir: import.meta.dirname,
 			},
 		},
 		plugins: {
-			// @ts-expect-error No types provided.
-			"no-autofix": noAutofix,
-			"import-x": importPlugin,
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 			"simple-import-sort": simpleImportSort,
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 			"import-export-newline": importExportNewline,
 		},
 		rules: {
@@ -268,16 +273,12 @@ const eslintConfig = config(
 			*/
 			camelcase: ERROR,
 			// https://eslint.org/docs/latest/rules/capitalized-comments
-			// The "no-autofix/capitalized-comments" rule takes care of it.
-			"capitalized-comments": DISABLED,
 			/*
 				Having this rule is useful for several reasons:
 				1. Enforces comments consistency
 				2. Highlights commented out code, which needs to be reviewed
-
-				Auto-fix is disabled to avoid changing the case of temporary commented code and breaking it.
 			*/
-			"no-autofix/capitalized-comments": [
+			"capitalized-comments": [
 				WARNING,
 				"always",
 				{
@@ -1335,8 +1336,7 @@ const eslintConfig = config(
 			"**/*.{ts,tsx}",
 		],
 		extends: [
-			...configs.all,
-			...configs.strictTypeChecked,
+			typeScriptConfigs.all,
 		],
 		rules: {
 			/*
@@ -1695,6 +1695,8 @@ const eslintConfig = config(
 			"@typescript-eslint/no-misused-new": ERROR,
 			// https://typescript-eslint.io/rules/no-misused-promises
 			"@typescript-eslint/no-misused-promises": ERROR,
+			// https://typescript-eslint.io/rules/no-misused-spread
+			"@typescript-eslint/no-misused-spread": ERROR,
 			// https://typescript-eslint.io/rules/no-mixed-enums
 			"@typescript-eslint/no-mixed-enums": ERROR,
 			// https://typescript-eslint.io/rules/no-namespace
@@ -1736,10 +1738,7 @@ const eslintConfig = config(
 			// https://typescript-eslint.io/rules/no-unnecessary-boolean-literal-compare
 			"@typescript-eslint/no-unnecessary-boolean-literal-compare": ERROR,
 			// https://typescript-eslint.io/rules/no-unnecessary-condition
-			// The "no-autofix/@typescript-eslint/no-unnecessary-condition" rule takes care of it.
-			"@typescript-eslint/no-unnecessary-condition": DISABLED,
-			// Auto-fix is disabled to avoid breaking the code by removing the optional chaining operator.
-			"no-autofix/@typescript-eslint/no-unnecessary-condition": ERROR,
+			"@typescript-eslint/no-unnecessary-condition": ERROR,
 			// https://typescript-eslint.io/rules/no-unnecessary-parameter-property-assignment
 			"@typescript-eslint/no-unnecessary-parameter-property-assignment": ERROR,
 			// https://typescript-eslint.io/rules/no-unnecessary-qualifier
@@ -1752,6 +1751,8 @@ const eslintConfig = config(
 			"@typescript-eslint/no-unnecessary-type-assertion": ERROR,
 			// https://typescript-eslint.io/rules/no-unnecessary-type-constraint
 			"@typescript-eslint/no-unnecessary-type-constraint": ERROR,
+			// https://typescript-eslint.io/rules/no-unnecessary-type-conversion
+			"@typescript-eslint/no-unnecessary-type-conversion": ERROR,
 			// https://typescript-eslint.io/rules/no-unnecessary-type-parameters
 			"@typescript-eslint/no-unnecessary-type-parameters": ERROR,
 			// https://typescript-eslint.io/rules/no-unsafe-argument
@@ -1882,10 +1883,7 @@ const eslintConfig = config(
 				"always",
 			],
 			// https://typescript-eslint.io/rules/strict-boolean-expressions
-			// The "no-autofix/@typescript-eslint/strict-boolean-expressions" rule takes care of it.
-			"@typescript-eslint/strict-boolean-expressions": DISABLED,
-			// Auto-fix is disabled to avoid breaking the code by adding the nullish check.
-			"no-autofix/@typescript-eslint/strict-boolean-expressions": [
+			"@typescript-eslint/strict-boolean-expressions": [
 				ERROR,
 				{
 					allowString: false,
@@ -1914,9 +1912,8 @@ const eslintConfig = config(
 			"eslint.config.js",
 		],
 		rules: {
-			"no-autofix/capitalized-comments": DISABLED,
+			"capitalized-comments": DISABLED,
 			"sort-keys": DISABLED,
-			"import-x/no-named-as-default-member": DISABLED,
 		},
 	},
 );
