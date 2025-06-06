@@ -24,7 +24,7 @@ All scripts are defined in [package.json](./package.json).
 * `dev` - starts the application
 * `build` - builds the application
 * `preview` - starts the built application
-* `analyze-bundle` - creates a static page with tree structure of the application's dependencies
+* `analyze:bundle` - creates a static page with tree structure of the application's dependencies
 * `check:types` - checks for TypeScript errors
 * `check:eslint` - checks for ESLint errors
 * `check:stylelint` - checks for Stylelint errors

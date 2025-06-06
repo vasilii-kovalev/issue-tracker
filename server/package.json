@@ -5,12 +5,12 @@
 	"type": "module",
 	"main": "./index.ts",
 	"scripts": {
-		"prisma:update": "bunx prisma db push",
-		"prisma:seed": "bunx prisma db seed",
-		"prisma:studio": "bunx prisma studio",
+		"prisma:update": "prisma db push",
+		"prisma:seed": "prisma db seed",
+		"prisma:studio": "prisma studio",
 		"start": "bun --hot ./index.ts",
-		"check:types": "bunx --bun tsc --noEmit",
-		"check:eslint": "bunx --bun eslint . --quiet"
+		"check:types": "tsc --noEmit",
+		"check:eslint": "eslint . --quiet"
 	},
 	"dependencies": {
 		"@fastify/cookie": "11.0.1",

@@ -5,13 +5,13 @@
 	"type": "module",
 	"main": "./src/main.tsx",
 	"scripts": {
-		"dev": "bunx --bun vite",
-		"build": "bunx --bun vite build",
-		"preview": "bunx --bun vite preview",
-		"analyze-bundle": "bunx --bun vite-bundle-visualizer",
-		"check:types": "bunx --bun tsc --noEmit --project tsconfig.app.json",
-		"check:eslint": "bunx --bun eslint . --quiet",
-		"check:stylelint": "bunx --bun stylelint \"src/**/*.css\" --quiet"
+		"dev": "vite",
+		"build": "vite build",
+		"preview": "vite preview",
+		"analyze:bundle": "vite-bundle-visualizer",
+		"check:types": "tsc --noEmit --project tsconfig.app.json",
+		"check:eslint": "eslint . --quiet",
+		"check:stylelint": "stylelint \"src/**/*.css\" --quiet"
 	},
 	"browserslist": [
 		"last 1 chrome version",
@@ -48,6 +48,7 @@
 		"typescript": "5.7.2",
 		"typescript-eslint": "8.19.0",
 		"vite": "6.0.6",
+		"vite-bundle-visualizer": "^1.2.1",
 		"vite-tsconfig-paths": "5.1.4"
 	}
 }
