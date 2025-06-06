@@ -14,6 +14,7 @@ Status: in progress.
 
 All scripts are defined in [package.json](./package.json).
 
+* `prisma:generate` - alias for [Prisma's `generate` script](https://www.prisma.io/docs/orm/reference/prisma-cli-reference#generate). Creates `PrismaClient` and types according to the [Prisma's schema](./prisma/schema.prisma)
 * `prisma:update` - alias for [Prisma's `db push` script](https://www.prisma.io/docs/orm/reference/prisma-cli-reference#db-push). Creates database (and tables in it) or updates it after changes in the [Prisma's schema](./prisma/schema.prisma)
 * `prisma:seed` - alias for [Prisma's `db seed` script](https://www.prisma.io/docs/orm/reference/prisma-cli-reference#db-seed). Removes existing data in the database and populates it with mock data using the [seed script](./src/db/seed.ts)
 * `prisma:studio` - alias for [Prisma's `studio` script](https://www.prisma.io/docs/orm/reference/prisma-cli-reference#studio-1). Opens [Prisma Studio](https://www.prisma.io/docs/orm/tools/prisma-studio) in the browser
@@ -29,8 +30,9 @@ To stop a running script, press <kbd>Ctrl + C</kbd> (for Windows, maybe differen
 
 1. [Install Bun](https://bun.sh/docs/installation)
 2. Run `bun install` command in the application to install dependencies
-3. Run `prisma:update` script
-4. Run `prisma:seed` script (if you need to create the mock data for the first time or replace the existing data)
+3. Run `prisma:generate` script
+4. Run `prisma:update` script
+5. Run `prisma:seed` script (if you need to create the mock data for the first time or replace the existing data)
 
 ## Starting the server
 
@@ -59,6 +61,7 @@ After starting the server, visit <http://localhost:5000/swagger>.
   * Connection to the database
 * [src](./src) folder:
   * [db](./src/db) - Prisma-related code
+    * [prisma](./src/db/prisma) - appears after running `prisma:generate` script. Contains Prisma Client and types according to the [Prisma's schema](./prisma/schema.prisma)
     * [client](./src/db/client.ts) - creates, configures and exports a Prisma client
     * [seed](./src/db/seed.ts) - a seed script, that populates the database with mock data. Used in `prisma:seed` script
   * [models](./src/models) - code, related to models of the project. Main models are described in the ["Models" document](../documentation/models.md), but the folder may also contain other "utility" models (like auth, errors, dates and so on) to create a place for related code. Each model may contain:

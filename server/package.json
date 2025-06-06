@@ -5,6 +5,7 @@
 	"type": "module",
 	"main": "./index.ts",
 	"scripts": {
+		"prisma:generate": "prisma generate",
 		"prisma:update": "prisma db push",
 		"prisma:seed": "prisma db seed",
 		"prisma:studio": "prisma studio",
@@ -30,6 +31,7 @@
 		"eslint-plugin-import-export-newline": "1.0.0",
 		"eslint-plugin-import-x": "4.15.1",
 		"eslint-plugin-simple-import-sort": "12.1.1",
+		"prisma": "6.9.0",
 		"typescript-eslint": "8.33.1"
 	},
 	"prisma": {
