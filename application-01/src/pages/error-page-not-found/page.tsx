@@ -1,15 +1,16 @@
 import {
 	type FC,
+	Fragment,
 } from "react";
 
-const ErrorPageNotFoundPage: FC = () => {
+const ErrorPageNotFound: FC = () => {
 	return (
-		<>
+		<Fragment>
 			Error page: not found.
-		</>
+		</Fragment>
 	);
 };
 
 export {
-	ErrorPageNotFoundPage,
+	ErrorPageNotFound,
 };

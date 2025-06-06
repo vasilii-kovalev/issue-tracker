@@ -1,6 +1,7 @@
 import {
 	type FC,
 	type FormEvent,
+	Fragment,
 } from "react";
 import {
 	useNavigate,
@@ -53,19 +54,14 @@ const SignInPage: FC = () => {
 			})
 				.unwrap();
 
-			void navigate(
-				`/users/${id}/dashboard`,
-				{
-					replace: true,
-				},
-			);
+			void navigate(`/users/${id}/dashboard`);
 		} catch (error) {
 			logError(error);
 		}
 	};
 
 	return (
-		<>
+		<Fragment>
 			<h1>
 				Login
 			</h1>
@@ -94,7 +90,7 @@ const SignInPage: FC = () => {
 					Login
 				</button>
 			</form>
-		</>
+		</Fragment>
 	);
 };
 

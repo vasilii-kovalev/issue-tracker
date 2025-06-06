@@ -14,7 +14,7 @@ import {
 	userApi,
 } from "@/models/user/api";
 import {
-	ErrorPageNotFoundPage,
+	ErrorPageNotFound,
 } from "@/pages/error-page-not-found/page";
 import {
 	isUndefined,
@@ -78,7 +78,7 @@ const Application: FC = () => {
 					/>
 
 					<Route
-						element={<ErrorPageNotFoundPage/>}
+						element={<ErrorPageNotFound/>}
 						path="*"
 					/>
 				</Routes>
