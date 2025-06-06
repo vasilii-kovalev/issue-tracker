@@ -12,5 +12,15 @@
 	"cssModules.pathAlias": {
 		"@/*": "../src/*"
 	},
+	"markdownlint.config": {
+		"MD024": {
+			"siblings_only": true
+		},
+		"no-inline-html": {
+			"allowed_elements": [
+				"kbd"
+			]
+		}
+	},
 	"typescript.tsdk": "node_modules\\typescript\\lib"
 }
