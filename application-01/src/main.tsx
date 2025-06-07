@@ -1,5 +1,5 @@
-import "ui/react/theme.css";
-import "./reset.css";
+import "ui/theme.css";
+import "ui/reset.css";
 
 import {
 	StrictMode,
