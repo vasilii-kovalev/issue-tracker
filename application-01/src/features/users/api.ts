@@ -1,6 +1,9 @@
 import {
-	getEndpointUrl,
-} from "@/models/api/utilities/get-endpoint-url";
+	type User,
+	type UserId,
+	type UserLogin,
+	type UserLoginResponse,
+} from "@/features/users/types";
 import {
 	api,
 	ApiTagType,
@@ -9,19 +12,40 @@ import {
 	isUndefined,
 } from "@/utilities/is-undefined";
 
-import {
-	type User,
-	type UserLogin,
-	type UserLoginResponse,
-} from "./types";
-
-const userApi = api.injectEndpoints({
+const usersApi = api.injectEndpoints({
 	endpoints: (build) => {
 		return {
 			getCurrentUser: build.query<
 				User,
 				undefined
 			>({
+				providesTags: (
+					result,
+					error,
+				) => {
+					if (
+						!isUndefined(error)
+						|| isUndefined(result)
+					) {
+						return [];
+					}
+
+					return [
+						ApiTagType.CURRENT_USER,
+					];
+				},
+				query: () => {
+					return {
+						method: "GET",
+						url: "users/current",
+					};
+				},
+			}),
+			getUserById: build.query<
+				User,
+				UserId
+			>({
+				keepUnusedDataFor: 0,
 				providesTags: (
 					result,
 					error,
@@ -40,14 +64,10 @@ const userApi = api.injectEndpoints({
 						},
 					];
 				},
-				query: () => {
-					const url = getEndpointUrl(
-						"/api/users/current",
-					);
-
+				query: (userId) => {
 					return {
 						method: "GET",
-						url: url.toString(),
+						url: `users/${userId}`,
 					};
 				},
 			}),
@@ -77,17 +97,13 @@ const userApi = api.injectEndpoints({
 					email,
 					password,
 				}) => {
-					const url = getEndpointUrl(
-						"/api/auth/login",
-					);
-
 					return {
 						body: {
 							email,
 							password,
 						},
 						method: "POST",
-						url: url.toString(),
+						url: "auth/login",
 					};
 				},
 			}),
@@ -96,5 +112,5 @@ const userApi = api.injectEndpoints({
 });
 
 export {
-	userApi,
+	usersApi,
 };

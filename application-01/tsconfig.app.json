@@ -17,9 +17,6 @@
 			"@/*": [
 				"./src/*"
 			],
-			"ui/*": [
-				"./src/ui/*"
-			],
 		},
 		"skipLibCheck": true,
 		"strict": true,

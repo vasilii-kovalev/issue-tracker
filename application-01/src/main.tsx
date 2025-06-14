@@ -1,40 +1,23 @@
-import "ui/theme.css";
-import "ui/reset.css";
+import "@/styles/reset.css";
+import "@/styles/theme.css";
 
-import {
-	StrictMode,
-} from "react";
 import {
 	createRoot,
 } from "react-dom/client";
-import {
-	Provider,
-} from "react-redux";
-import {
-	BrowserRouter,
-} from "react-router";
 
 import {
 	Application,
 } from "@/application/application";
 import {
-	store,
-} from "@/store/store";
+	isNull,
+} from "@/utilities/is-null";
 
 const rootElement = document.getElementById("root");
 
-if (rootElement !== null) {
+if (!isNull(rootElement)) {
 	const root = createRoot(rootElement);
 
 	root.render(
-		<StrictMode>
-			<BrowserRouter>
-				<Provider
-					store={store}
-				>
-					<Application/>
-				</Provider>
-			</BrowserRouter>
-		</StrictMode>,
+		<Application/>,
 	);
 }

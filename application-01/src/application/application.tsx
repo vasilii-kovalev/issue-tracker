@@ -1,89 +1,44 @@
 import {
 	type FC,
-	lazy,
-	Suspense,
+	StrictMode,
 } from "react";
 import {
-	Navigate,
-	Outlet,
-	Route,
-	Routes,
+	ErrorBoundary,
+} from "react-error-boundary";
+import {
+	Provider,
+} from "react-redux";
+import {
+	BrowserRouter,
 } from "react-router";
 
 import {
-	userApi,
-} from "@/models/user/api";
+	ErrorUnknownPage,
+} from "@/pages/error-unknown/page";
 import {
-	ErrorPageNotFound,
-} from "@/pages/error-page-not-found/page";
+	ApplicationRoutes,
+} from "@/routes/routes";
 import {
-	isUndefined,
-} from "@/utilities/is-undefined";
-
-const UserDashboard = lazy(async () => {
-	return await import("@/pages/user-dashboard/page");
-});
-
-const LoginPage = lazy(async () => {
-	return await import("@/pages/login/page");
-});
-
-const ProtectedRoute: FC = () => {
-	const {
-		data,
-		isError,
-		isFetching,
-	} = userApi.endpoints.getCurrentUser.useQueryState(undefined);
-
-	if (isFetching) {
-		return null;
-	}
-
-	if (
-		isError
-		|| isUndefined(data)
-	) {
-		return (
-			<Navigate
-				replace={true}
-				to="/login"
-			/>
-		);
-	}
-
-	return <Outlet/>;
-};
+	store,
+} from "@/store/store";
 
 const Application: FC = () => {
-	userApi.endpoints.getCurrentUser.useQuery(undefined);
-
 	return (
-		<main>
-			<Suspense
-				fallback={null}
-			>
-				<Routes>
-					<Route
-						element={<ProtectedRoute/>}
-					>
-						<Route
-							element={<UserDashboard/>}
-							path="/users/:userId/dashboard"
-						/>
-					</Route>
-
-					<Route
-						element={<LoginPage/>}
-						path="/login"
-					/>
-
-					<Route
-						element={<ErrorPageNotFound/>}
-						path="*"
-					/>
-				</Routes>
-			</Suspense>
-		</main>
+		<StrictMode>
+			<BrowserRouter>
+				<Provider
+					store={store}
+				>
+					<main>
+						<ErrorBoundary
+							fallback={<ErrorUnknownPage/>}
+						>
+							<ApplicationRoutes/>
+						</ErrorBoundary>
+					</main>
+				</Provider>
+			</BrowserRouter>
+		</StrictMode>
 	);
 };
 

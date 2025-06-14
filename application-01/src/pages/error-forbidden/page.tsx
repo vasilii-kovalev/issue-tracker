@@ -3,14 +3,14 @@ import {
 	Fragment,
 } from "react";
 
-const ErrorPageNotFound: FC = () => {
+const ErrorForbiddenPage: FC = () => {
 	return (
 		<Fragment>
-			Error page: not found.
+			Error page: forbidden.
 		</Fragment>
 	);
 };
 
 export {
-	ErrorPageNotFound,
+	ErrorForbiddenPage,
 };

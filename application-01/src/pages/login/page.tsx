@@ -4,12 +4,14 @@ import {
 	Fragment,
 } from "react";
 import {
+	type Location,
+	useLocation,
 	useNavigate,
 } from "react-router";
 
 import {
-	userApi,
-} from "@/models/user/api";
+	usersApi,
+} from "@/features/users/api";
 import {
 	isString,
 } from "@/utilities/is-string";
@@ -17,24 +19,32 @@ import {
 	logError,
 } from "@/utilities/log-error";
 
-const SignInPage: FC = () => {
+import {
+	type LocationState,
+} from "./types";
+
+const LoginPage: FC = () => {
+	const location = useLocation() as Location<LocationState | null>;
 	const navigate = useNavigate();
 
+	const [
+		getCurrentUser,
+	] = usersApi.endpoints.getCurrentUser.useLazyQuery();
 	const [
 		loginUser,
 		{
 			isLoading,
 		},
-	] = userApi.endpoints.loginUser.useMutation();
+	] = usersApi.endpoints.loginUser.useMutation();
 
-	const submitForm = async (
+	const handleSubmitForm = async (
 		event: FormEvent<HTMLFormElement>,
 	): Promise<void> => {
 		event.preventDefault();
 
-		const formData = new FormData(event.target as HTMLFormElement);
-
 		try {
+			const formData = new FormData(event.target as HTMLFormElement);
+
 			const email = formData.get("email");
 			const password = formData.get("password");
 
@@ -46,15 +56,20 @@ const SignInPage: FC = () => {
 				return;
 			}
 
-			const {
-				id,
-			} = await loginUser({
+			await loginUser({
 				email,
 				password,
 			})
 				.unwrap();
 
-			void navigate(`/users/${id}/dashboard`);
+			await getCurrentUser(undefined);
+
+			void navigate(
+				location.state?.from.pathname ?? "/",
+				{
+					replace: true,
+				},
+			);
 		} catch (error) {
 			logError(error);
 		}
@@ -68,7 +83,7 @@ const SignInPage: FC = () => {
 
 			<form
 				onSubmit={(event) => {
-					void submitForm(event);
+					void handleSubmitForm(event);
 				}}
 			>
 				<input
@@ -94,4 +109,4 @@ const SignInPage: FC = () => {
 	);
 };
 
-export default SignInPage;
+export default LoginPage;

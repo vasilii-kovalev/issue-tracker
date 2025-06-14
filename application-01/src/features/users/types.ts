@@ -1,12 +1,12 @@
 import {
 	type DateString,
-} from "@/models/dates-and-time/types";
+} from "@/features/dates-and-time/types";
 import {
 	type PaginatedPage,
-} from "@/models/pagination/types";
+} from "@/features/pagination/types";
 import {
 	type RoleId,
-} from "@/models/roles/constants";
+} from "@/features/roles/constants";
 
 interface UserFull {
 	createdDate: DateString;
@@ -17,6 +17,8 @@ interface UserFull {
 	password: string;
 	updatedDate: DateString;
 }
+
+type UserId = UserFull["id"];
 
 type User = Pick<
 	UserFull,
@@ -43,6 +45,7 @@ type UsersPaginatedPage = PaginatedPage<User>;
 
 export type {
 	User,
+	UserId,
 	UserLogin,
 	UserLoginResponse,
 	UsersPaginatedPage,

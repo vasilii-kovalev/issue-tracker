@@ -8,5 +8,5 @@ This document contains information about resources, that helped (provided inform
 
 ## Router
 
-* [React Router 6: Private Routes (alias Protected Routes)](https://www.robinwieruch.de/react-router-private-routes)
-* [React Router 6: Redirect](https://www.robinwieruch.de/react-router-redirect)
+* [React Router 7: Private Routes (alias Protected Routes)](https://www.robinwieruch.de/react-router-private-routes)
+* [React Router 7: Redirect](https://www.robinwieruch.de/react-router-redirect)
