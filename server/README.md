@@ -51,7 +51,7 @@ Stop the server in the same command line it was started (<kbd>Ctrl + C</kbd> for
 
 After starting the server, visit <http://localhost:5000/swagger>.
 
-## Code structure
+## Folder structure
 
 * [index.ts](./index.ts) - the application's entry points. It contains the following:
   * Server initialization and launch
