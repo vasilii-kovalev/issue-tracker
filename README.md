@@ -60,4 +60,5 @@ Status: in progress.
 * [Redux Toolkit](https://redux-toolkit.js.org)
 * [RTK Query](https://redux-toolkit.js.org/rtk-query/overview)
 * [TypeScript](https://www.typescriptlang.org)
+* [UUI](https://uui.epam.com)
 * [Vite](https://vite.dev)

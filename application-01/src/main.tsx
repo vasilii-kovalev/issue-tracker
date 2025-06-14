@@ -1,5 +1,7 @@
 import "@/styles/reset.css";
-import "@/styles/theme.css";
+import "@epam/uui-components/styles.css";
+import "@epam/uui/styles.css";
+import "@epam/loveship/styles.css";
 
 import {
 	createRoot,

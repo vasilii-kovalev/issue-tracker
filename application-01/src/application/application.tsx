@@ -1,4 +1,16 @@
 import {
+	Snackbar,
+} from "@epam/loveship";
+import {
+	Modals,
+} from "@epam/uui-components";
+import {
+	DragGhost,
+	type HistoryAdaptedRouter,
+	useUuiServices,
+	UuiContext,
+} from "@epam/uui-core";
+import {
 	type FC,
 	StrictMode,
 } from "react";
@@ -13,6 +25,9 @@ import {
 } from "react-router";
 
 import {
+	PageSpinner,
+} from "@/components/page-spinner/page-spinner";
+import {
 	ErrorUnknownPage,
 } from "@/pages/error-unknown/page";
 import {
@@ -21,23 +36,44 @@ import {
 import {
 	store,
 } from "@/store/store";
+import {
+	emptyFunction,
+} from "@/utilities/empty-function";
 
 const Application: FC = () => {
+	const {
+		services,
+	} = useUuiServices({
+		router: {
+			block: emptyFunction,
+			listen: emptyFunction,
+		} as unknown as HistoryAdaptedRouter,
+	});
+
 	return (
 		<StrictMode>
-			<BrowserRouter>
-				<Provider
-					store={store}
-				>
-					<main>
-						<ErrorBoundary
-							fallback={<ErrorUnknownPage/>}
-						>
-							<ApplicationRoutes/>
-						</ErrorBoundary>
-					</main>
-				</Provider>
-			</BrowserRouter>
+			<UuiContext
+				value={services}
+			>
+				<BrowserRouter>
+					<Provider
+						store={store}
+					>
+						<main>
+							<ErrorBoundary
+								fallback={<ErrorUnknownPage/>}
+							>
+								<ApplicationRoutes/>
+								<PageSpinner/>
+							</ErrorBoundary>
+						</main>
+					</Provider>
+				</BrowserRouter>
+
+				<Snackbar/>
+				<Modals/>
+				<DragGhost/>
+			</UuiContext>
 		</StrictMode>
 	);
 };

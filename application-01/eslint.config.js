@@ -2279,6 +2279,22 @@ const eslintConfig = config(
 	},
 	{
 		files: [
+			"**/slice.ts",
+		],
+		rules: {
+			"no-param-reassign": [
+				ERROR,
+				{
+					ignorePropertyModificationsFor: [
+						"state",
+					],
+					props: true,
+				},
+			],
+		},
+	},
+	{
+		files: [
 			"eslint.config.js",
 			"stylelint.config.js",
 		],

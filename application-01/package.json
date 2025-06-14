@@ -18,6 +18,11 @@
 		"last 1 firefox version"
 	],
 	"dependencies": {
+		"@epam/assets": "6.1.2",
+		"@epam/loveship": "6.1.2",
+		"@epam/uui": "6.1.2",
+		"@epam/uui-components": "6.1.2",
+		"@epam/uui-core": "6.1.2",
 		"@reduxjs/toolkit": "2.8.2",
 		"classnames": "2.5.1",
 		"react": "19.1.0",
@@ -48,6 +53,7 @@
 		"typescript-eslint": "8.33.1",
 		"vite": "6.3.5",
 		"vite-bundle-visualizer": "1.2.1",
+		"vite-plugin-svgr": "4.3.0",
 		"vite-tsconfig-paths": "5.1.4"
 	}
 }

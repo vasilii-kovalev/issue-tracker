@@ -1,0 +1,10 @@
+.page {
+	align-items: center;
+	justify-content: center;
+}
+
+.pageContent {
+	max-width: 80ch;
+	padding: 24px;
+	width: 100%;
+}

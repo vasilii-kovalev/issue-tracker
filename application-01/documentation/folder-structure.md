@@ -6,19 +6,19 @@ src/  # Application source code folder
     application.module.css
 
   components/  # Shared components
-    auth-form/
+    login-form/
       tests/
-        auth-form.test.tsx
+        login-form.test.tsx
       hooks/  # Component-specific React Hooks
         tests/
-          use-auth-form.test.ts
-        use-auth-form.ts
+          use-login-form.test.ts
+        use-login-form.ts
       utilities/
         tests/
           validate-email.test.ts
         validate-email.ts
-      auth-form.tsx
-      auth-form.module.css
+      login-form.tsx
+      login-form.module.css
       constants.ts
       types.ts
 

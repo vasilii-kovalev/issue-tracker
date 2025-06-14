@@ -3,6 +3,10 @@ import {
 } from "@reduxjs/toolkit";
 
 import {
+	pageSpinnerReducer,
+} from "@/features/page-spinner/store/slice";
+
+import {
 	api,
 } from "../api";
 
@@ -14,6 +18,8 @@ const getStore = () => {
 			return getDefaultMiddleware().concat(api.middleware);
 		},
 		reducer: {
+			pageSpinnerReducer,
+
 			[api.reducerPath]: api.reducer,
 		},
 	});
