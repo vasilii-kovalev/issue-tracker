@@ -1,13 +1,12 @@
 import classNames from "classnames";
 import {
-	type DetailedHTMLProps,
+	type ComponentProps,
 	type FC,
-	type HTMLAttributes,
 } from "react";
 
 import classes from "./page.module.css";
 
-type PageProps = DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
+type PageProps = ComponentProps<"div">;
 
 const Page: FC<PageProps> = ({
 	className,
