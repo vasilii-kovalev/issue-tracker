@@ -24,10 +24,6 @@ src/  # Application source code folder
 
   features/
     users/
-      hooks/  # Feature-specific React Hooks
-        tests/
-          use-is-authorized-user.test.ts
-        use-is-authorized-user.ts
       tests/
         utilities/
           get-user.ts
@@ -52,7 +48,9 @@ src/  # Application source code folder
 
   hooks/  # Shared React Hooks
     tests/
+      use-login-form.test.ts
       use-previous.test.ts
+    use-login-form.ts
     use-previous.ts  # General purpose React Hooks
 
   routes/  # Routes data

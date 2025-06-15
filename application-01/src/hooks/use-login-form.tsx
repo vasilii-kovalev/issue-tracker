@@ -15,15 +15,14 @@ import {
 	getErrorMessage,
 } from "@/features/api/utilities/get-error-message";
 import {
-	logError,
-} from "@/utilities/log-error";
-
-import {
 	usersApi,
-} from "../api";
+} from "@/features/users/api";
 import {
 	type UserLogin,
-} from "../types";
+} from "@/features/users/types";
+import {
+	logError,
+} from "@/utilities/log-error";
 
 interface UseLoginFormParams {
 	onError?: () => void;

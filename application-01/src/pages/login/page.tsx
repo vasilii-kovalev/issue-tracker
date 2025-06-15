@@ -22,7 +22,7 @@ import {
 } from "@/components/page/page";
 import {
 	useLoginForm,
-} from "@/features/users/hooks/use-login-form";
+} from "@/hooks/use-login-form";
 
 import classes from "./page.module.css";
 import {
