@@ -1,6 +1,6 @@
 import {
 	type RootState,
-} from "@/store/store";
+} from "@/store/types";
 
 import {
 	type PageSpinnerState,

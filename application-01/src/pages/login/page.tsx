@@ -1,19 +1,13 @@
-import CircleLoaderIcon from "@epam/assets/icons/loaders/circle-loader.svg?react";
 import {
-	Button,
 	FlexRow,
-	FlexSpacer,
-	LabeledInput,
 	Panel,
 	Text,
-	TextInput,
 } from "@epam/loveship";
 import {
 	type FC,
 } from "react";
 import {
-	type Location,
-	useLocation,
+	Navigate,
 	useNavigate,
 } from "react-router";
 
@@ -21,33 +15,32 @@ import {
 	Page,
 } from "@/components/page/page";
 import {
-	useLoginForm,
-} from "@/hooks/use-login-form";
-
-import classes from "./page.module.css";
+	usersApi,
+} from "@/features/users/api";
 import {
-	type LocationState,
-} from "./types";
+	useLoginPageRedirectPathname,
+} from "@/routes/hooks/use-params";
+import {
+	isUndefined,
+} from "@/utilities/is-undefined";
+
+import {
+	LoginForm,
+} from "./components/login-form";
+import classes from "./page.module.css";
 
 const LoginPage: FC = () => {
-	const location = useLocation() as Location<LocationState | null>;
+	const redirectPathname = useLoginPageRedirectPathname();
 	const navigate = useNavigate();
 
-	const {
-		// eslint-disable-next-line @typescript-eslint/unbound-method
-		save,
-		lens,
-		isInProgress,
-	} = useLoginForm({
-		onSuccess: () => {
-			void navigate(
-				location.state?.from.pathname ?? "/",
-				{
-					replace: true,
-				},
-			);
-		},
-	});
+	const onSuccess = (): void => {
+		void navigate(
+			redirectPathname,
+			{
+				replace: true,
+			},
+		);
+	};
 
 	return (
 		<Page
@@ -60,70 +53,60 @@ const LoginPage: FC = () => {
 				<FlexRow
 					justifyContent="center"
 				>
-					<Text>
-						<h1>
+					<Text
+						color="primary"
+					>
+						<h1
+							id="page-title"
+						>
 							Login
 						</h1>
 					</Text>
 				</FlexRow>
 
-				<FlexRow
-					vPadding="24"
-				>
-					<LabeledInput
-						htmlFor="email"
-						label="Email"
-						size="48"
-						{...lens.prop("email").toProps()}
-					>
-						<TextInput
-							id="email"
-							placeholder="Email"
-							size="48"
-							{...lens.prop("email").toProps()}
-						/>
-					</LabeledInput>
-				</FlexRow>
-
-				<FlexRow
-					vPadding="24"
-				>
-					<LabeledInput
-						htmlFor="password"
-						label="Password"
-						size="48"
-						{...lens.prop("email").toProps()}
-					>
-						<TextInput
-							id="password"
-							placeholder="Password"
-							size="48"
-							type="password"
-							{...lens.prop("password").toProps()}
-						/>
-					</LabeledInput>
-				</FlexRow>
-
-				<FlexRow
-					vPadding="24"
-				>
-					<FlexSpacer/>
-
-					<Button
-						caption="Login"
-						icon={
-							isInProgress
-								? CircleLoaderIcon
-								: undefined
-						}
-						isDisabled={isInProgress}
-						onClick={save}
-						size="48"
-					/>
-				</FlexRow>
+				<LoginForm
+					onSuccess={onSuccess}
+				/>
 			</Panel>
 		</Page>
 	);
 };
 
-export default LoginPage;
+const LoginPageWithRedirect: FC = () => {
+	const redirectPathname = useLoginPageRedirectPathname();
+
+	const {
+		data,
+		isUninitialized,
+		isFetching,
+		isLoading,
+		error,
+	} = usersApi.endpoints.getCurrentUser.useQuery(undefined);
+
+	if (
+		isUninitialized
+		|| isLoading
+		|| isFetching
+	) {
+		return null;
+	}
+
+	if (
+		isUndefined(error)
+		&& !isUndefined(data)
+	) {
+		// Navigating to the main page if the user is already logged in,
+		return (
+			<Navigate
+				replace={true}
+				to={redirectPathname}
+			/>
+		);
+	}
+
+	return (
+		<LoginPage/>
+	);
+};
+
+export default LoginPageWithRedirect;

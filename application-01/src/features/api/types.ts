@@ -1,11 +1,13 @@
 import {
-	type ErrorCode,
-} from "./constants";
+	type InferOutput,
+} from "valibot";
 
-interface ErrorResponse {
-	errorCodes: Array<ErrorCode>;
-}
+import {
+	type ErrorResponseSchema,
+} from "./schemas";
 
-export type {
-	ErrorResponse,
+type ErrorResponse = InferOutput<typeof ErrorResponseSchema>;
+
+export {
+	type ErrorResponse,
 };

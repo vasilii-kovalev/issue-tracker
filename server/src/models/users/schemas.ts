@@ -46,6 +46,7 @@ const UserFullSchema = {
 		},
 		password: {
 			format: "password",
+			maxLength: 50,
 			minLength: 3,
 			type: "string",
 		},

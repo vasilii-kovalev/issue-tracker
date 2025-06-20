@@ -1,52 +1,30 @@
 import {
-	type DateString,
-} from "@/features/dates-and-time/types";
+	type InferOutput,
+} from "valibot";
+
 import {
-	type PaginatedPage,
-} from "@/features/pagination/types";
-import {
-	type RoleId,
-} from "@/features/roles/constants";
+	type UserIdSchema,
+	type UserLoginResponseSchema,
+	type UserLoginSchema,
+	type UserSchema,
+	type UsersPaginatedPageSchema,
+} from "./schemas";
 
-interface UserFull {
-	createdDate: DateString;
-	email: string;
-	id: string;
-	name: string;
-	roles: Array<RoleId>;
-	password: string;
-	updatedDate: DateString;
-}
+type UserId = InferOutput<typeof UserIdSchema>;
 
-type UserId = UserFull["id"];
+// https://github.com/fabian-hiller/valibot/issues/1208#issuecomment-2978650087
+interface User extends InferOutput<typeof UserSchema> {}
 
-type User = Pick<
-	UserFull,
-	| "createdDate"
-	| "email"
-	| "id"
-	| "name"
-	| "roles"
-	| "updatedDate"
->;
+type UserLogin = InferOutput<typeof UserLoginSchema>;
 
-type UserLogin = Pick<
-	UserFull,
-	| "email"
-	| "password"
->;
+type UserLoginResponse = InferOutput<typeof UserLoginResponseSchema>;
 
-type UserLoginResponse = Pick<
-	UserFull,
-	| "id"
->;
+type UsersPaginatedPage = InferOutput<typeof UsersPaginatedPageSchema>;
 
-type UsersPaginatedPage = PaginatedPage<User>;
-
-export type {
-	User,
-	UserId,
-	UserLogin,
-	UserLoginResponse,
-	UsersPaginatedPage,
+export {
+	type User,
+	type UserId,
+	type UserLogin,
+	type UserLoginResponse,
+	type UsersPaginatedPage,
 };

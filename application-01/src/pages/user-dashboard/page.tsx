@@ -4,7 +4,6 @@ import {
 } from "react";
 import {
 	useNavigate,
-	useParams,
 } from "react-router";
 
 import {
@@ -13,6 +12,9 @@ import {
 import {
 	usersApi,
 } from "@/features/users/api";
+import {
+	useUserDashboardPageParams,
+} from "@/routes/hooks/use-params";
 import {
 	isUndefined,
 } from "@/utilities/is-undefined";
@@ -23,14 +25,11 @@ import {
 import {
 	ErrorUnknownPage,
 } from "../error-unknown/page";
-import {
-	type PageParams,
-} from "./types";
 
 const UserDashboardPage: FC = () => {
 	const {
-		userId = "",
-	} = useParams<PageParams>();
+		userId,
+	} = useUserDashboardPageParams();
 	const navigate = useNavigate();
 
 	const {

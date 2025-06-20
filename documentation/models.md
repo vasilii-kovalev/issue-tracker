@@ -154,6 +154,7 @@ A hashed version of user's password.
 * **Required**: Yes
 * **Unique**: No
 * **Min length**: 3
+* **Max length**: 50
 
 #### `updatedDate`
 

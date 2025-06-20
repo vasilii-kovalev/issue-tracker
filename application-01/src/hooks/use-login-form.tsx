@@ -10,6 +10,9 @@ import {
 import {
 	type FetchBaseQueryError,
 } from "@reduxjs/toolkit/query/react";
+import {
+	safeParse,
+} from "valibot";
 
 import {
 	getErrorMessage,
@@ -18,8 +21,14 @@ import {
 	usersApi,
 } from "@/features/users/api";
 import {
+	UserLoginSchema,
+} from "@/features/users/schemas";
+import {
 	type UserLogin,
 } from "@/features/users/types";
+import {
+	isUndefined,
+} from "@/utilities/is-undefined";
 import {
 	logError,
 } from "@/utilities/log-error";
@@ -52,9 +61,53 @@ const useLoginForm = ({
 				props: {
 					email: {
 						isRequired: true,
+						validators: [
+							(value) => {
+								const {
+									issues,
+								} = safeParse(
+									UserLoginSchema.entries.email,
+									value,
+								);
+
+								const errorMessage = issues?.at(0)?.message;
+
+								if (isUndefined(errorMessage)) {
+									return [
+										false,
+									];
+								}
+
+								return [
+									errorMessage,
+								];
+							},
+						],
 					},
 					password: {
 						isRequired: true,
+						validators: [
+							(value) => {
+								const {
+									issues,
+								} = safeParse(
+									UserLoginSchema.entries.password,
+									value,
+								);
+
+								const errorMessage = issues?.at(0)?.message;
+
+								if (isUndefined(errorMessage)) {
+									return [
+										false,
+									];
+								}
+
+								return [
+									errorMessage,
+								];
+							},
+						],
 					},
 				},
 			};
@@ -73,7 +126,9 @@ const useLoginForm = ({
 							<ErrorNotification
 								{...props}
 							>
-								<Text>
+								<Text
+									color="primary"
+								>
 									{errorMessage}
 								</Text>
 							</ErrorNotification>
