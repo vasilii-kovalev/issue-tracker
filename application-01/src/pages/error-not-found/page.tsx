@@ -3,10 +3,14 @@ import {
 	Fragment,
 } from "react";
 
+import {
+	PageCode,
+} from "./i18n";
+
 const ErrorNotFoundPage: FC = () => {
 	return (
 		<Fragment>
-			Error page: not found.
+			{PageCode.PAGE_HEADER}
 		</Fragment>
 	);
 };

@@ -3,10 +3,14 @@ import {
 	Fragment,
 } from "react";
 
+import {
+	PageCode,
+} from "./i18n";
+
 const ErrorUnknownPage: FC = () => {
 	return (
 		<Fragment>
-			Error page: unknown error.
+			{PageCode.PAGE_HEADER}
 		</Fragment>
 	);
 };
