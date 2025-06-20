@@ -16,6 +16,9 @@ import {
 } from "@/features/dates-and-time/schemas";
 
 import {
+	ValidationErrorCode,
+} from "../i18n/constants";
+import {
 	getPaginatedPageSchema,
 } from "../pagination/schemas";
 import {
@@ -26,26 +29,37 @@ const UserFullSchema = object({
 	createdDate: DateStringSchema,
 	email: pipe(
 		string(),
-		nonEmpty(),
-		email(),
+		nonEmpty(ValidationErrorCode.USER_VALIDATION_EMAIL_EMPTY),
+		email(ValidationErrorCode.USER_VALIDATION_EMAIL_INCORRECT),
 		flavor("user-email"),
 	),
 	id: pipe(
 		string(),
-		nonEmpty(),
 		flavor("user-id"),
 	),
 	name: pipe(
 		string(),
-		nonEmpty(),
-		minLength(1),
-		maxLength(100),
+		nonEmpty(ValidationErrorCode.USER_VALIDATION_NAME_EMPTY),
+		minLength(
+			1,
+			ValidationErrorCode.USER_VALIDATION_NAME_LENGTH_MIN,
+		),
+		maxLength(
+			100,
+			ValidationErrorCode.USER_VALIDATION_NAME_LENGTH_MAX,
+		),
 	),
 	password: pipe(
 		string(),
-		nonEmpty(),
-		minLength(3),
-		maxLength(50),
+		nonEmpty(ValidationErrorCode.USER_VALIDATION_PASSWORD_EMPTY),
+		minLength(
+			3,
+			ValidationErrorCode.USER_VALIDATION_PASSWORD_LENGTH_MIN,
+		),
+		maxLength(
+			50,
+			ValidationErrorCode.USER_VALIDATION_PASSWORD_LENGTH_MAX,
+		),
 	),
 	roles: pipe(
 		array(RoleIdSchema),
