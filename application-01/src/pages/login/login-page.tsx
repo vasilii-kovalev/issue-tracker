@@ -27,7 +27,10 @@ import {
 import {
 	LoginForm,
 } from "./components/login-form";
-import classes from "./page.module.css";
+import {
+	PageCode,
+} from "./i18n";
+import classes from "./login-page.module.css";
 
 const LoginPage: FC = () => {
 	const redirectPathname = useLoginPageRedirectPathname();
@@ -59,7 +62,7 @@ const LoginPage: FC = () => {
 						<h1
 							id="page-title"
 						>
-							Login
+							{PageCode.PAGE_HEADER}
 						</h1>
 					</Text>
 				</FlexRow>

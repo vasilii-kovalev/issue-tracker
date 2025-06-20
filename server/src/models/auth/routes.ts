@@ -13,7 +13,7 @@ import {
 	prismaClient,
 } from "@/db/client";
 import {
-	ErrorCode,
+	ResponseErrorCode,
 } from "@/models/errors/constants";
 import {
 	ResponseWithStatusBadRequestSchema,
@@ -72,7 +72,7 @@ const authRoutes: FastifyPluginCallback = (
 					[ResponseStatus.BAD_REQUEST]: {
 						...ResponseWithStatusBadRequestSchema,
 						description: `Validation errors (schema) or provided password doesn't match the user's password.
-						In the latter case, \`${ErrorCode.USER_VALIDATION_PASSWORD_INCORRECT}\` code is provided in the
+						In the latter case, \`${ResponseErrorCode.USER_VALIDATION_PASSWORD_INCORRECT}\` code is provided in the
 						\`errorCodes\` array. Otherwise the array is empty.`,
 					},
 					[ResponseStatus.NOT_FOUND]: {
@@ -125,7 +125,7 @@ const authRoutes: FastifyPluginCallback = (
 						.status(ResponseStatus.NOT_FOUND)
 						.send({
 							errorCodes: [
-								ErrorCode.USER_NOT_FOUND_BY_EMAIL,
+								ResponseErrorCode.USER_NOT_FOUND_BY_EMAIL,
 							],
 						});
 				}
@@ -145,7 +145,7 @@ const authRoutes: FastifyPluginCallback = (
 						.status(ResponseStatus.BAD_REQUEST)
 						.send({
 							errorCodes: [
-								ErrorCode.USER_VALIDATION_PASSWORD_INCORRECT,
+								ResponseErrorCode.USER_VALIDATION_PASSWORD_INCORRECT,
 							],
 						});
 				}

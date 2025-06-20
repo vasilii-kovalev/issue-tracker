@@ -5,15 +5,17 @@ enum ResponseStatus {
 	UNAUTHORIZED = 401,
 	FORBIDDEN = 403,
 	NOT_FOUND = 404,
-	CONFLICT = 409,
-
-	// Server error responses.
-	INTERNAL_SERVER_ERROR = 500,
 }
 
-enum ErrorCode {
+enum TechnicalErrorCode {
+	BAD_REQUEST = "technical.badRequest",
+	SERVER_ERROR = "technical.serverError",
+	NO_INTERNET_CONNECTION = "technical.noInternetConnection",
+}
+
+enum ResponseErrorCode {
 	// Users.
-	USER_ACCESS_FORBIDDEN = "user.access.forbidden",
+	USER_ACCESS_FORBIDDEN = "user.accessForbidden",
 	USER_NOT_FOUND_BY_EMAIL = "user.notFound.byEmail",
 	USER_NOT_FOUND_BY_ID = "user.notFound.byId",
 	USER_VALIDATION_EMAIL_ALREADY_EXISTS = "user.validation.email.alreadyExists",
@@ -22,6 +24,7 @@ enum ErrorCode {
 }
 
 export {
-	ErrorCode,
+	ResponseErrorCode,
 	ResponseStatus,
+	TechnicalErrorCode,
 };

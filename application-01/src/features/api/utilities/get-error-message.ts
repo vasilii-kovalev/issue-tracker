@@ -7,6 +7,10 @@ import {
 } from "@/utilities/is-undefined";
 
 import {
+	ResponseStatus,
+	TechnicalErrorCode,
+} from "../constants";
+import {
 	type ErrorResponse,
 } from "../types";
 
@@ -25,11 +29,15 @@ const getErrorMessage = (
 			return firstErrorCode;
 		}
 
-		return "The server is currently unavailable. Please try again later.";
+		if (error.status === ResponseStatus.BAD_REQUEST) {
+			return TechnicalErrorCode.BAD_REQUEST;
+		}
+
+		return TechnicalErrorCode.SERVER_ERROR;
 	}
 
 	if (error.status === "FETCH_ERROR") {
-		return "No internet connection detected. Please reconnect and try again.";
+		return TechnicalErrorCode.NO_INTERNET_CONNECTION;
 	}
 
 	return error.error;

@@ -3,10 +3,18 @@ import {
 	Fragment,
 } from "react";
 
-const ErrorForbiddenPage: FC = () => {
+import {
+	type WithChildren,
+} from "@/types/with-children";
+
+type ErrorForbiddenPageProps = WithChildren;
+
+const ErrorForbiddenPage: FC<ErrorForbiddenPageProps> = ({
+	children,
+}) => {
 	return (
 		<Fragment>
-			Error page: forbidden.
+			{children}
 		</Fragment>
 	);
 };

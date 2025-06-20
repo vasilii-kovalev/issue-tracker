@@ -5,8 +5,8 @@ import {
 } from "@reduxjs/toolkit/query/react";
 
 import {
-	HttpStatus,
-} from "@/constants";
+	ResponseStatus,
+} from "@/features/api/constants";
 
 enum ApiTagType {
 	CURRENT_USER = "CURRENT_USER",
@@ -25,7 +25,7 @@ const api = createApi({
 			extraOptions,
 		);
 
-		if (result.error?.status === HttpStatus.UNAUTHORIZED) {
+		if (result.error?.status === ResponseStatus.UNAUTHORIZED) {
 			requestApi.dispatch(
 				api.util.invalidateTags([
 					ApiTagType.CURRENT_USER,

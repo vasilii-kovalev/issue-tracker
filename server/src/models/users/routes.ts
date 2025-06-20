@@ -28,7 +28,7 @@ import {
 	getUserIdFromJwtCookie,
 } from "@/models/auth/utilities/get-user-id-from-jwt-cookie";
 import {
-	ErrorCode,
+	ResponseErrorCode,
 } from "@/models/errors/constants";
 import {
 	ResponseWithStatusBadRequestSchema,
@@ -265,7 +265,7 @@ const usersRoutes: FastifyPluginCallback = (
 						.status(ResponseStatus.NOT_FOUND)
 						.send({
 							errorCodes: [
-								ErrorCode.USER_NOT_FOUND_BY_ID,
+								ResponseErrorCode.USER_NOT_FOUND_BY_ID,
 							],
 						});
 				}
@@ -360,7 +360,7 @@ const usersRoutes: FastifyPluginCallback = (
 						.status(ResponseStatus.NOT_FOUND)
 						.send({
 							errorCodes: [
-								ErrorCode.USER_NOT_FOUND_BY_ID,
+								ResponseErrorCode.USER_NOT_FOUND_BY_ID,
 							],
 						});
 				}
@@ -480,7 +480,7 @@ const usersRoutes: FastifyPluginCallback = (
 							.status(ResponseStatus.CONFLICT)
 							.send({
 								errorCodes: [
-									ErrorCode.USER_VALIDATION_EMAIL_ALREADY_EXISTS,
+									ResponseErrorCode.USER_VALIDATION_EMAIL_ALREADY_EXISTS,
 								],
 							});
 					}
@@ -490,7 +490,7 @@ const usersRoutes: FastifyPluginCallback = (
 							.status(ResponseStatus.CONFLICT)
 							.send({
 								errorCodes: [
-									ErrorCode.USER_VALIDATION_NAME_ALREADY_EXISTS,
+									ResponseErrorCode.USER_VALIDATION_NAME_ALREADY_EXISTS,
 								],
 							});
 					}
@@ -663,7 +663,7 @@ const usersRoutes: FastifyPluginCallback = (
 							.status(ResponseStatus.NOT_FOUND)
 							.send({
 								errorCodes: [
-									ErrorCode.USER_NOT_FOUND_BY_ID,
+									ResponseErrorCode.USER_NOT_FOUND_BY_ID,
 								],
 							});
 					}
@@ -684,7 +684,7 @@ const usersRoutes: FastifyPluginCallback = (
 								.status(ResponseStatus.CONFLICT)
 								.send({
 									errorCodes: [
-										ErrorCode.USER_VALIDATION_EMAIL_ALREADY_EXISTS,
+										ResponseErrorCode.USER_VALIDATION_EMAIL_ALREADY_EXISTS,
 									],
 								});
 						}
@@ -694,7 +694,7 @@ const usersRoutes: FastifyPluginCallback = (
 								.status(ResponseStatus.CONFLICT)
 								.send({
 									errorCodes: [
-										ErrorCode.USER_VALIDATION_NAME_ALREADY_EXISTS,
+										ResponseErrorCode.USER_VALIDATION_NAME_ALREADY_EXISTS,
 									],
 								});
 						}
@@ -820,7 +820,7 @@ const usersRoutes: FastifyPluginCallback = (
 						.status(ResponseStatus.NOT_FOUND)
 						.send({
 							errorCodes: [
-								ErrorCode.USER_NOT_FOUND_BY_ID,
+								ResponseErrorCode.USER_NOT_FOUND_BY_ID,
 							],
 						});
 				}

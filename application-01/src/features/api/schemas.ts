@@ -5,10 +5,10 @@ import {
 } from "valibot";
 
 import {
-	ErrorCode,
+	ResponseErrorCode,
 } from "./constants";
 
-const ErrorCodeSchema = enum_(ErrorCode);
+const ErrorCodeSchema = enum_(ResponseErrorCode);
 
 const ErrorResponseSchema = object({
 	errorCodes: array(ErrorCodeSchema),

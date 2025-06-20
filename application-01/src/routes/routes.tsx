@@ -25,12 +25,12 @@ const CurrentUserDashboardPage = lazy(async () => {
 	return await import("@/pages/current-user-dashboard/page");
 });
 
-const UserDashboard = lazy(async () => {
-	return await import("@/pages/user-dashboard/page");
+const UserDashboardPage = lazy(async () => {
+	return await import("@/pages/user-dashboard/user-dashboard-page");
 });
 
 const LoginPage = lazy(async () => {
-	return await import("@/pages/login/page");
+	return await import("@/pages/login/login-page");
 });
 
 const ProtectedRoute: FC = () => {
@@ -85,7 +85,7 @@ const ApplicationRoutes: FC = () => {
 					/>
 
 					<Route
-						element={<UserDashboard/>}
+						element={<UserDashboardPage/>}
 						path="/users/:userId"
 					/>
 				</Route>

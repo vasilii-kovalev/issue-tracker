@@ -3,7 +3,7 @@ import {
 } from "@/constants/schemas";
 
 import {
-	ErrorCode,
+	ResponseErrorCode,
 } from "./constants";
 import {
 	type ErrorResponse,
@@ -14,7 +14,7 @@ const ErrorResponseSchema = {
 	properties: {
 		errorCodes: {
 			items: {
-				enum: Object.values(ErrorCode),
+				enum: Object.values(ResponseErrorCode),
 				type: "string",
 			},
 			type: "array",

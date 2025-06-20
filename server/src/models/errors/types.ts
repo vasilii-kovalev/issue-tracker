@@ -1,9 +1,9 @@
 import {
-	type ErrorCode,
+	type ResponseErrorCode,
 } from "./constants";
 
 interface ErrorResponse {
-	errorCodes: Array<ErrorCode>;
+	errorCodes: Array<ResponseErrorCode>;
 	message?: string;
 }
 

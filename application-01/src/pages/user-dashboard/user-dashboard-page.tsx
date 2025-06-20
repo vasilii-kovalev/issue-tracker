@@ -2,13 +2,13 @@ import {
 	type FC,
 	Fragment,
 } from "react";
-import {
-	useNavigate,
-} from "react-router";
 
 import {
-	HttpStatus,
-} from "@/constants";
+	ResponseStatus,
+} from "@/features/api/constants";
+import {
+	LoadingCode,
+} from "@/features/i18n/constants";
 import {
 	usersApi,
 } from "@/features/users/api";
@@ -25,12 +25,14 @@ import {
 import {
 	ErrorUnknownPage,
 } from "../error-unknown/page";
+import {
+	PageCode,
+} from "./i18n";
 
 const UserDashboardPage: FC = () => {
 	const {
 		userId,
 	} = useUserDashboardPageParams();
-	const navigate = useNavigate();
 
 	const {
 		data,
@@ -39,17 +41,21 @@ const UserDashboardPage: FC = () => {
 	} = usersApi.endpoints.getUserById.useQuery(userId);
 
 	if (isLoading) {
-		return "Loading...";
+		return LoadingCode.GENERAL;
 	}
 
 	if (!isUndefined(error)) {
 		if ("status" in error) {
-			if (error.status === HttpStatus.FORBIDDEN) {
-				return <ErrorForbiddenPage/>;
+			if (error.status === ResponseStatus.FORBIDDEN) {
+				return (
+					<ErrorForbiddenPage>
+						{PageCode.USER_ACCESS_FORBIDDEN}
+					</ErrorForbiddenPage>
+				);
 			}
 
-			if (error.status === HttpStatus.NOT_FOUND) {
-				return "User not found";
+			if (error.status === ResponseStatus.NOT_FOUND) {
+				return PageCode.USER_NOT_FOUND;
 			}
 		}
 
@@ -59,7 +65,7 @@ const UserDashboardPage: FC = () => {
 	return (
 		<Fragment>
 			<h1>
-				User dashboard
+				{PageCode.PAGE_HEADER}
 			</h1>
 
 			{
@@ -69,17 +75,8 @@ const UserDashboardPage: FC = () => {
 							{data.name}
 						</p>
 					)
-					: "No data to display"
+					: null
 			}
-
-			<button
-				onClick={() => {
-					void navigate("/");
-				}}
-				type="button"
-			>
-				Click
-			</button>
 		</Fragment>
 	);
 };

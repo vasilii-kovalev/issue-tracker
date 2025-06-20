@@ -14,6 +14,10 @@ import {
 	useLoginForm,
 } from "@/hooks/use-login-form";
 
+import {
+	PageCode,
+} from "../i18n";
+
 interface LoginFormProps {
 	onSuccess: () => void;
 }
@@ -39,7 +43,7 @@ const LoginForm: FC<LoginFormProps> = ({
 			>
 				<LabeledInput
 					htmlFor="email"
-					label="Email"
+					label={PageCode.LOGIN_FORM_EMAIL_LABEL}
 					size="48"
 					{...lens.prop("email").toProps()}
 				>
@@ -57,7 +61,7 @@ const LoginForm: FC<LoginFormProps> = ({
 			>
 				<LabeledInput
 					htmlFor="password"
-					label="Password"
+					label={PageCode.LOGIN_FORM_PASSWORD_LABEL}
 					size="48"
 					{...lens.prop("password").toProps()}
 				>
@@ -77,7 +81,7 @@ const LoginForm: FC<LoginFormProps> = ({
 				<FlexSpacer/>
 
 				<Button
-					caption="Login"
+					caption={PageCode.LOGIN_FORM_SUBMIT_BUTTON_LABEL}
 					icon={
 						isInProgress
 							? CircleLoaderIcon

@@ -30,7 +30,7 @@ const UserFullSchema = object({
 	email: pipe(
 		string(),
 		nonEmpty(ValidationErrorCode.USER_VALIDATION_EMAIL_EMPTY),
-		email(ValidationErrorCode.USER_VALIDATION_EMAIL_INCORRECT),
+		email(ValidationErrorCode.USER_VALIDATION_EMAIL_INVALID),
 		flavor("user-email"),
 	),
 	id: pipe(
