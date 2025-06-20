@@ -11,6 +11,9 @@ import {
 } from "@/utilities/is-undefined";
 
 import {
+	RoutePath,
+} from "../constants";
+import {
 	LoginPageLocationSchema,
 	UserDashboardPageSchema,
 } from "../schemas";
@@ -38,7 +41,7 @@ const useLoginPageRedirectPathname = (): string => {
 	const pathname = loginPageLocation.state?.from.pathname;
 
 	if (isUndefined(pathname)) {
-		return "/";
+		return RoutePath.ROOT;
 	}
 
 	return pathname;

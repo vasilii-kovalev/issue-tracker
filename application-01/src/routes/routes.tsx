@@ -21,8 +21,12 @@ import {
 	isUndefined,
 } from "@/utilities/is-undefined";
 
+import {
+	RoutePath,
+} from "./constants";
+
 const CurrentUserDashboardPage = lazy(async () => {
-	return await import("@/pages/current-user-dashboard/page");
+	return await import("@/pages/current-user-dashboard/current-user-dashboard-page");
 });
 
 const UserDashboardPage = lazy(async () => {
@@ -62,7 +66,7 @@ const ProtectedRoute: FC = () => {
 				state={{
 					from: location,
 				}}
-				to="/login"
+				to={RoutePath.LOGIN_PAGE}
 			/>
 		);
 	}
@@ -81,18 +85,18 @@ const ApplicationRoutes: FC = () => {
 				>
 					<Route
 						element={<CurrentUserDashboardPage/>}
-						path="/"
+						path={RoutePath.ROOT}
 					/>
 
 					<Route
 						element={<UserDashboardPage/>}
-						path="/users/:userId"
+						path={RoutePath.USER_DASHBOARD}
 					/>
 				</Route>
 
 				<Route
 					element={<LoginPage/>}
-					path="/login"
+					path={RoutePath.LOGIN_PAGE}
 				/>
 
 				<Route

@@ -9,6 +9,9 @@ import {
 	usersApi,
 } from "@/features/users/api";
 import {
+	getUserDashboardPath,
+} from "@/routes/utilities/get-user-dashboard-path";
+import {
 	isUndefined,
 } from "@/utilities/is-undefined";
 
@@ -24,7 +27,7 @@ const CurrentUserDashboardPage: FC = () => {
 	return (
 		<Navigate
 			replace={true}
-			to={`/users/${data.id}`}
+			to={getUserDashboardPath(data.id)}
 		/>
 	);
 };
